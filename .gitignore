@@ -1,0 +1,14 @@
+*.*~
+var/
+
+gas.pid
+config.py
+venv
+*.pyc
+__pycache__
+node_modules
+fontawesome*
+
+.vscode
+
+*.php

@@ -1,0 +1,17 @@
+<html>
+  {% include "header.html" %}
+  <body>
+      {% include "head-appli.html" %}
+
+      <div class="container main-zone ng-scope">
+        <h2>{{ name_list }} {{ group.group_name }} ({{ group.group_leader }})</h2>
+      </div>
+      <div class="container main-zone ng-scope ">
+        <ul>
+          {% for elt in table %}
+            <li>{{ elt.first_name }} {{ elt.last_name }} : <a href="mailto:{{ elt.email }}">{{ elt.email }}</a></li> 
+          {% endfor %}
+        </ul>
+      </div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<nav class="navbar navbar-collapse navbar-expand-lg navbar-light bg-light ">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">GAS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        {% if session.get('current_user', False) %}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('profil.profils') }}">Profils</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('user.users') }}">Utilisateurs</a>
+              </li>
+          </ul>
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('group.groups') }}">Relais</a>
+              </li>
+          </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('delivery.deliveries') }}">Livraisons</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('product.products') }}">Produits</a>
+            </li>
+        </ul>
+          <!-- <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                  {{session['current_user']['identifiant']}}
+                  <i class="fa fa-sign-out font-medium" aria-hidden="true"></i></a>
+              </li>
+          </ul> -->
+          {% endif %}
+      </div>
+  </nav>

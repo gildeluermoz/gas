@@ -1,0 +1,35 @@
+###########################
+### PostgreSQL settings ###
+###########################
+
+# Effacer la base de donnée existante lors de l'installation
+drop_apps_db=false
+# Host de la base de données de l'application
+db_host=localhost
+# Port du serveur PostgreSQL
+pg_port=5432
+# Nom de la base de données de l'application
+db_name=gasdb
+# Nom de l'utilisateur propriétaire de la BDD de l'application
+user_pg=gasuser
+# User propriétaire de la BDD de l'application
+user_pg_pass=gaspass
+# Intégrer les données minimales (admin user and profils)
+insert_minimal_data=true
+
+#######################
+### Python settings ###
+#######################
+
+# Notice: n'est compatible qu'avec python3
+python_path=/usr/bin/python3
+
+#########################
+### Gunicorn settings ###
+#########################
+
+app_name=gas
+venv_dir=venv
+gun_num_workers=4
+gun_host=0.0.0.0
+gun_port=3001

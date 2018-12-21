@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    {% include "header.html" %}
+
+    <body>
+
+        {% include "head-appli.html" %}
+
+        <div class="container main-zone ng-scope ">
+            <h2>Connexion</h2>
+
+            <div class="alert alert-danger" role="alert" id="login-error">
+                Paramètres de connexion invalides
+            </div>
+            <div class="form-horizontal">
+                <input type="hidden" name="" id="user_app" value="{{id_app}}">
+                <div class="form-group">
+                <label for="user_id">Identifiant:</label>
+                <input type="text" class="form-control" id="user_id">
+                </div>
+                <div class="form-group">
+                <label for="pwd">Mot de passe:</label>
+                <input type="password" class="form-control" id="user_pwd">
+                </div>
+                <button onclick="login()" id="submit" class="btn btn-default">Login</button>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+$("#login-error").hide();
+
+$(window).keypress(function(event) {
+    if (event.keyCode == 13 || event.which == 13) {
+        login();
+    }
+})
+
+login = function() {
+    $("#login-error").hide();
+    $.post({
+        url : '{{url_application}}' + '/pypn/auth/login',
+        data : JSON.stringify ({
+            "id_application": $('#user_app').val(),
+            "login": $('#user_id').val(),
+            "password" : $('#user_pwd').val()
+        }),
+        contentType:"application/json; charset=utf-8",
+        dataType:"json",
+        success: function(response){
+            console.log(response);
+            window.location.href = '{{url_application}}';
+        },
+        error: function(error){
+            $("#login-error" ).show();
+            console.log(error);
+        }
+    });
+};
+
+</script>
