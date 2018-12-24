@@ -12,11 +12,11 @@
           <div class="card-body">Commandes des relais</div>
         </div>
             {% for o in orders %}
-              <div class="card">
-                <div class="card-header bg-secondary text-white">{{ o.group['group_name'] }} - {{o.group_price}}€</div>
-                <div class="card-body">
+              <div class="card" >
+                <div class="card-header bg-secondary text-white" data-toggle="collapse" data-target="#group{{ o.group.id_group }}">{{ o.group['group_name'] }} - {{o.group_price}}€</div>
+                <div id="group{{ o.group.id_group }}" class="card-body collapse show">
                 {% for p in o.products %}
-                  <li>{{p.product.product_name}} : {{ p.nb }} caisse(s) = {{ p.price }}€</li>
+                  <li  class="list-unstyled"><kbd>{{p.product.product_name}}</kbd> : {{ p.nb }} caisse(s) = {{ p.price }}€</li>
                 {% endfor %}
                 </div>
               </div>
@@ -27,12 +27,12 @@
           </div>
           <ul class="list-group">
           {% for p in results %}
-            <li class="list-group-item">
-              {{ p.product_name }} :
-              {{ p.case_number }} caisses = 
+            <li class="list-group-item list-unstyled">
+              <kbd>{{ p.product_name }}</kbd> :
+              <mark style="background-color: #fcf8e3;padding:.2em;">{{ p.case_number }} caisses</mark> = 
               {{ p.weight }}Kg -
               Vente : {{ p.selling_price }}€, 
-              Achat : {{ p.buying_price }}€, 
+              <mark style="background-color: #fcf8e3;padding:.2em;">Achat : {{ p.buying_price }}€</mark>, 
               Bénéfice : {{ p.benefice }}€
             </li>
           {% endfor %}
