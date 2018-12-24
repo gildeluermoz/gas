@@ -5,6 +5,7 @@
 
 {% block content %}
     <form method="POST" class="container" novalidate>
+        {{ form.hidden_tag() }} {{ form.csrf_token }}
         <h2 class="margin-neg">{{ title }}</h2>
         <div class="row forms card">
             {% with messages = get_flashed_messages() %}

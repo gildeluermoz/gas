@@ -13,7 +13,6 @@ from wtforms.validators import DataRequired
 # from app.models import TProducts
 
 class Order(FlaskForm):
-    
     id_group = SelectField(
         'Je choisi mon relais', 
         coerce=int, 
@@ -21,12 +20,6 @@ class Order(FlaskForm):
         default=0,
         validators=[DataRequired(message = "Merci de choisir un relais.")]
     )
-    # product_case_number = IntegerField(
-    #     'Nombre de caisses', 
-    #     validators=[DataRequired(message = 'Le nombre de caisse est obligatoire. Aucune = "0"')]
-    # )
-    
-    # id_product = HiddenField('id')
     submit = SubmitField('Enregistrer')
 
     @classmethod

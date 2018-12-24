@@ -122,20 +122,24 @@ def addorupdate(id_delivery, id_group):
         title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
 
     if request.method == 'POST':
-        if id_group is None:
-            id_group = form.data['id_group']
-            group =  TGroups.get_one(id_group)
-        form_order = pops(form.data)
-        for key, value in form_order.items():
-            post_order = dict()
-            post_order['id_group'] = id_group
-            if key[0:2] == 'nb':
-                post_order['id_product'] = key[2:]
-                post_order['product_case_number'] = value
-                TOrders.update(post_order)
-        return render_template(
-            'group_order_info.html', form_order=form_order, group=group, products=products, title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
-        )
+        if form.validate_on_submit() and form.validate():
+            if id_group is None:
+                id_group = form.data['id_group']
+                group =  TGroups.get_one(id_group)
+            form_order = pops(form.data)
+            for key, value in form_order.items():
+                post_order = dict()
+                post_order['id_group'] = id_group
+                if key[0:2] == 'nb':
+                    post_order['id_product'] = key[2:]
+                    post_order['product_case_number'] = value
+                    TOrders.update(post_order)
+            return render_template(
+                'group_order_info.html', form_order=form_order, group=group, products=products, title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
+            )
+        else:
+            errors = form.errors
+            flash(errors)
         # if form.validate_on_submit() and form.validate():
 
     #     else:
