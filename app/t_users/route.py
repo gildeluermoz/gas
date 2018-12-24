@@ -75,7 +75,7 @@ def addorupdate(id_user):
     Une fois le formulaire validé on retourne une redirection vers la liste des users
     """
     form = t_usersforms.Utilisateur()
-    form.id_group.choices = TGroups.selectActiveGroup()
+    form.id_group.choices = TGroups.selectActiveGroups()
 
     if id_user is not None:
         user = TUsers.get_one(id_user)
