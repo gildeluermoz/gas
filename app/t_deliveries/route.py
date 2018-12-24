@@ -56,6 +56,9 @@ def deliveries():
         key='id_delivery',
         pathD=config.URL_APPLICATION + '/delivery/delete/',
         pathA=config.URL_APPLICATION + '/delivery/add/new',
+        pathP=config.URL_APPLICATION + '/order/info/',
+        otherCol='True',
+        Members="Commandes",
         name="une livraison",
         name_list="Livraisons",
         see='False'

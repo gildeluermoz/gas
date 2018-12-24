@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS t_deliveries (
     id_delivery serial NOT NULL,
     delivery_name character varying(50),
     delivery_date date,
+    delivery_discount decimal DEFAULT 0,
     delivery_comment text,
     active boolean DEFAULT true,
     date_insert timestamp without time zone,
@@ -173,3 +174,47 @@ FROM gas.t_users u
 JOIN gas.cor_user_profil c ON c.id_user = u.id_user
 WHERE u.active = true
 );
+
+-- DROP VIEW gas.v_group_orders_sum;
+-- DROP VIEW gas.v_orders_result;
+-- DROP VIEW gas.v_group_orders_detail;
+
+
+CREATE OR REPLACE VIEW gas.v_group_orders_detail AS
+SELECT 
+  d.id_delivery, 
+  g.id_group, 
+  d.delivery_name, 
+  g.group_name, 
+  p.id_product, 
+  p.product_name, 
+  o.product_case_number, 
+  p.selling_price * o.product_case_number AS selling_price, 
+  p.buying_price * o.product_case_number AS buying_price,
+  p.case_weight  * o.product_case_number AS weight
+FROM gas.t_orders o
+JOIN gas.t_groups g ON g.id_group = o.id_group
+JOIN gas.t_products p ON p.id_product = o.id_product
+JOIN gas.t_deliveries d ON d.id_delivery = p.id_delivery
+ORDER BY d.id_delivery, p.id_product, g.id_group;
+
+CREATE OR REPLACE VIEW gas.v_group_orders_sum AS
+SELECT id_delivery, id_group, delivery_name, group_name, sum(selling_price) AS total
+FROM gas.v_group_orders_detail
+GROUP BY id_delivery, id_group, delivery_name, group_name;
+
+CREATE OR REPLACE VIEW gas.v_orders_result AS
+SELECT 
+  v.id_delivery,
+  v.id_product, 
+  v.delivery_name,
+  d.delivery_discount, 
+  v.product_name, 
+  sum(v.product_case_number) AS case_number, 
+  sum(v.selling_price) AS selling_price,
+  sum(v.buying_price-(v.buying_price*COALESCE(d.delivery_discount,0))) AS buying_price,
+  sum(v.selling_price) - sum(v.buying_price-(v.buying_price*COALESCE(d.delivery_discount,0))) AS benefice,
+  sum(v.weight) as weight
+FROM gas.v_group_orders_detail v
+JOIN gas.t_deliveries d ON d.id_delivery = v.id_delivery
+GROUP BY v.id_delivery, v.id_product, v.delivery_name, d.delivery_discount, v.product_name;

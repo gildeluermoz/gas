@@ -1,0 +1,54 @@
+<html>
+  {% include "header.html" %}
+  <body>
+      {% include "head-appli.html" %}
+
+      <div class="container main-zone ng-scope">
+        <h2>{{title}}</h2>
+      </div>
+      <br /><hr /><br />
+      <div class="container main-zone ng-scope ">
+        <div class="card bg-success text-white">
+          <div class="card-body">Commandes des relais</div>
+        </div>
+            {% for o in orders %}
+              <div class="card">
+                <div class="card-header bg-secondary text-white">{{ o.group['group_name'] }} - {{o.group_price}}€</div>
+                <div class="card-body">
+                {% for p in o.products %}
+                  <li>{{p.product.product_name}} : {{ p.nb }} caisse(s) = {{ p.price }}€</li>
+                {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+            <br/>
+          <div class="card bg-success text-white">
+            <div class="card-body">Bilan de la commande (remise globale -{{results[0].delivery_discount*100}} %)</div>
+          </div>
+          <ul class="list-group">
+          {% for p in results %}
+            <li class="list-group-item">
+              {{ p.product_name }} :
+              {{ p.case_number }} caisses = 
+              {{ p.weight }}Kg -
+              Vente : {{ p.selling_price }}€, 
+              Achat : {{ p.buying_price }}€, 
+              Bénéfice : {{ p.benefice }}€
+            </li>
+          {% endfor %}
+          </ul>
+
+          <br />
+          <div class="card bg-success text-white">
+            <div class="card-body">Résultats</div>
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item">Nombre total de caisses : {{ sums.case_number }}</li>
+            <li class="list-group-item">Poids total : {{ sums.weight }}Kg</li>
+            <li class="list-group-item">Somme des ventes : {{ sums.selling }}€</li>
+            <li class="list-group-item">Montant des achats : {{ sums.buying }}€</li>
+            <li class="list-group-item">Bénéfice total : {{ sums.benefice }}€</li>
+          </ul>
+      </div>
+  </body>
+</html>

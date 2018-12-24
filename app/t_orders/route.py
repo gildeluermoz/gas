@@ -3,13 +3,16 @@ from flask import (
     Blueprint, request, flash
 )
 from flask_wtf import FlaskForm
-from wtforms import (IntegerField)
+# from wtforms import IntegerField
 from wtforms.validators import DataRequired
+
+from sqlalchemy import and_
 
 from app.pypnusershub import routes as fnauth
 from app.env import db, URL_REDIRECT
 from app.t_orders.forms import Order as orderform
-from app.models import TProducts, TGroups, TOrders, TDeliveries
+from app.models import (TProducts, TGroups, TOrders, 
+    TDeliveries, VOrdersResult)
 
 from config import config
 
@@ -17,11 +20,67 @@ from config import config
 route = Blueprint('order', __name__)
 
 
+@route.route('order/info/<id_delivery>', methods=['GET'])
+@fnauth.check_auth(3, False, URL_REDIRECT)
+def info(id_delivery):
+    """
+    Route affichant le résumé d'une commande
+    Des liens permettent de modifier la commande d'un relais
+    """
+
+     # get delivery informations with id_delivery filter
+    delivery = TDeliveries.get_one(id_delivery)
+    # get products order in t_products table with id_delivery filter
+    q = db.session.query(TOrders.id_group).distinct()
+    q.join(TProducts, TProducts.id_product == TOrders.id_product)
+    q = q.filter(TProducts.id_delivery == id_delivery)
+    ordergroups = [p[0] for p in q.all()]
+
+    # get orders details
+    
+    orders = list()
+    for og in ordergroups:
+        order = dict()
+        q = db.session.query(TOrders)
+        q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
+        q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
+        q = q.filter(and_(TProducts.id_delivery == id_delivery, TOrders.id_group == og))
+        order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':o.product_case_number*o.product_rel.selling_price} for o in q.all()]
+        order['group'] = TGroups.get_one(og)
+        mysum = 0
+        for p in order['products']:
+            mysum = mysum + p['price'] 
+            order['group_price'] = mysum
+        orders.append(order)
+
+    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
+    results = list()
+    nbc = 0
+    w = 0 
+    selling = 0 
+    buying = 0
+    benef = 0
+    for r in q.all():
+        result = dict()
+        result = r.as_dict()
+        results.append(result)
+        nbc = nbc + r.case_number
+        w = w + r.weight
+        selling = selling + r.selling_price
+        buying = buying + r.buying_price
+        benef = benef + r.benefice
+    sums = dict()
+    sums['case_number'] = nbc
+    sums['weight'] = w
+    sums['selling'] = selling
+    sums['buying'] = buying
+    sums['benefice'] = benef
+    return render_template('info_order.html', orders=orders, results=results, sums=sums, title="Commandes pour la livraison du " + delivery['delivery_date'])
+
 @route.route('order/add/<id_delivery>', defaults={'id_group': None}, methods=['GET', 'POST'])
 @route.route('order/update/<id_delivery>/<id_group>', methods=['GET', 'POST'])
 @fnauth.check_auth(3, False, URL_REDIRECT)
 def addorupdate(id_delivery, id_group):
-
     """
     Route affichant un formulaire pour ajouter ou mettre à jour une commande
     L'envoie du formulaire permet l'ajout ou la mise à jour de la commande dans la base

@@ -20,42 +20,7 @@ from config import config
 """Fichier contenant les models de la base de données"""
 
 
-@serializable
-class TOrders(GenericRepository):
-    """ Classe de correspondance entre la table t_groups et la table t_products"""
 
-    __tablename__ = 't_orders'
-    __table_args__= {'schema':'gas'}
-    id_group = db.Column(db.Integer,ForeignKey('gas.t_groups.id_group'), primary_key = True)
-    id_product = db.Column(db.Integer, ForeignKey('gas.t_products.id_product'),primary_key = True)
-    product_case_number = db.Column(db.Integer)
-
-    @classmethod
-    def add_cor(cls,id_group, products_number):
-        """
-        Methode qui ajoute des relations group <-> produits --> nombre de caisses
-
-        Avec pour paramètres un id de group et un id_produit et un nombre de caisse
-        """
-
-        dict_add = dict()
-        dict_add["id_group"] = id_group
-        for p in products_number:
-            dict_add["id_product"] = p.id_produit
-            dict_add["product_case_number"] = p.product_case_number
-            cls.post(dict_add)
-
-    @classmethod
-    def del_cor(cls,id_group,ids_product):
-        """
-        Methode qui supprime des relations group <-> produit
-
-        Avec pour paramètres un id de group et un tableau d'id de produit
-        """
-
-        for p in ids_product:
-            cls.query.filter(cls.id_group == id_group).filter(cls.id_produit == p).delete()
-            db.session.commit()
 
 
 
@@ -242,6 +207,47 @@ class TProducts(GenericRepository):
     active = db.Column(db.Boolean)
     delivery_rel = relationship("TDeliveries")
 
+
+@serializable
+class TOrders(GenericRepository):
+    """ Classe de correspondance entre la table t_groups et la table t_products"""
+
+    __tablename__ = 't_orders'
+    __table_args__= {'schema':'gas'}
+    id_group = db.Column(db.Integer,ForeignKey('gas.t_groups.id_group'), primary_key = True)
+    id_product = db.Column(db.Integer, ForeignKey('gas.t_products.id_product'),primary_key = True)
+    product_case_number = db.Column(db.Integer)
+    group_rel = relationship("TGroups")
+    product_rel = relationship("TProducts")
+
+    @classmethod
+    def add_cor(cls,id_group, products_number):
+        """
+        Methode qui ajoute des relations group <-> produits --> nombre de caisses
+
+        Avec pour paramètres un id de group et un id_produit et un nombre de caisse
+        """
+
+        dict_add = dict()
+        dict_add["id_group"] = id_group
+        for p in products_number:
+            dict_add["id_product"] = p.id_produit
+            dict_add["product_case_number"] = p.product_case_number
+            cls.post(dict_add)
+
+    @classmethod
+    def del_cor(cls,id_group,ids_product):
+        """
+        Methode qui supprime des relations group <-> produit
+
+        Avec pour paramètres un id de group et un tableau d'id de produit
+        """
+
+        for p in ids_product:
+            cls.query.filter(cls.id_group == id_group).filter(cls.id_produit == p).delete()
+            db.session.commit()
+
+
 @serializable
 class TProfils(GenericRepository):
     """
@@ -262,3 +268,24 @@ class TProfils(GenericRepository):
         Avec pour paramètres un code de profil et un nom de profil
         """
         return [(d[profil_code], d[profil_name]) for d in cls.get_all()]
+
+
+@serializable
+class VOrdersResult(GenericRepository):
+    """
+    Model de la classe v_orders_result
+    """
+
+    __tablename__ = 'v_orders_result'
+    __table_args__ = {'schema':'gas', 'extend_existing': True}
+    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_product = db.Column(db.Integer, primary_key = True)
+    delivery_name = db.Column(db.Unicode)
+    delivery_discount = db.Column(db.Numeric)
+    product_name = db.Column(db.Unicode)
+    case_number = db.Column(db.Integer)
+    weight = db.Column(db.Numeric)
+    selling_price = db.Column(db.Numeric)
+    buying_price = db.Column(db.Numeric)
+    benefice = db.Column(db.Numeric)
+    
