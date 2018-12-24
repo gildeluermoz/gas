@@ -178,8 +178,8 @@ $( document ).ready(function() {
     $('#user').DataTable({
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
-            "zeroRecords": "Aucunes données trouvées - Désolé",
-            "info": "Affiche la page _PAGE_ sur _PAGES_",
+            "zeroRecords": "Aucunes données",
+            "info": "Page _PAGE_ sur _PAGES_",
             "infoEmpty": "Aucunes données trouvées",
             "infoFiltered": "(filtrer sur _MAX_ total d'éléments)",
             "search":         "Recherche:",
@@ -197,9 +197,9 @@ $( document ).ready(function() {
     $('#adding_table').DataTable({
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
-            "zeroRecords": "Aucunes données trouvées - Désolé",
-            "info": "Affiche la page _PAGE_ sur _PAGES_",
-            "infoEmpty": "Aucunes données trouvées",
+            "zeroRecords": "Aucunes données",
+            "info": "Page _PAGE_ sur _PAGES_",
+            "infoEmpty": "Aucunes données",
             "infoFiltered": "(filtrer sur _MAX_ total d'éléments)",
             "search":         "Recherche:",
             "paginate": {
@@ -216,9 +216,9 @@ $( document ).ready(function() {
     $('#tri').DataTable({
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
-            "zeroRecords": "Aucunes données trouvées - Désolé",
-            "info": "Affiche la page _PAGE_ sur _PAGES_",
-            "infoEmpty": "Aucunes données trouvées",
+            "zeroRecords": "Aucunes données",
+            "info": "Page _PAGE_ sur _PAGES_",
+            "infoEmpty": "Aucunes données",
             "infoFiltered": "(filtrer sur _MAX_ total d'éléments)",
             "search":         "Recherche:",
             "paginate": {
