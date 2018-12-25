@@ -2,7 +2,6 @@
 {% include "head-appli.html" %}
 {% include "header.html" %}
 
-
 {% block content %}
     <form method="POST" class="container" novalidate>
         {{ form.hidden_tag() }} {{ form.csrf_token }}
@@ -26,7 +25,6 @@
                 </p>
             {% endfor %}
             {{ wtf.form_field(form.submit, class="btn btn-success") }}
-            <!-- <button onclick="update_order()" id="update_order" class="btn btn-success btn-sm">Enregistrer</button> -->
         </div>
     </form>
 {% endblock %}

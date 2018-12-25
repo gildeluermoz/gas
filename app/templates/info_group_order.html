@@ -9,7 +9,10 @@
         <hr /><br />
         <div class="container main-zone ng-scope ">
           <div class="card bg-success text-white">
-            <div class="card-body">Relais {{ group.group_name }} ({{ group.group_leader }})</div>
+            <div class="card-body">
+              Relais {{ group.group_name }} ({{ group.group_leader }}) - 
+              {{ group_order_sum.total }}€
+            </div>
           </div>
 
           <ul>
@@ -22,6 +25,10 @@
             {% endfor %}
           </ul>
       </div>
-      <button onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' id="submit" class="btn btn-default">Modifier</button>
+      <button 
+        onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' 
+        id="submit" 
+        class="btn btn-outline-primary">Modifier
+      </button>
   </body>
 </html>

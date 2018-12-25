@@ -308,3 +308,17 @@ class VGroupOrdersDetail(GenericRepository):
     selling_price = db.Column(db.Numeric)
     buying_price = db.Column(db.Numeric)
     weight = db.Column(db.Numeric)
+
+@serializable
+class VGroupOrdersSum(GenericRepository):
+    """
+    Model de la classe v_group_orders_sum
+    """
+
+    __tablename__ = 'v_group_orders_sum'
+    __table_args__ = {'schema':'gas', 'extend_existing': True}
+    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_group = db.Column(db.Integer, primary_key = True)
+    delivery_name = db.Column(db.Unicode)
+    group_name = db.Column(db.Unicode)
+    total = db.Column(db.Numeric)

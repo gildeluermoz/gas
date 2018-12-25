@@ -12,7 +12,7 @@ from app.pypnusershub import routes as fnauth
 from app.env import db, URL_REDIRECT
 from app.t_orders.forms import Order as orderform
 from app.models import (TProducts, TGroups, TOrders, 
-    TDeliveries, VOrdersResult, VGroupOrdersDetail)
+    TDeliveries, VOrdersResult, VGroupOrdersDetail, VGroupOrdersSum)
 
 from config import config
 
@@ -137,9 +137,11 @@ def addorupdate(id_delivery, id_group):
             q = db.session.query(VGroupOrdersDetail)
             q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group))
             group_order = [go.as_dict() for go in q.all()]
+            group_order_sum = VGroupOrdersSum.get_one((id_delivery, id_group))
             return render_template(
                 'info_group_order.html', 
                 group_order=group_order, 
+                group_order_sum=group_order_sum, 
                 group=group, 
                 delivery=delivery, 
                 title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
