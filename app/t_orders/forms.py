@@ -7,7 +7,7 @@ from wtforms import (
     SubmitField, HiddenField, SelectField, 
     IntegerField, validators
 )
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, InputRequired
 
 # from app.env import db, URL_REDIRECT
 # from app.models import TProducts
@@ -24,7 +24,7 @@ class Order(FlaskForm):
 
     @classmethod
     def append_nbcase(cls, name, label):
-        setattr(cls, name, IntegerField(label, validators=[DataRequired(message = 'Le nombre de caisse est obligatoire. Aucune = "0"')]))
+        setattr(cls, name, IntegerField(label, validators=[InputRequired(message = 'Le nombre de caisse est obligatoire. Aucune = "0"')]))
         return cls
 
 
