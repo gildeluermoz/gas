@@ -8,6 +8,7 @@ from flask_bcrypt import (
 )
 
 from app.pypnusershub import route as fnauth
+from app.pypnusershub.db.tools import user_from_token
 
 from app.env import URL_REDIRECT
 from app.t_users import forms as t_usersforms
@@ -20,24 +21,31 @@ route = Blueprint('user', __name__)
 
 
 @route.route('users/list', methods=['GET'])
-@fnauth.check_auth(3, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def users():
 
     """
     Route qui affiche la liste des utilisateurs
     Retourne un template avec pour paramètres :
-                                            - une entête de tableau --> fLine
-                                            - le nom des colonnes de la base --> line
-                                            - le contenu du tableau --> table
-                                            - le chemin de mise à jour --> pathU
-                                            - le chemin de suppression --> pathD
-                                            - le chemin d'ajout --> pathA
-                                            - le chemin de la page d'information --> pathI
-                                            - une clé (clé primaire dans la plupart des cas) --> key
-                                            - un nom (nom de la table) pour le bouton ajout --> name
-                                            - un nom de listes --> name_list
-                                            - ajoute une colonne pour accéder aux infos de l'utilisateur --> see
+        - les droits de l'utilisateur selon son porfil --> user_right
+        - une entête de tableau --> fLine
+        - le nom des colonnes de la base --> line
+        - le contenu du tableau --> table
+        - le chemin de mise à jour --> pathU
+        - le chemin de suppression --> pathD
+        - le chemin d'ajout --> pathA
+        - le chemin de la page d'information --> pathI
+        - une clé (clé primaire dans la plupart des cas) --> key
+        - un nom (nom de la table) pour le bouton ajout --> name
+        - un nom de listes --> name_list
+        - ajoute une colonne pour accéder aux infos de l'utilisateur --> see
     """
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil >= 4:
+        user_right = ['C','R','U','D']
+    else:
+        user_right = ['R']
     fLine = ['Actif', 'Id', 'Identifiant', 'Nom', 'Prenom', 'Email', 'Relais', 'Remarques']  # noqa
     columns = ['active', 'id_user', 'identifiant', 'last_name', 'first_name', 'email', 'group_name', 'user_comment']  # noqa
     contents = TUsers.get_all(columns)
@@ -49,6 +57,7 @@ def users():
 
     return render_template(
         "table_database.html",
+        user_right=user_right,
         fLine=fLine,
         line=columns,
         table=tab,
@@ -65,7 +74,7 @@ def users():
 
 @route.route('user/add/new', defaults={'id_user': None}, methods=['GET', 'POST'])
 @route.route('user/update/<id_user>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def addorupdate(id_user):
 
     """
@@ -119,7 +128,7 @@ def addorupdate(id_user):
 
 
 @route.route('user/delete/<id_user>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def deluser(id_user):
     """
     Route qui supprime un utilisateur dont l'id est donné en paramètres dans l'url

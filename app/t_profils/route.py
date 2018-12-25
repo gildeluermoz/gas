@@ -4,6 +4,7 @@ from flask import (
 )
 
 from app.pypnusershub import route as fnauth
+from app.pypnusershub.db.tools import user_from_token
 
 from app.env import URL_REDIRECT
 from app.t_profils import forms as t_profilsforms
@@ -20,30 +21,37 @@ Routes des profils
 
 
 @route.route('profils/list', methods=['GET', 'POST'])
-@fnauth.check_auth(3, False, URL_REDIRECT)
+@fnauth.check_auth(6, False, URL_REDIRECT)
 def profils():
     """
     Route qui affiche la liste des profils
     Retourne un template avec pour paramètres :
-                                            - une entête de tableau --> fLine
-                                            - le nom des colonnes de la base --> line
-                                            - le contenu du tableau --> table
-                                            - le chemin de mise à jour --> pathU
-                                            - le chemin de suppression --> pathD
-                                            - le chemin d'ajout --> pathA
-                                            - le chemin des roles du profil --> pathP
-                                            - une clé (clé primaire dans la plupart des cas) --> key
-                                            - un nom (nom de la table) pour le bouton ajout --> name
-                                            - un nom de listes --> name_list
-                                            - ajoute une colonne de bouton ('True' doit être de type string)--> otherCol
-                                            - nom affiché sur le bouton --> Members
+        - les droits de l'utilisateur selon son porfil --> user_right
+        - une entête de tableau --> fLine
+        - le nom des colonnes de la base --> line
+        - le contenu du tableau --> table
+        - le chemin de mise à jour --> pathU
+        - le chemin de suppression --> pathD
+        - le chemin d'ajout --> pathA
+        - le chemin des roles du profil --> pathP
+        - une clé (clé primaire dans la plupart des cas) --> key
+        - un nom (nom de la table) pour le bouton ajout --> name
+        - un nom de listes --> name_list
+        - ajoute une colonne de bouton ('True' doit être de type string)--> otherCol
+        - nom affiché sur le bouton --> Members
     """
-
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil == 6:
+        user_right = ['C','R','U','D']
+    else:
+        user_right = ['R']
     fLine = ['ID', 'CODE', 'Nom', 'Description']
     columns = ['id_profil',  'profil_code', 'profil_name', 'profil_comment']
     tab = [data for data in TProfils.get_all()]
     return render_template(
         'table_database.html',
+        user_right=user_right,
         fLine=fLine,
         line=columns,
         table=tab,

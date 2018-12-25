@@ -2,14 +2,16 @@
   {% include "header.html" %}
   <body>
       {% include "head-appli.html" %}
-
+      {% set user = session.get('current_user', False) %}
       <div class="container main-zone ng-scope">
         <h2>{{ name_list }}</h2>
-        <p>
-          <a href="{{pathA}}"><button type="submit" class="btn btn-success btn-sm">
-              Ajouter {{ name }}
-            </button></a>
-        </p>
+        {% if 'C' in user_right %}
+          <p>
+            <a href="{{pathA}}"><button type="submit" class="btn btn-success btn-sm">
+                Ajouter {{ name }}
+              </button></a>
+          </p>
+        {%endif%}
       </div>
       <div class="container main-zone ng-scope ">
         <div id="table">
@@ -27,8 +29,12 @@
                 {% if see == 'True'%}
                   <th scope="col">Voir</th>
                 {%endif%}
-                <th scope="col">Modification</th>
-                <th scope="col">Suppression</th>
+                {% if 'U' in user_right %}
+                  <th scope="col">Modification</th>
+                {%endif%}
+                {% if 'D' in user_right %}
+                  <th scope="col">Suppression</th>
+                {%endif%}
               </tr>
             </thead>
             <tbody>
@@ -51,17 +57,20 @@
                           <i class="fa fa-eye font-medium" aria-hidden="true"></i></button></a>
                     </td>
                   {%endif%} 
-
+                  {% if 'U' in user_right %}
                   <td align="center">
                     <a href="{{pathU}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm">
                         <i class="fa fa-pencil font-medium" aria-hidden="true"></i></button></a>
                   </td>
+                  {%endif%}
+                  {% if 'D' in user_right %}
                   <td align="center">
                     <button onClick="deleteRaw('{{pathD}}{{elt[key]}} ')" type="submit" class="btn btn-danger btn-sm">
                       <i class="fa fa-trash font-medium" aria-hidden="true"></i>
                     </button>
                   </td>
+                  {%endif%}
                 </tr>
               {% endfor %}
             </tbody>

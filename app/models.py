@@ -133,6 +133,15 @@ class TUsers(GenericRepository):
         user_as_dict = self.as_dict()
         user_as_dict['full_name'] = full_name
         return user_as_dict
+    
+    # @classmethod
+    # def get_profil(cls, id_user):
+    #     """
+    #     Methode qui retourne l'id_profil d'un utilisateur
+    #     """
+
+    #     q = CorUserProfil.get_one(id_user)
+    #     return q.id_profil
 
     @classmethod
     def get_users_in_profil(cls, id_profil):

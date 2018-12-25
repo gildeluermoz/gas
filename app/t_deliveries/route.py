@@ -5,6 +5,7 @@ from flask import (
 from datetime import datetime
 
 from app.pypnusershub import route as fnauth
+from app.pypnusershub.db.tools import user_from_token
 
 from app.env import URL_REDIRECT
 
@@ -28,19 +29,26 @@ def deliveries():
     """
     Route qui affiche la liste des livraisons
     Retourne un template avec pour paramètres :
-                                            - une entête de tableau --> fLine
-                                            - le nom des colonnes de la base --> line
-                                            - le contenu du tableau --> table
-                                            - le chemin de mise à jour --> pathU
-                                            - le chemin de suppression --> pathD
-                                            - le chemin d'ajout --> pathA
-                                            - le chemin de la page d'information --> pathI
-                                            - une clé (clé primaire dans la plupart des cas) --> key
-                                            - un nom (nom de la table) pour le bouton ajout --> name
-                                            - un nom de listes --> name_list
-                                            - ajoute une colonne pour accéder aux infos de l'utilisateur --> see
+        - les droits de l'utilisateur selon son porfil --> user_right
+        - une entête de tableau --> fLine
+        - le nom des colonnes de la base --> line
+        - le contenu du tableau --> table
+        - le chemin de mise à jour --> pathU
+        - le chemin de suppression --> pathD
+        - le chemin d'ajout --> pathA
+        - le chemin de la page d'information --> pathI
+        - une clé (clé primaire dans la plupart des cas) --> key
+        - un nom (nom de la table) pour le bouton ajout --> name
+        - un nom de listes --> name_list
+        - ajoute une colonne pour accéder aux infos de l'utilisateur --> see
     """
 
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil >= 4:
+        user_right = ['C','R','U','D']
+    else:
+        user_right = ['R']
     fLine = ['active', 'ID', 'Nom', 'Date', 'Commentaire']
     columns = ['active', 'id_delivery', 'delivery_name', 'delivery_date', 'delivery_comment']
     contents = TDeliveries.get_all(columns)
@@ -48,6 +56,7 @@ def deliveries():
         c['delivery_date'] = datetime.strptime(c['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
     return render_template(
         'table_database.html',
+        user_right=user_right,
         table=contents,
         fLine=fLine,
         line=columns,
@@ -67,7 +76,7 @@ def deliveries():
 
 @route.route('delivery/add/new', defaults={'id_delivery': None}, methods=['GET', 'POST'])
 @route.route('delivery/update/<id_delivery>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def addorupdate(id_delivery):
     """
     Route affichant un formulaire vierge ou non (selon l'url) pour ajouter ou mettre à jour une livraison
@@ -102,7 +111,7 @@ def addorupdate(id_delivery):
 
 
 @route.route('delivery/delete/<id_delivery>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def delete(id_delivery):
     """
     Route qui supprime une livraison dont l'id est donné en paramètres dans l'url

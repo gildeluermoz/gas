@@ -30,6 +30,7 @@ def info(id_delivery):
 
      # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
+
     # get products order in t_products table with id_delivery filter
     q = db.session.query(TOrders.id_group).distinct()
     q.join(TProducts, TProducts.id_product == TOrders.id_product)
@@ -37,7 +38,6 @@ def info(id_delivery):
     ordergroups = [p[0] for p in q.all()]
 
     # get orders details
-    
     orders = list()
     for og in ordergroups:
         order = dict()
@@ -53,6 +53,7 @@ def info(id_delivery):
             order['group_price'] = mysum
         orders.append(order)
 
+    # get orders sums
     q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
     results = list()
     nbc = 0
@@ -75,7 +76,14 @@ def info(id_delivery):
     sums['selling'] = selling
     sums['buying'] = buying
     sums['benefice'] = benef
-    return render_template('info_order.html', orders=orders, results=results, sums=sums, title="Commandes pour la livraison du " + delivery['delivery_date'])
+
+    return render_template(
+        'info_order.html', 
+        orders=orders, 
+        results=results, 
+        sums=sums, 
+        title="Commandes pour la livraison du " + delivery['delivery_date']
+    )
 
 @route.route('order/add/<id_delivery>', defaults={'id_group': None}, methods=['GET', 'POST'])
 @route.route('order/update/<id_delivery>/<id_group>', methods=['GET', 'POST'])
@@ -156,7 +164,7 @@ def addorupdate(id_delivery, id_group):
 
 
 @route.route('order/delete/<id_product>/<id_group>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def delproduct(id_product, id_group):
     """
     Route qui supprime la commande d'un relais dont les id_product et id_group sont en paramètres

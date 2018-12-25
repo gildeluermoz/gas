@@ -58,7 +58,7 @@ with app.app_context():
         @app.route('/')
         def index():
             ''' Route par défaut de l'application '''
-            return redirect(url_for('user.users'))
+            return redirect(url_for('delivery.deliveries'))
 
         @app.route('/constants.js')
         def constants_js():

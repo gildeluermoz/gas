@@ -4,6 +4,8 @@ from flask import (
 )
 
 from app.pypnusershub import route as fnauth
+from app.pypnusershub.db.tools import user_from_token
+
 from app.env import db, URL_REDIRECT
 from app.t_groups import forms as groupforms
 from app.models import TGroups, TUsers
@@ -13,11 +15,12 @@ route = Blueprint('group', __name__)
 
 
 @route.route('groups/group', methods=['GET', 'POST'])
-@fnauth.check_auth(3, False, URL_REDIRECT)
+@fnauth.check_auth(2, False, URL_REDIRECT)
 def groups():
     """
     Route qui affiche la liste des relais
     Retourne un template avec pour paramètres :
+        - les droits de l'utilisateur selon son porfil --> user_right
         - une entête de tableau --> fLine
         - le nom des colonnes de la base --> line
         - le contenu du tableau --> table
@@ -32,11 +35,18 @@ def groups():
         - nom affiché sur le bouton --> Members
     """
 
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil >= 4:
+        user_right = ['C','R','U','D']
+    else:
+        user_right = ['R']
     fLine = ['Actif', 'ID', 'Nom', 'Responsable', 'email', 'tel', 'Remarques']
     columns = ['active', 'id_group', 'group_name', 'group_leader', 'group_main_email', 'group_main_tel','group_comment']
     contents = TGroups.get_all(columns)
     return render_template(
         'table_database.html',
+        user_right=user_right,
         fLine=fLine,
         line=columns,
         table=contents,
@@ -56,7 +66,7 @@ def groups():
 
 @route.route('group/add/new', defaults={'id_group': None}, methods=['GET', 'POST'])
 @route.route('group/update/<id_group>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def addorupdate(id_group):
     """
     Route affichant un formulaire vierge ou non (selon l'url) pour ajouter ou mettre à jour un relais
@@ -88,7 +98,7 @@ def addorupdate(id_group):
 
 
 @route.route('group/members/<id_group>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def membres(id_group):
     """
     Route retournant la liste des users appartenant au relais
@@ -110,7 +120,7 @@ def membres(id_group):
 
 
 @route.route('group/delete/<id_group>', methods=['GET', 'POST'])
-@fnauth.check_auth(6, False, URL_REDIRECT)
+@fnauth.check_auth(4, False, URL_REDIRECT)
 def delete(id_group):
     """
     Route qui supprime un relais dont l'id est donné en paramètres dans l'url
