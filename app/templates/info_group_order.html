@@ -1,0 +1,27 @@
+<html>
+  {% include "header.html" %}
+  <body>
+      {% include "head-appli.html" %}
+
+      <div class="container main-zone ng-scope">
+        <h2 class="margin-neg">{{ title }}</h2>
+        <br />
+        <hr /><br />
+        <div class="container main-zone ng-scope ">
+          <div class="card bg-success text-white">
+            <div class="card-body">Relais {{ group.group_name }} ({{ group.group_leader }})</div>
+          </div>
+
+          <ul>
+            {% for go in group_order %}
+              <div class="card">
+                <div class="card-body">
+                  <li class="list-unstyled"><kbd>{{ go.product_name }}</kbd> {{ go.product_case_number }} caisses = {{ go.selling_price }}€</li>
+                </div>
+              </div> 
+            {% endfor %}
+          </ul>
+      </div>
+      <button onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' id="submit" class="btn btn-default">Modifier</button>
+  </body>
+</html>

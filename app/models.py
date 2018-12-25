@@ -288,4 +288,23 @@ class VOrdersResult(GenericRepository):
     selling_price = db.Column(db.Numeric)
     buying_price = db.Column(db.Numeric)
     benefice = db.Column(db.Numeric)
-    
+
+
+@serializable
+class VGroupOrdersDetail(GenericRepository):
+    """
+    Model de la classe v_group_orders_detail
+    """
+
+    __tablename__ = 'v_group_orders_detail'
+    __table_args__ = {'schema':'gas', 'extend_existing': True}
+    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_group = db.Column(db.Integer, primary_key = True)
+    id_product = db.Column(db.Integer, primary_key = True)
+    delivery_name = db.Column(db.Unicode)
+    group_name = db.Column(db.Unicode)
+    product_name = db.Column(db.Unicode)
+    product_case_number = db.Column(db.Integer)
+    selling_price = db.Column(db.Numeric)
+    buying_price = db.Column(db.Numeric)
+    weight = db.Column(db.Numeric)

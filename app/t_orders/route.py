@@ -12,7 +12,7 @@ from app.pypnusershub import routes as fnauth
 from app.env import db, URL_REDIRECT
 from app.t_orders.forms import Order as orderform
 from app.models import (TProducts, TGroups, TOrders, 
-    TDeliveries, VOrdersResult)
+    TDeliveries, VOrdersResult, VGroupOrdersDetail)
 
 from config import config
 
@@ -134,17 +134,19 @@ def addorupdate(id_delivery, id_group):
                     post_order['id_product'] = key[2:]
                     post_order['product_case_number'] = value
                     TOrders.update(post_order)
+            q = db.session.query(VGroupOrdersDetail)
+            q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group))
+            group_order = [go.as_dict() for go in q.all()]
             return render_template(
-                'group_order_info.html', form_order=form_order, group=group, products=products, title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
+                'info_group_order.html', 
+                group_order=group_order, 
+                group=group, 
+                delivery=delivery, 
+                title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
             )
         else:
             errors = form.errors
             flash(errors)
-        # if form.validate_on_submit() and form.validate():
-
-    #     else:
-    #         errors = form.errors
-    #         flash(errors)
 
     return render_template(
         'order.html', nbcase=nbcase,  form=form, title=title
