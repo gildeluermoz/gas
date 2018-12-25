@@ -5,7 +5,7 @@ from __future__ import (unicode_literals, print_function,
 
 
 '''
-routes relatives aux application, utilisateurs et à l'authentification
+route relatives aux application, utilisateurs et à l'authentification
 '''
 
 import json
@@ -15,7 +15,8 @@ import datetime
 from functools import wraps
 from copy import copy
 
-from flask import Blueprint, request, Response, current_app, redirect, g, jsonify, session
+from flask import (Blueprint, request, Response, 
+ url_for, current_app, redirect, g, jsonify, session)
 
 from sqlalchemy.orm import exc
 import sqlalchemy as sa
@@ -96,7 +97,7 @@ class ConfigurableBlueprint(Blueprint):
         parent.register(app, options, first_registration)
 
 
-routes = ConfigurableBlueprint('auth', __name__)
+route = ConfigurableBlueprint('auth', __name__)
 
 
 def check_auth(
@@ -164,7 +165,7 @@ def check_auth(
 
 
 
-@routes.route('/login', methods=['POST'])
+@route.route('/login', methods=['POST'])
 def login():
 
     try:
@@ -248,8 +249,8 @@ def login():
         return Response(msg, status=403)
 
 
-@routes.route('/logout', methods=['GET', 'POST'])
+@route.route('/logout', methods=['GET', 'POST'])
 def logout():
-    resp = redirect("", code=302)
+    resp = redirect(url_for('index'), code=302)
     resp.delete_cookie('token')
     return resp

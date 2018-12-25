@@ -79,8 +79,8 @@ with app.app_context():
                 session["current_user"] = current_user["user"]
             return response
 
-        from app.pypnusershub import routes
-        app.register_blueprint(routes.routes, url_prefix='/pypn/auth')
+        from app.pypnusershub import route
+        app.register_blueprint(route.route, url_prefix='/auth')
 
         from app.t_users import route
         app.register_blueprint(route.route, url_prefix='/')

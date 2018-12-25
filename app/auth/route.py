@@ -1,5 +1,5 @@
 from flask import (
-    Flask, redirect, url_for, render_template,
+    Flask, redirect, render_template,
     Blueprint, request, session, flash
 )
 from app import genericRepository

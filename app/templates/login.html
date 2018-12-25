@@ -40,7 +40,7 @@ $(window).keypress(function(event) {
 login = function() {
     $("#login-error").hide();
     $.post({
-        url : '{{url_application}}' + '/pypn/auth/login',
+        url : '{{url_application}}' + '/auth/login',
         data : JSON.stringify ({
             "id_application": $('#user_app').val(),
             "login": $('#user_id').val(),

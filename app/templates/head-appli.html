@@ -6,35 +6,36 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="nav navbar-nav mr-auto"></ul>
         {% if session.get('current_user', False) %}
-            <li class="nav-item list-unstyled">
-                <a style="color: #fff" class="nav-link active" href="{{ url_for('profil.profils') }}">Profils</a>
-            </li>
+            <ul class="nav navbar-nav mr-auto"></ul>
+                <li class="nav-item list-unstyled">
+                    <a style="color: #fff" class="nav-link active" href="{{ url_for('profil.profils') }}">Profils</a>
+                </li>
 
-            <li class="nav-item list-unstyled">
-                <a style="color: #fff" class="nav-link" href="{{ url_for('user.users') }}">Utilisateurs</a>
-            </li>
+                <li class="nav-item list-unstyled">
+                    <a style="color: #fff" class="nav-link" href="{{ url_for('user.users') }}">Utilisateurs</a>
+                </li>
 
-            <li class="nav-item list-unstyled">
-                <a style="color: #fff" class="nav-link" href="{{ url_for('group.groups') }}">Relais</a>
-            </li>
+                <li class="nav-item list-unstyled">
+                    <a style="color: #fff" class="nav-link" href="{{ url_for('group.groups') }}">Relais</a>
+                </li>
 
-            <li class="nav-item list-unstyled">
-                <a style="color: #fff" class="nav-link" href="{{ url_for('delivery.deliveries') }}">Livraisons</a>
-            </li>
+                <li class="nav-item list-unstyled">
+                    <a style="color: #fff" class="nav-link" href="{{ url_for('delivery.deliveries') }}">Livraisons</a>
+                </li>
 
-            <li class="nav-item list-unstyled">
-                <a style="color: #fff" class="nav-link" href="{{ url_for('product.products') }}">Produits</a>
-            </li>
-        </ul>
-          <!-- <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('auth.logout') }}">
-                  {{session['current_user']['identifiant']}}
-                  <i class="fa fa-sign-out font-medium" aria-hidden="true"></i></a>
-              </li>
-          </ul> -->
-          {% endif %}
+                <li class="nav-item list-unstyled">
+                    <a style="color: #fff" class="nav-link" href="{{ url_for('product.products') }}">Produits</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                        {{session['current_user']['identifiant']}}
+                        <i class="fa fa-sign-out font-medium" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
       </div>
   </nav>

@@ -4,7 +4,7 @@ from flask import (
 )
 from datetime import datetime
 
-from app.pypnusershub import routes as fnauth
+from app.pypnusershub import route as fnauth
 
 from app.env import URL_REDIRECT
 

@@ -7,7 +7,7 @@ from flask_bcrypt import (
     generate_password_hash
 )
 
-from app.pypnusershub import routes as fnauth
+from app.pypnusershub import route as fnauth
 
 from app.env import URL_REDIRECT
 from app.t_products import forms as t_productsforms

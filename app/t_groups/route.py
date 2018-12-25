@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, flash
 )
 
-from app.pypnusershub import routes as fnauth
+from app.pypnusershub import route as fnauth
 from app.env import db, URL_REDIRECT
 from app.t_groups import forms as groupforms
 from app.models import TGroups, TUsers
