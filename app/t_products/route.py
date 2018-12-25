@@ -3,9 +3,7 @@ from flask import (
     Blueprint, request, flash
 )
 
-from flask_bcrypt import (
-    generate_password_hash
-)
+from sqlalchemy import exc
 
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
@@ -118,8 +116,17 @@ def delproduct(id_product):
     Route qui supprime un utilisateur dont l'id est donné en paramètres dans l'url
     Retourne une redirection vers la liste d'utilisateurs
     """
-    TProducts.delete(id_product)
-    return redirect(url_for('product.products'))
+    try:
+        TProducts.delete(id_product)
+        return redirect(url_for('product.products'))
+    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+        flash(e)
+        return render_template(
+            'error.html', 
+            title="Houps ! Une erreur s'est produite"
+        )
+    
 
 
 def pops(form):

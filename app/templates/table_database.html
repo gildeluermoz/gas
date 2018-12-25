@@ -2,7 +2,6 @@
   {% include "header.html" %}
   <body>
       {% include "head-appli.html" %}
-      {% set user = session.get('current_user', False) %}
       <div class="container main-zone ng-scope">
         <h2>{{ name_list }}</h2>
         {% if 'C' in user_right %}

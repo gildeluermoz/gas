@@ -3,6 +3,8 @@ from flask import (
     Blueprint, request,  flash
 )
 
+from sqlalchemy import exc
+
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 
@@ -108,8 +110,16 @@ def delete(id_profil):
     Retourne une redirection vers la liste de profil
     """
 
-    TProfils.delete(id_profil)
-    return redirect(url_for('profil.profils'))
+    try:
+        TProfils.delete(id_profil)
+        return redirect(url_for('profil.profils'))
+    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+        flash(e)
+        return render_template(
+            'error.html', 
+            title="Houps ! Une erreur s'est produite"
+        )
 
 
 @route.route('profil/add/new', defaults={'id_profil': None}, methods=['GET', 'POST'])

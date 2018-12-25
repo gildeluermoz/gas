@@ -3,6 +3,8 @@ from flask import (
     Blueprint, request, flash
 )
 
+from sqlalchemy import exc
+
 from flask_bcrypt import (
     generate_password_hash
 )
@@ -134,8 +136,16 @@ def deluser(id_user):
     Route qui supprime un utilisateur dont l'id est donné en paramètres dans l'url
     Retourne une redirection vers la liste d'utilisateurs
     """
-    TUsers.delete(id_user)
-    return redirect(url_for('user.users'))
+    try:
+        TUsers.delete(id_user)
+        return redirect(url_for('user.users'))
+    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+        flash(e)
+        return render_template(
+            'error.html', 
+            title="Houps ! Une erreur s'est produite"
+        )
 
 
 def pops(form):

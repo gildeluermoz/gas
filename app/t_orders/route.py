@@ -3,10 +3,9 @@ from flask import (
     Blueprint, request, flash
 )
 from flask_wtf import FlaskForm
-# from wtforms import IntegerField
 from wtforms.validators import DataRequired
 
-from sqlalchemy import and_
+from sqlalchemy import exc, and_
 
 from app.pypnusershub import route as fnauth
 from app.env import db, URL_REDIRECT
@@ -35,7 +34,15 @@ def info(id_delivery):
     q = db.session.query(TOrders.id_group).distinct()
     q.join(TProducts, TProducts.id_product == TOrders.id_product)
     q = q.filter(TProducts.id_delivery == id_delivery)
-    ordergroups = [p[0] for p in q.all()]
+    data = q.all() 
+    if data:
+         ordergroups = [p[0] for p in data]
+    else:
+        flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
+        return render_template(
+            'error.html', 
+            title="Houps ! Un petit soucis"
+        )
 
     # get orders details
     orders = list()
@@ -170,8 +177,16 @@ def delproduct(id_product, id_group):
     Route qui supprime la commande d'un relais dont les id_product et id_group sont en paramètres
     Retourne une redirection vers la liste des commandes
     """
-    TOrders.delete(id_product, id_group)
-    return redirect(url_for('order.orders'))
+    try:
+        TOrders.delete(id_product, id_group)
+        return redirect(url_for('order.orders'))
+    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+        flash(e)
+        return render_template(
+            'error.html', 
+            title="Houps ! Une erreur s'est produite"
+        )
 
 
 def pops(form):

@@ -2,6 +2,9 @@ from flask import (
     Blueprint, redirect, url_for, render_template,
     request, flash
 )
+
+from sqlalchemy import exc
+
 from datetime import datetime
 
 from app.pypnusershub import route as fnauth
@@ -118,8 +121,16 @@ def delete(id_delivery):
     Retourne une redirection vers la liste des livraisons
     """
 
-    TDeliveries.delete(id_delivery)
-    return redirect(url_for('delivery.deliveries'))
+    try:
+        TDeliveries.delete(id_delivery)
+        return redirect(url_for('delivery.deliveries'))
+    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+        flash(e)
+        return render_template(
+            'error.html', 
+            title="Houps ! Une erreur s'est produite"
+        )
 
 def pops(form):
 

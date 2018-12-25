@@ -3,6 +3,8 @@ from flask import (
     Blueprint, request, flash
 )
 
+from sqlalchemy import exc
+
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 
@@ -127,8 +129,16 @@ def delete(id_group):
     Retourne une redirection vers la liste des relais
     """
 
-    TGroups.delete(id_group)
-    return redirect(url_for('group.groups'))
+    try:
+        TGroups.delete(id_group)
+        return redirect(url_for('group.groups'))
+    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+        flash(e)
+        return render_template(
+            'error.html', 
+            title="Houps ! Une erreur s'est produite"
+        )
 
 
 def pops(form):
