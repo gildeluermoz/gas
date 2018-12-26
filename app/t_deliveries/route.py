@@ -83,7 +83,12 @@ def info(id_delivery):
     Route affichant le résumé d'une livraison
     Des liens permettent de créer ou de voir la commande des relais
     """
-
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil >= 4:
+        user_right = ['C','R','U','D']
+    else:
+        user_right = ['R']
      # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
@@ -100,7 +105,8 @@ def info(id_delivery):
         products = list()
 
     return render_template(
-        'info_delivery.html', 
+        'info_delivery.html',
+        user_right=user_right, 
         products=products, 
         delivery=delivery,
         title="Livraison " + delivery['delivery_name']

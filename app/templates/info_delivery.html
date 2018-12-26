@@ -5,28 +5,37 @@
 
       <div class="container main-zone ng-scope">
         <h2>{{title}}</h2>
-      </div>
-      <button 
-        onclick='window.location.href="/gas/order/info/{{ delivery.id_delivery }}"' 
-        id="submit" 
-        class="btn btn-outline-secondary btn-sm float-right"
-        style="margin: 0 3px">
-        Voir les commandes de cette livraison
-      </button>
-       
-      <button 
-        onclick='window.location.href="/gas/order/add/{{ delivery.id_delivery }}"' 
-        id="submit" 
-        class="btn btn-outline-secondary btn-sm float-right">
-        Ajouter une commande à cette livraison
-      </button>
-      
-      <br /><hr /><br />
 
-      <div class="container main-zone ng-scope ">
+        {% if delivery.is_open %}
+          <button 
+            onclick='window.location.href="/gas/order/info/{{ delivery.id_delivery }}"' 
+            id="submit" 
+            class="btn btn-outline-secondary btn-sm float-right"
+            style="margin: 0 3px">
+            Voir les commandes de cette livraison
+          </button>
+          <button onclick='window.location.href="/gas/order/add/{{ delivery.id_delivery }}"' id="submit" class="btn btn-outline-secondary btn-sm float-right">
+            Ajouter une commande à cette livraison
+          </button>
+          <br />
+        {% else %}
+            <div class="alert alert-danger">Les commandes pour cette livraison sont closes.</div>
+        {%endif%}
+
+        <hr /><br />
+
         <div class="card">
           <div class="card-header bg-secondary text-white">
             DESCRIPTION DE LA LIVRAISON
+            {% if 'U' in user_right %}
+              <button 
+                onclick='window.location.href="/gas/delivery/update/{{ delivery.id_delivery }}"' 
+                id="submit" 
+                class="btn btn-outline-light btn-sm float-right"
+                style="margin: 0 3px">
+                Modifier
+              </button>
+            {%endif%}
           </div>
           <div class="card-body">
             {% if delivery.order_limit_date %}
@@ -35,7 +44,6 @@
             {% endif %}
             Livraison le {{ delivery.delivery_date }}
             <br />
-            
             {{delivery.delivery_comment }}
           </div>
         </div>

@@ -106,9 +106,6 @@ def addorupdate(id_delivery, id_group):
     Retourne un template accompagné du formulaire pré-rempli ou non
     Une fois le formulaire validé on retourne une redirection vers un résumé de la commande
     """
-    # test if product is in t_orders table
-        # if yes process
-        # if not pass
     
     # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
