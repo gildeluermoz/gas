@@ -10,6 +10,7 @@ from sqlalchemy import exc, and_
 from datetime import datetime
 
 from app.pypnusershub import route as fnauth
+from app.pypnusershub.db.tools import user_from_token
 from app.env import db, URL_REDIRECT
 from app.t_orders.forms import Order as orderform
 from app.models import (TProducts, TGroups, TOrders, 
@@ -28,6 +29,15 @@ def info(id_delivery):
     Route affichant le résumé d'une commande
     Des liens permettent de modifier la commande d'un relais
     """
+
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil == 6:
+        user_right = ['C','R','U','D']
+    elif user_profil >= 3 and user_profil < 6:
+        user_right = ['C','R','U']
+    else:
+        user_right = ['R']
 
      # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
@@ -89,6 +99,7 @@ def info(id_delivery):
 
     return render_template(
         'info_order.html', 
+        user_right=user_right,
         orders=orders, 
         delivery=delivery,
         results=results, 
@@ -106,7 +117,16 @@ def addorupdate(id_delivery, id_group):
     Retourne un template accompagné du formulaire pré-rempli ou non
     Une fois le formulaire validé on retourne une redirection vers un résumé de la commande
     """
-    
+
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil == 6:
+        user_right = ['C','R','U','D']
+    elif user_profil >= 3 and user_profil < 6:
+        user_right = ['C','R','U']
+    else:
+        user_right = ['R']
+
     # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
@@ -161,7 +181,8 @@ def addorupdate(id_delivery, id_group):
                 group_order = [go.as_dict() for go in q.all()]
                 group_order_sum = VGroupOrdersSum.get_one((id_delivery, id_group))
                 return render_template(
-                    'info_group_order.html', 
+                    'info_group_order.html',
+                    user_right=user_right, 
                     group_order=group_order, 
                     group_order_sum=group_order_sum, 
                     group=group, 
@@ -183,16 +204,20 @@ def addorupdate(id_delivery, id_group):
         )
 
 
-@route.route('order/delete/<id_product>/<id_group>', methods=['GET', 'POST'])
+@route.route('order/delete/<id_delivery>/<id_group>', methods=['GET', 'POST'])
 @fnauth.check_auth(4, False, URL_REDIRECT)
-def delproduct(id_product, id_group):
+def delproduct(id_delivery, id_group):
     """
-    Route qui supprime la commande d'un relais dont les id_product et id_group sont en paramètres
+    Route qui supprime la commande d'un relais dont les id_delivery et id_group sont en paramètres
     Retourne une redirection vers la liste des commandes
     """
+     # get products in t_products table with id_delivery filter
+    q = db.session.query(TProducts)
+    q = q.filter(TProducts.id_delivery == id_delivery)
     try:
-        TOrders.delete(id_product, id_group)
-        return redirect(url_for('order.orders'))
+        for p in q.all():
+            TOrders.delete((id_group, p.id_product))
+        return redirect(url_for('order.info',id_delivery=id_delivery))
     except (exc.SQLAlchemyError, exc.DBAPIError) as e:
         flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
         flash(e)

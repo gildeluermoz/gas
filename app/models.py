@@ -133,15 +133,6 @@ class TUsers(GenericRepository):
         user_as_dict = self.as_dict()
         user_as_dict['full_name'] = full_name
         return user_as_dict
-    
-    # @classmethod
-    # def get_profil(cls, id_user):
-    #     """
-    #     Methode qui retourne l'id_profil d'un utilisateur
-    #     """
-
-    #     q = CorUserProfil.get_one(id_user)
-    #     return q.id_profil
 
     @classmethod
     def get_users_in_profil(cls, id_profil):
@@ -165,8 +156,9 @@ class TUsers(GenericRepository):
 
         q = db.session.query(cls)
         q = q.order_by(desc(cls.last_name))
-        subquery = db.session.query(CorUserProfil.id_user).filter(CorUserProfil.id_profil == id_profil)
-        q = q.filter(cls.id_user.notin_(subquery))
+        subquery = db.session.query(CorUserProfil.id_user)
+        subquery = subquery.filter(CorUserProfil.id_profil == id_profil)
+        q = q.filter(and_(cls.id_user.notin_(subquery), cls.active == True))
         #TODO filtrer les users actifs
         return [data.as_dict_full_name() for data in q.all()]
 
