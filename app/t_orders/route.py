@@ -7,6 +7,8 @@ from wtforms.validators import DataRequired
 
 from sqlalchemy import exc, and_
 
+from datetime import datetime
+
 from app.pypnusershub import route as fnauth
 from app.env import db, URL_REDIRECT
 from app.t_orders.forms import Order as orderform
@@ -29,6 +31,7 @@ def info(id_delivery):
 
      # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
+    delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
 
     # get products order in t_products table with id_delivery filter
     q = db.session.query(TOrders.id_group).distinct()
@@ -87,6 +90,7 @@ def info(id_delivery):
     return render_template(
         'info_order.html', 
         orders=orders, 
+        delivery=delivery,
         results=results, 
         sums=sums, 
         title="Commandes pour la livraison du " + delivery['delivery_date']
@@ -108,6 +112,7 @@ def addorupdate(id_delivery, id_group):
     
     # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
+    delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
     # get products order in t_products table with id_delivery filter
     q = db.session.query(TProducts)
     q = q.filter(TProducts.id_delivery == id_delivery)
@@ -126,16 +131,18 @@ def addorupdate(id_delivery, id_group):
     
     if id_group is not None:
         for p in products:
-            order = TOrders.get_one((id_group, p['id_product']))
-            if request.method == 'GET':
-                form = process(form, order)
+            try:
+                order = TOrders.get_one((id_group, p['id_product']))
+                if request.method == 'GET':
+                    form = process(form, order)
+            except:
+                pass   
         del form.id_group
         group =  TGroups.get_one(id_group)
         title = "Commande du relais '"+group['group_name']+"' pour la livraison du " + delivery['delivery_date']
     else:
-        
         title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
-
+    
     if request.method == 'POST':
         if form.validate_on_submit() and form.validate():
             if id_group is None:
@@ -164,7 +171,7 @@ def addorupdate(id_delivery, id_group):
         else:
             errors = form.errors
             flash(errors)
-
+    
     return render_template(
         'order.html', nbcase=nbcase,  form=form, title=title
     )
@@ -205,6 +212,6 @@ def process(form, order):
     Avec pour paramètres un formulaire et un product
     """
     nbc = 'nb'+str(order['id_product'])
-    form[nbc].process_data(order['product_case_number'])
+    form[nbc].process_data(order['product_case_number'] or 0)
     form.id_group.process_data(order['id_group'])
     return form

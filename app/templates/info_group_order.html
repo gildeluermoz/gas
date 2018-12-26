@@ -12,6 +12,12 @@
             <div class="card-body">
               Relais {{ group.group_name }} ({{ group.group_leader }}) - 
               {{ group_order_sum.total }}€
+              <button 
+                onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' 
+                id="submit"
+                class="btn btn-outline-light btn-sm float-right">
+                Modifier
+              </button>
             </div>
           </div>
 
@@ -25,10 +31,5 @@
             {% endfor %}
           </ul>
       </div>
-      <button 
-        onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' 
-        id="submit" 
-        class="btn btn-outline-primary">Modifier
-      </button>
   </body>
 </html>
