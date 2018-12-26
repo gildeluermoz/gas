@@ -71,7 +71,7 @@ class TGroups(GenericRepository):
         """
         q = db.session.query(cls)
         q = q.order_by(desc(cls.group_name))
-        q = q.filter(TGroups.active == True)
+        q = q.filter(and_(TGroups.active == True,TGroups.id_group != 0))
         return [(g.id_group, g.group_name) for g in q.all()]
 
 @serializable
