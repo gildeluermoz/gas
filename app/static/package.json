@@ -1,6 +1,6 @@
 {
-  "name": "usershub",
-  "version": "2.0.0",
+  "name": "gas",
+  "version": "0.1",
   "description": "Gestion centralisée des utilisateurs",
   "main": "index.js",
   "directories": {
@@ -11,21 +11,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PnEcrins/UsersHub.git"
+    "url": "git+https://github.com/gildeluermoz/gas.git"
   },
   "keywords": [
-    "PnX",
-    "Geonature",
-    "Biodiversité",
-    "Parcs",
-    "nationaux"
+    "groupement",
+    "solidaire",
+    "agrumes",
+    "achat",
+    "gas"
   ],
   "author": "",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/PnEcrins/UsersHub/issues"
+    "url": "https://github.com/gildeluermoz/gas/issues"
   },
-  "homepage": "https://github.com/PnEcrins/UsersHub#readme",
+  "homepage": "https://github.com/gildeluermoz/gas#readme",
   "dependencies": {
     "bootstrap": "^4.1.3",
     "font-awesome": "^4.7.0",
