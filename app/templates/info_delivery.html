@@ -1,0 +1,67 @@
+<html>
+  {% include "header.html" %}
+  <body>
+      {% include "head-appli.html" %}
+
+      <div class="container main-zone ng-scope">
+        <h2>{{title}}</h2>
+      </div>
+      <button 
+        onclick='window.location.href="/gas/order/info/{{ delivery.id_delivery }}"' 
+        id="submit" 
+        class="btn btn-outline-secondary btn-sm float-right"
+        style="margin: 0 3px">
+        Voir les commandes de cette livraison
+      </button>
+       
+      <button 
+        onclick='window.location.href="/gas/order/add/{{ delivery.id_delivery }}"' 
+        id="submit" 
+        class="btn btn-outline-secondary btn-sm float-right">
+        Ajouter une commande à cette livraison
+      </button>
+      
+      <br /><hr /><br />
+
+      <div class="container main-zone ng-scope ">
+        <div class="card">
+          <div class="card-header bg-secondary text-white">
+            DESCRIPTION DE LA LIVRAISON
+          </div>
+          <div class="card-body">
+            {% if delivery.order_limit_date %}
+            Date limite pour les commandes : {{ delivery.order_limit_date }}
+            <br />
+            {% endif %}
+            Livraison le {{ delivery.delivery_date }}
+            <br />
+            
+            {{delivery.delivery_comment }}
+          </div>
+        </div>
+
+        <br />
+
+        <div class="card" >
+          <div class="card-header bg-secondary text-white">
+            PRODUITS EN COMMANDE
+          </div>
+          <div class="card-body">
+            {% for p in products %}
+              <li  class="list-unstyled">
+                <kbd>{{p.product_name}}</kbd> 
+                {% if session['current_user']['id_profil'] >= 4 %}
+                  {{ p.selling_price }}€ 
+                {% endif %}
+                <small>(Achat : {{ p.buying_price }}€)</small>
+                Poids : {{ p.case_weight }}Kg
+                {% if p.product_comment %}
+                  - Commentaire : {{ p.product_comment }}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  </body>
+</html>

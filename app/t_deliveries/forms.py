@@ -13,8 +13,10 @@ class Delivery(FlaskForm):
     """
         
     active = BooleanField('Actif', default = True, false_values=(False, 'false'))
+    is_open = BooleanField('Commandes ouvertes', default = False, false_values=(False, 'false'))
     delivery_name = StringField('Nom de la livraison', validators=[DataRequired()])
     delivery_date = DateField('Date de livraison', format='%d/%m/%Y')
+    order_limit_date = DateField('Date limite de commande', format='%d/%m/%Y')
     delivery_comment = StringField('Commentaire')
     id_delivery = HiddenField('id')
     submit = SubmitField('Enregistrer')

@@ -182,8 +182,10 @@ class TDeliveries(GenericRepository):
     id_delivery = db.Column(db.Integer, primary_key = True)
     delivery_name = db.Column(db.Unicode)
     delivery_date = db.Column(db.Date)
+    order_limit_date = db.Column(db.Date)
     delivery_comment = db.Column(db.Unicode)
     active = db.Column(db.Boolean)
+    is_open = db.Column(db.Boolean)
 
     @classmethod
     def selectActiveDelivery(cls):

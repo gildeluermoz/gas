@@ -21,13 +21,12 @@
                 {% for name in fLine %}
                   <th scope="col">{{ name }}</th>
                 {% endfor %} 
-                {#{% set otherCols = otherCol %}#} 
+                {% if see == 'True'%}
+                <th scope="col">Voir</th>
+                {%endif%}
                 {% if otherCol == 'True'%}
                   <th scope="col">{{ Members }}</th>
                 {%endif%} 
-                {% if see == 'True'%}
-                  <th scope="col">Voir</th>
-                {%endif%}
                 {% if 'U' in user_right %}
                   <th scope="col">Modification</th>
                 {%endif%}
@@ -42,18 +41,18 @@
                   {% for name in line %}
                     <td>{{ elt[name] }}</td>
                   {% endfor %}
+                  {% if see == 'True'%}
+                  <td align="center">
+                    <a href="{{pathI}}{{elt[key]}}">
+                      <button type="submit" class="btn btn-secondary btn-sm ">
+                        <i class="fa fa-eye font-medium" aria-hidden="true"></i></button></a>
+                  </td>
+                  {%endif%}
                   {% if otherCol == 'True'%}
                     <td align="center">
                       <a href="{{pathP}}{{elt[key]}}" title="Liste des {{Members.lower()}}">
                         <button type="submit" class="btn btn-secondary btn-sm ">
                           <i class="fa fa-user font-medium" aria-hidden="true"></i></button></a>
-                    </td>
-                  {%endif%} 
-                  {% if see == 'True'%}
-                    <td align="center">
-                      <a href="{{pathI}}{{elt[key]}}">
-                        <button type="submit" class="btn btn-secondary btn-sm ">
-                          <i class="fa fa-eye font-medium" aria-hidden="true"></i></button></a>
                     </td>
                   {%endif%} 
                   {% if 'U' in user_right %}

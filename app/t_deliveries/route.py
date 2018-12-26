@@ -10,11 +10,11 @@ from datetime import datetime
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 
-from app.env import URL_REDIRECT
+from app.env import db, URL_REDIRECT
 
 from app import genericRepository
 from app.t_deliveries import forms as deliveriesforms
-from app.models import TDeliveries
+from app.models import TDeliveries, TProducts
 from config import config
 
 
@@ -23,7 +23,6 @@ route = Blueprint('delivery', __name__)
 """
 Route des livraisons
 """
-
 
 @route.route('delivery/list', methods=['GET', 'POST'])
 @fnauth.check_auth(3, False, URL_REDIRECT)
@@ -52,8 +51,8 @@ def deliveries():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['active', 'ID', 'Nom', 'Date', 'Commentaire']
-    columns = ['active', 'id_delivery', 'delivery_name', 'delivery_date', 'delivery_comment']
+    fLine = ['Active', 'Ouverte', 'ID', 'Nom', 'Date', 'Commentaire']
+    columns = ['active', 'is_open', 'id_delivery', 'delivery_name', 'delivery_date', 'delivery_comment']
     contents = TDeliveries.get_all(columns)
     for c in contents:
         c['delivery_date'] = datetime.strptime(c['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
@@ -73,7 +72,38 @@ def deliveries():
         Members="Commandes",
         name="une livraison",
         name_list="Livraisons",
-        see='False'
+        see="True"
+    )
+
+
+@route.route('delivery/info/<id_delivery>', methods=['GET'])
+@fnauth.check_auth(2, False, URL_REDIRECT)
+def info(id_delivery):
+    """
+    Route affichant le résumé d'une livraison
+    Des liens permettent de créer ou de voir la commande des relais
+    """
+
+     # get delivery informations with id_delivery filter
+    delivery = TDeliveries.get_one(id_delivery)
+    delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
+    if delivery['order_limit_date']:
+        delivery['order_limit_date'] = datetime.strptime(delivery['order_limit_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
+
+    # get delivery products with id_delivery filter
+    q = db.session.query(TProducts)
+    q = q.filter(TProducts.id_delivery == id_delivery)
+    data = q.all() 
+    if data:
+        products = [p.as_dict() for p in data]
+    else:
+        products = list()
+
+    return render_template(
+        'info_delivery.html', 
+        products=products, 
+        delivery=delivery,
+        title="Livraison " + delivery['delivery_name']
     )
 
 
@@ -92,9 +122,9 @@ def addorupdate(id_delivery):
     if id_delivery == None:
         if request.method == 'POST':
             if form.validate_on_submit() and form.validate():
-                form_org = pops(form.data)
-                form_org.pop('id_delivery')
-                TDeliveries.post(form_org)
+                form_delivery = pops(form.data)
+                form_delivery.pop('id_delivery')
+                TDeliveries.post(form_delivery)
                 return redirect(url_for('delivery.deliveries'))
             else:
                 flash(form.errors)
@@ -104,9 +134,9 @@ def addorupdate(id_delivery):
             form = process(form, o)
         if request.method == 'POST':
             if form.validate_on_submit() and form.validate():
-                form_org = pops(form.data)
-                form_org['id_delivery'] = o['id_delivery']
-                TDeliveries.update(form_org)
+                form_delivery = pops(form.data)
+                form_delivery['id_delivery'] = o['id_delivery']
+                TDeliveries.update(form_delivery)
                 return redirect(url_for('delivery.deliveries'))
             else:
                 flash(form.errors)
@@ -142,15 +172,18 @@ def pops(form):
     form.pop('csrf_token')
     return form
 
-def process(form, org):
+def process(form, delivery):
 
     """
     Methode qui rempli le formulaire par les données de l'éléments concerné
     Avec pour paramètres un formulaire et une livraison
     """
 
-    form.delivery_name.process_data(org['delivery_name'])
-    form.delivery_date.process_data(datetime.strptime(org['delivery_date'],'%Y-%m-%d'))
-    form.delivery_comment.process_data(org['delivery_comment'])
-    form.active.process_data(org['active'])
+    form.delivery_name.process_data(delivery['delivery_name'])
+    form.delivery_date.process_data(datetime.strptime(delivery['delivery_date'],'%Y-%m-%d'))
+    if delivery['order_limit_date']:
+        form.order_limit_date.process_data(datetime.strptime(delivery['order_limit_date'],'%Y-%m-%d'))
+    form.delivery_comment.process_data(delivery['delivery_comment'])
+    form.active.process_data(delivery['active'])
+    form.is_open.process_data(delivery['is_open'])
     return form

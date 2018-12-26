@@ -113,68 +113,77 @@ def addorupdate(id_delivery, id_group):
     # get delivery informations with id_delivery filter
     delivery = TDeliveries.get_one(id_delivery)
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
-    # get products order in t_products table with id_delivery filter
-    q = db.session.query(TProducts)
-    q = q.filter(TProducts.id_delivery == id_delivery)
-    products = [p.as_dict() for p in q.all()]
-    
-    # construct form with delivery products
-    nbcase = list()
-    for p in products:
-        orderform.append_nbcase(
-            'nb'+str(p['id_product']), 
-            p['product_name']
-        )
-        nbcase.append('nb'+str(p['id_product']))
-    form = orderform(request.form)
-    form.id_group.choices = TGroups.selectActiveGroups()
-    
-    if id_group is not None:
+    is_open = delivery['is_open']
+
+    if is_open:
+        # get products order in t_products table with id_delivery filter
+        q = db.session.query(TProducts)
+        q = q.filter(TProducts.id_delivery == id_delivery)
+        products = [p.as_dict() for p in q.all()]
+        
+        # construct form with delivery products
+        nbcase = list()
         for p in products:
-            try:
-                order = TOrders.get_one((id_group, p['id_product']))
-                if request.method == 'GET':
-                    form = process(form, order)
-            except:
-                pass   
-        del form.id_group
-        group =  TGroups.get_one(id_group)
-        title = "Commande du relais '"+group['group_name']+"' pour la livraison du " + delivery['delivery_date']
-    else:
-        title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
-    
-    if request.method == 'POST':
-        if form.validate_on_submit() and form.validate():
-            if id_group is None:
-                id_group = form.data['id_group']
-                group =  TGroups.get_one(id_group)
-            form_order = pops(form.data)
-            for key, value in form_order.items():
-                post_order = dict()
-                post_order['id_group'] = id_group
-                if key[0:2] == 'nb':
-                    post_order['id_product'] = key[2:]
-                    post_order['product_case_number'] = value
-                    TOrders.update(post_order)
-            q = db.session.query(VGroupOrdersDetail)
-            q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group))
-            group_order = [go.as_dict() for go in q.all()]
-            group_order_sum = VGroupOrdersSum.get_one((id_delivery, id_group))
-            return render_template(
-                'info_group_order.html', 
-                group_order=group_order, 
-                group_order_sum=group_order_sum, 
-                group=group, 
-                delivery=delivery, 
-                title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
+            orderform.append_nbcase(
+                'nb'+str(p['id_product']), 
+                p['product_name']
             )
+            nbcase.append('nb'+str(p['id_product']))
+        form = orderform(request.form)
+        form.id_group.choices = TGroups.selectActiveGroups()
+        
+        if id_group is not None:
+            for p in products:
+                try:
+                    order = TOrders.get_one((id_group, p['id_product']))
+                    if request.method == 'GET':
+                        form = process(form, order)
+                except:
+                    pass   
+            del form.id_group
+            group =  TGroups.get_one(id_group)
+            title = "Commande du relais '"+group['group_name']+"' pour la livraison du " + delivery['delivery_date']
         else:
-            errors = form.errors
-            flash(errors)
-    
-    return render_template(
-        'order.html', nbcase=nbcase,  form=form, title=title
-    )
+            title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
+        
+        if request.method == 'POST':
+            if form.validate_on_submit() and form.validate():
+                if id_group is None:
+                    id_group = form.data['id_group']
+                    group =  TGroups.get_one(id_group)
+                form_order = pops(form.data)
+                for key, value in form_order.items():
+                    post_order = dict()
+                    post_order['id_group'] = id_group
+                    if key[0:2] == 'nb':
+                        post_order['id_product'] = key[2:]
+                        post_order['product_case_number'] = value
+                        TOrders.update(post_order)
+                q = db.session.query(VGroupOrdersDetail)
+                q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group))
+                group_order = [go.as_dict() for go in q.all()]
+                group_order_sum = VGroupOrdersSum.get_one((id_delivery, id_group))
+                return render_template(
+                    'info_group_order.html', 
+                    group_order=group_order, 
+                    group_order_sum=group_order_sum, 
+                    group=group, 
+                    delivery=delivery, 
+                    title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
+                )
+            else:
+                errors = form.errors
+                flash(errors)
+        
+        return render_template(
+            'order.html', nbcase=nbcase,  form=form, title=title
+        )
+    else:
+        flash("Aucune modification n'est possible sur cette commande.")
+        return render_template(
+            'error.html', 
+            title="La commande est fermée."
+        )
 
 
 @route.route('order/delete/<id_product>/<id_group>', methods=['GET', 'POST'])

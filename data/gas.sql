@@ -88,9 +88,11 @@ CREATE TABLE IF NOT EXISTS t_deliveries (
     id_delivery serial NOT NULL,
     delivery_name character varying(50),
     delivery_date date,
+    order_limit_date date,
     delivery_discount decimal DEFAULT 0,
     delivery_comment text,
     active boolean DEFAULT true,
+    is_open boolean DEFAULT false,
     date_insert timestamp without time zone,
     date_update timestamp without time zone
 );
