@@ -39,7 +39,13 @@
               {% for elt in table %}
                 <tr>
                   {% for name in line %}
-                    <td>{{ elt[name] }}</td>
+                    {%if elt[name] is sameas true %}
+                      <td>Oui</td>
+                    {%elif elt[name] is sameas false%}
+                      <td>Non</td>
+                    {%else%}
+                      <td>{{ elt[name] }}</td>
+                    {%endif%}
                   {% endfor %}
                   {% if see == 'True'%}
                   <td align="center">
