@@ -52,7 +52,7 @@ def info(id_delivery):
     if data:
          ordergroups = [p[0] for p in data]
     else:
-        flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
+        flash("Aucun produit n'a été enregistré pour cette livraison.")
         return render_template(
             'error.html', 
             title="Houps ! Un petit soucis"
@@ -69,9 +69,16 @@ def info(id_delivery):
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':o.product_case_number*o.product_rel.selling_price} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
-        for p in order['products']:
-            mysum = mysum + p['price'] 
-            order['group_price'] = mysum
+        if len(order['products']) > 0:
+            for p in order['products']:
+                mysum = mysum + p['price'] 
+                order['group_price'] = mysum
+        else:
+            flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
+            return render_template(
+                'error.html', 
+                title="Houps ! Un petit soucis"
+            )
         orders.append(order)
 
     # get orders sums
@@ -179,6 +186,12 @@ def addorupdate(id_delivery, id_group):
         q = db.session.query(TProducts)
         q = q.filter(TProducts.id_delivery == id_delivery)
         products = [p.as_dict() for p in q.all()]
+        if len(products) == 0:
+            flash("Aucun produit n'a été enregistré pour cette livraison.")
+            return render_template(
+                'error.html', 
+                title="Houps ! Un petit soucis"
+            )
         
         # construct form with delivery products
         nbcase = list()
@@ -191,6 +204,7 @@ def addorupdate(id_delivery, id_group):
         form = orderform(request.form)
         form.id_group.choices = TGroups.selectActiveGroups()
         
+        is_update = False
         if id_group is not None:
             for p in products:
                 try:
@@ -199,12 +213,11 @@ def addorupdate(id_delivery, id_group):
                     if request.method == 'GET':
                         form = process(form, order)
                 except:
-                    is_update = False   
+                    pass 
             del form.id_group
             group =  TGroups.get_one(id_group)
             title = "Commande du relais '"+group['group_name']+"' pour la livraison du " + delivery['delivery_date']
         else:
-            is_update = False
             title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
         
         if request.method == 'POST':
