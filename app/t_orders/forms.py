@@ -27,4 +27,20 @@ class Order(FlaskForm):
         setattr(cls, name, IntegerField(label, validators=[InputRequired(message = 'Le nombre de caisse est obligatoire. Aucune = "0"')]))
         return cls
 
+class OrderChoice(FlaskForm):
+    id_delivery = SelectField(
+        'Je choisi une livraison', 
+        coerce=int, 
+        choices=[],
+        default=0, 
+        validators=[DataRequired(message = "Merci de choisir une livraison.")]
+    )
+    id_group = SelectField(
+        'Je choisi mon relais', 
+        coerce=int, 
+        choices=[], 
+        default=0,
+        validators=[DataRequired(message = "Merci de choisir un relais.")]
+    )
+    submit = SubmitField("C'est parti")
 

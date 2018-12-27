@@ -1,0 +1,26 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% include "head-appli.html" %}
+{% include "header.html" %}
+
+{% block content %}
+    <form method="POST" class="container" novalidate>
+        {{ form.hidden_tag() }} {{ form.csrf_token }}
+        <h2 class="margin-neg">{{ title }}</h2>
+        <div class="row forms card">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                    Veuillez remplir les champs obligatoires
+                </div>
+                {% endif %}
+            {% endwith %}
+            
+            {% if 'id_delivery' in form %}
+                {{ wtf.form_field(form.id_delivery, id="inputDeliverySelect01") }}
+            {% endif %}
+            {{ wtf.form_field(form.id_group, id="inputGroupSelect01") }}
+        
+            {{ wtf.form_field(form.submit, class="btn btn-success") }}
+        </div>
+    </form>
+{% endblock %}

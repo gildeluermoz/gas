@@ -51,11 +51,17 @@ def deliveries():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['Active', 'Ouverte', 'ID', 'Nom', 'Date', 'Commentaire']
+    fLine = ['Active', 'Ouverte', 'ID', 'Nom', 'Date', 'Commentaire', 'Commander']
     columns = ['active', 'is_open', 'id_delivery', 'delivery_name', 'delivery_date', 'delivery_comment']
     contents = TDeliveries.get_all(columns)
+    # contents.append(c['delivery_order_link'])
     for c in contents:
         c['delivery_date'] = datetime.strptime(c['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
+        if c['is_open']:
+            c['delivery_order_link'] = '<a href="'+config.URL_APPLICATION + '/order/choice/' + str(c['id_delivery'])+'">'+config.URL_APPLICATION + '/order/choice/' + str(c['id_delivery']) + '</a>'
+        else:
+            c['delivery_order_link'] = "Commande fermée"
+    columns.append('delivery_order_link')   
     return render_template(
         'table_database.html',
         user_right=user_right,

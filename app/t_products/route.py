@@ -82,7 +82,7 @@ def addorupdate(id_product):
     Une fois le formulaire validé on retourne une redirection vers la liste de produits
     """
     form = t_productsforms.Product()
-    form.id_delivery.choices = TDeliveries.selectActiveDelivery()
+    form.id_delivery.choices = TDeliveries.selectActiveDeliveries(False)
 
     if id_product is not None:
         product = TProducts.get_one(id_product)

@@ -180,14 +180,17 @@ class TDeliveries(GenericRepository):
     is_open = db.Column(db.Boolean)
 
     @classmethod
-    def selectActiveDelivery(cls):
+    def selectActiveDeliveries(cls, is_open=False):
         """
         Methode qui retourne un tableau de tuples de id_delivery et de nom de la livraison
         Avec pour paramètres un id_order et un nom de livraison
         """
         q = db.session.query(cls)
         q = q.order_by(desc(cls.delivery_date))
-        q = q.filter(TDeliveries.active == True)
+        if is_open:
+            q = q.filter(and_(TDeliveries.active == True, TDeliveries.is_open == True))
+        else:
+            q = q.filter(TDeliveries.active == True)
         return [(o.id_delivery, o.delivery_name) for o in q.all()]
 
 

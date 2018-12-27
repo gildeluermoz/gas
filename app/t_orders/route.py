@@ -13,6 +13,7 @@ from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 from app.env import db, URL_REDIRECT
 from app.t_orders.forms import Order as orderform
+from app.t_orders.forms import OrderChoice as orderchoiceform
 from app.models import (TProducts, TGroups, TOrders, 
     TDeliveries, VOrdersResult, VGroupOrdersDetail, VGroupOrdersSum)
 
@@ -106,6 +107,47 @@ def info(id_delivery):
         sums=sums, 
         title="Commandes pour la livraison du " + delivery['delivery_date']
     )
+
+@route.route('order/choice', defaults={'id_delivery': None, 'id_group': None}, methods=['GET', 'POST'])
+@route.route('order/choice/<id_delivery>', defaults={'id_group': None}, methods=['GET', 'POST'])
+@fnauth.check_auth(2, False, URL_REDIRECT)
+def orderchoice(id_delivery, id_group):
+    """
+    Route affichant un formulaire préalable à la commande
+    Il permet de choisir sa commande et son relais 
+    L'envoi du formulaire passe les paramètres id_delivery et id_group au formulaire principal de la commande
+    Retourne un template accompagné du formulaire pré-rempli ou non
+    """
+
+    user_profil = user_from_token(request.cookies['token']).id_profil
+    user_right = list()
+    if user_profil >= 2:
+        user_right = ['C','R','U','D']
+
+    form = orderchoiceform()
+    form.id_delivery.choices = TDeliveries.selectActiveDeliveries(True) # True select only open deliveries
+    form.id_group.choices = TGroups.selectActiveGroups()
+
+    title = "Choisir une livraison et un relais"
+
+    if id_delivery is not None:
+        delivery = TDeliveries.get_one(id_delivery)
+        title = "Choisir un relais pour la livraison '" + delivery['delivery_name'] + "'"
+        if request.method == 'GET':
+            form.id_delivery.process_data(id_delivery)
+        del form.id_delivery
+
+    if request.method == 'POST':
+        if form.validate_on_submit() and form.validate():
+            if id_delivery is None:
+                id_delivery = form.data['id_delivery']
+            id_group = form.data['id_group']
+            return redirect(url_for('order.addorupdate', id_delivery=id_delivery, id_group=id_group))
+        else:
+            errors = form.errors
+            flash(errors)
+        
+    return render_template('order_choice.html', form=form, title=title)
 
 @route.route('order/add/<id_delivery>', defaults={'id_group': None}, methods=['GET', 'POST'])
 @route.route('order/update/<id_delivery>/<id_group>', methods=['GET', 'POST'])
