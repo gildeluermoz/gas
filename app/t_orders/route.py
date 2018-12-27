@@ -195,14 +195,16 @@ def addorupdate(id_delivery, id_group):
             for p in products:
                 try:
                     order = TOrders.get_one((id_group, p['id_product']))
+                    is_update = True
                     if request.method == 'GET':
                         form = process(form, order)
                 except:
-                    pass   
+                    is_update = False   
             del form.id_group
             group =  TGroups.get_one(id_group)
             title = "Commande du relais '"+group['group_name']+"' pour la livraison du " + delivery['delivery_date']
         else:
+            is_update = False
             title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
         
         if request.method == 'POST':
@@ -236,7 +238,7 @@ def addorupdate(id_delivery, id_group):
                 flash(errors)
         
         return render_template(
-            'order.html', nbcase=nbcase,  form=form, title=title
+            'order.html', is_update=is_update, nbcase=nbcase,  form=form, title=title
         )
     else:
         flash("Aucune modification n'est possible sur cette commande.")
