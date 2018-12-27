@@ -20,18 +20,18 @@
               <tr>
                 {% for name in fLine %}
                   <th scope="col">{{ name }}</th>
-                {% endfor %} 
-                {% if see == 'True'%}
-                <th scope="col">Voir</th>
-                {%endif%}
+                {% endfor %}
                 {% if otherCol == 'True'%}
-                  <th scope="col">{{ Members }}</th>
-                {%endif%} 
+                  <th scope="col"><i title="{{ Members }}" class="fa fa-user font-medium" aria-hidden="true"></i></th>
+                {%endif%}
+                {% if see == 'True'%}
+                <th scope="col"><i title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></i></th>
+                {%endif%}
                 {% if 'U' in user_right %}
-                  <th scope="col">Modification</th>
+                  <th scope="col"><i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i></th>
                 {%endif%}
                 {% if 'D' in user_right %}
-                  <th scope="col">Suppression</th>
+                  <th scope="col"><i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i></th>
                 {%endif%}
               </tr>
             </thead>
@@ -44,21 +44,25 @@
                     {%elif elt[name] is sameas false%}
                       <td>Non</td>
                     {%else%}
-                      <td>{{ elt[name] }}</td>
+                      <td>{{ elt[name] | safe }}</td>
                     {%endif%}
                   {% endfor %}
                   {% if see == 'True'%}
                   <td align="center">
                     <a href="{{pathI}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm ">
-                        <i class="fa fa-eye font-medium" aria-hidden="true"></i></button></a>
+                        <i class="fa fa-eye font-medium" aria-hidden="true"></i>
+                      </button>
+                    </a>
                   </td>
                   {%endif%}
                   {% if otherCol == 'True'%}
                     <td align="center">
                       <a href="{{pathP}}{{elt[key]}}" title="Liste des {{Members.lower()}}">
                         <button type="submit" class="btn btn-secondary btn-sm ">
-                          <i class="fa fa-user font-medium" aria-hidden="true"></i></button></a>
+                          <i class="fa fa-user font-medium" aria-hidden="true"></i>
+                        </button>
+                    </a>
                     </td>
                   {%endif%} 
                   {% if 'U' in user_right %}
