@@ -171,7 +171,7 @@ class TDeliveries(GenericRepository):
 
     __tablename__='t_deliveries'
     __table_args__ = {'schema':'gas', 'extend_existing': True}
-    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_delivery = db.Column(db.Unicode, primary_key = True)
     delivery_name = db.Column(db.Unicode)
     delivery_date = db.Column(db.Date)
     order_limit_date = db.Column(db.Date)
@@ -284,7 +284,7 @@ class VOrdersResult(GenericRepository):
 
     __tablename__ = 'v_orders_result'
     __table_args__ = {'schema':'gas', 'extend_existing': True}
-    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_delivery = db.Column(db.Unicode, primary_key = True)
     id_product = db.Column(db.Integer, primary_key = True)
     delivery_name = db.Column(db.Unicode)
     delivery_discount = db.Column(db.Numeric)
@@ -304,7 +304,7 @@ class VGroupOrdersDetail(GenericRepository):
 
     __tablename__ = 'v_group_orders_detail'
     __table_args__ = {'schema':'gas', 'extend_existing': True}
-    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_delivery = db.Column(db.Unicode, primary_key = True)
     id_group = db.Column(db.Integer, primary_key = True)
     id_product = db.Column(db.Integer, primary_key = True)
     delivery_name = db.Column(db.Unicode)
@@ -323,7 +323,7 @@ class VGroupOrdersSum(GenericRepository):
 
     __tablename__ = 'v_group_orders_sum'
     __table_args__ = {'schema':'gas', 'extend_existing': True}
-    id_delivery = db.Column(db.Integer, primary_key = True)
+    id_delivery = db.Column(db.Unicode, primary_key = True)
     id_group = db.Column(db.Integer, primary_key = True)
     delivery_name = db.Column(db.Unicode)
     group_name = db.Column(db.Unicode)

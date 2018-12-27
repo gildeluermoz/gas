@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS cor_user_profil (
 );
 
 CREATE TABLE IF NOT EXISTS t_deliveries (
-    id_delivery serial NOT NULL,
+    id_delivery character varying(100) NOT NULL DEFAULT MD5(random()::text),
     delivery_name character varying(50),
     delivery_date date,
     order_limit_date date,
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS t_deliveries (
 
 CREATE TABLE IF NOT EXISTS t_products (
     id_product serial NOT NULL,
-    id_delivery integer NOT NULL,
+    id_delivery character varying(100) NOT NULL,
     product_name character varying(50),
     buying_price decimal NOT NULL,
     selling_price decimal NOT NULL,
