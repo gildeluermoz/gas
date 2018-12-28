@@ -165,6 +165,9 @@ $( document ).ready(function() {
     } );
 
     $('#tri').DataTable({
+        "scrollY": "400px",
+        "scrollCollapse": true,
+        "paging": true,
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
             "zeroRecords": "Aucunes données",
