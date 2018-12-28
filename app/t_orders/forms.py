@@ -30,7 +30,7 @@ class Order(FlaskForm):
 class OrderChoice(FlaskForm):
     id_delivery = SelectField(
         'Je choisi une livraison', 
-        coerce=int, 
+        coerce=str, 
         choices=[],
         default=0, 
         validators=[DataRequired(message = "Merci de choisir une livraison.")]
