@@ -44,7 +44,7 @@ def products():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['Actif', 'ID', 'Livraison', 'Nom', 'Achat', 'Vente', 'Poids', 'Remarques']  # noqa
+    fLine = ['Actif', 'Livraison', 'Nom', 'Achat', 'Vente', 'Poids', 'Remarques']  # noqa
     columns = ['active', 'id_product', 'delivery_name', 'product_name', 'buying_price', 'selling_price', 'case_weight',  'product_comment']  # noqa
     contents = TProducts.get_all(columns)
     tab = []

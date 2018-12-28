@@ -43,7 +43,7 @@ def groups():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['Actif', 'ID', 'Nom', 'Responsable', 'email', 'tel', 'Remarques']
+    fLine = ['Actif', 'Nom', 'Responsable', 'email', 'tel', 'Remarques']
     columns = ['active', 'id_group', 'group_name', 'group_leader', 'group_main_email', 'group_main_tel','group_comment']
     contents = TGroups.get_all(columns)
     return render_template(

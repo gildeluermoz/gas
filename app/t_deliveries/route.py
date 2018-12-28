@@ -51,7 +51,7 @@ def deliveries():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['Active', 'Ouverte', 'ID', 'Nom', 'Date', 'Commentaire', 'Commander']
+    fLine = ['Active', 'Ouverte', 'Nom', 'Date', 'Commentaire', 'Commander']
     columns = ['active', 'is_open', 'id_delivery', 'delivery_name', 'delivery_date', 'delivery_comment']
     contents = TDeliveries.get_all(columns)
     # contents.append(c['delivery_order_link'])

@@ -44,7 +44,9 @@
                     {%elif elt[name] is sameas false%}
                       <td>Non</td>
                     {%else%}
-                      <td>{{ elt[name] | safe }}</td>
+                      {%if name != key %}
+                        <td>{{ elt[name] | safe }}</td>
+                      {%endif%}
                     {%endif%}
                   {% endfor %}
                   {% if see == 'True'%}

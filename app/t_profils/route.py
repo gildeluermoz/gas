@@ -48,7 +48,7 @@ def profils():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['ID', 'CODE', 'Nom', 'Description']
+    fLine = ['Code', 'Nom', 'Description']
     columns = ['id_profil',  'profil_code', 'profil_name', 'profil_comment']
     tab = [data for data in TProfils.get_all()]
     return render_template(
