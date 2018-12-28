@@ -50,7 +50,7 @@ def products():
     tab = []
     for data in contents:
         g = data
-        g['delivery_name'] = data['delivery_rel']['delivery_name']
+        g['delivery_name'] = '<a href="'+config.URL_APPLICATION + '/delivery/info/' + str(data['delivery_rel']['id_delivery'])+'">'+ data['delivery_rel']['delivery_name'] + '</a>'
         tab.append(g)
 
     return render_template(

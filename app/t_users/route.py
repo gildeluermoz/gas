@@ -54,7 +54,8 @@ def users():
     tab = []
     for data in contents:
         g = data
-        g['group_name'] = data['group_rel']['group_name']
+        # g['group_name'] = data['group_rel']['group_name']
+        g['group_name'] = '<a href="'+config.URL_APPLICATION + '/group/members/' + str(data['group_rel']['id_group']) +'">'+ str(data['group_rel']['group_name']) + '</a>'
         tab.append(g)
 
     return render_template(

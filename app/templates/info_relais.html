@@ -4,14 +4,23 @@
       {% include "head-appli.html" %}
 
       <div class="container main-zone ng-scope">
-        <h2>{{ name_list }} {{ group.group_name }} ({{ group.group_leader }})</h2>
+        <h2 class="margin-neg">{{ group.group_name }}</h2>
+        <br />
+        <hr /><br />
       </div>
       <div class="container main-zone ng-scope ">
-        <ul>
+        <div class="card ">
+          <div class="card-header bg-success text-white">
+            {{ name_list }} {{ group.group_name }} ({{ group.group_leader }})
+          </div>
           {% for elt in table %}
-            <li>{{ elt.first_name }} {{ elt.last_name }} : <a href="mailto:{{ elt.email }}">{{ elt.email }}</a></li> 
+            <div class="card-body">
+              {{ elt.first_name }} {{ elt.last_name }} : <a href="mailto:{{ elt.email }}">{{ elt.email }}</a>
+              {% if elt.user_comment %}
+               <br /><small>{{elt.user_comment}}</small>
+              {%endif%}
+            </div>
           {% endfor %}
-        </ul>
       </div>
   </body>
 </html>
