@@ -1,6 +1,6 @@
 from flask import (
     redirect, url_for, render_template,
-    Blueprint, request,  flash
+    Blueprint, request,  flash, jsonify
 )
 
 from sqlalchemy import exc
@@ -90,8 +90,12 @@ def users(id_profil):
         data = request.get_json()
         new_users = data["tab_add"]
         delete_users = data["tab_del"]
-        CorUserProfil.add_cor(new_users,id_profil)
-        CorUserProfil.del_cor(delete_users,id_profil)
+        try:
+            CorUserProfil.add_cor(new_users,id_profil)
+            CorUserProfil.del_cor(delete_users,id_profil)
+            return jsonify({"msg":"Enregistrement réussi"})
+        except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+            return jsonify({"msg":"Quelque chose s'est mal passé :" + e})
     return render_template(
         'tobelong.html',
         fLine=header,

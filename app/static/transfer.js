@@ -4,23 +4,6 @@ var tab_del = []
 var data_select = []
 var right = []
 
-$.ajax({
-    url : url_app+ '/api/application',
-    type : 'get',
-    data : JSON.stringify(data_select),
-    contentType:"application/json; charset=utf-8",
-    dataType:"json",
-    success: function(response){
-    console.log(response)
-        data_select = response;
-        console.log(data_select)
-    },
-    error: function(error){
-        console.log(error);
-    }
-});
-
-
 function fill_select(){
     td_right = '<td class = "right"><select class="custom-select", id="inputGroupSelect02">'
     for(var i = 0; i< data_select.length; i++)
@@ -32,9 +15,7 @@ function fill_select(){
 };
 
 function addTab(tab,table){
-    // table.find("input[type=checkbox]").attr('checked', false);
     for(var i = 0; i<tab.length;i++){
-
         table.append(tab[i]);
     }
 };
@@ -86,57 +67,7 @@ var del = function(app){
     addTab(tab,table)
 };
 
-
-var get_right = function(data){
-    var tab = []
-    data_id = data['tab_add']
-    $('#adding_table tr').each(function(){
-        var ID=$(this).find('td:eq(1)').html();
-        var RIGHT = $(this).find("option:selected").val();
-        for( d in data_id){
-            if (ID == data_id[d]){
-                tab.push({id_user : ID, id_right: RIGHT});
-
-            }
-        }
-    })
-    return tab
-};
-
-var get_right_delete = function(data){
-    for(r in right){
-        if(isInTabb(data['tab_del'],r['id_user']) == true){
-            right.splice(right.indexOf(r),1)
-        }
-    }
-};
-
-var update_right = function(){
-    console.log("tableau d ajout : "+ tab_add);
-    console.log("tableau de suppression : "+ tab_del );
-    var data ={}
-    data["tab_add"] = tab_add;
-    data["tab_del"]= tab_del;
-    data["tab_add"] = get_right(data)
-    get_right_delete(data)
-    data["tab_del"] = right
-
-    $.ajax({
-        url : $(location).attr('href'),
-        type : 'post',
-        data : JSON.stringify(data),
-        contentType:"application/json; charset=utf-8",
-        dataType:"json"
-    });
-
-    tab_add = []
-    tab_del = []
-    tab_right = []
-};
-
 var update = function(){
-    console.log("tableau d ajout : "+ tab_add);
-    console.log("tableau de suppression : "+ tab_del );
     var data ={};
     data["tab_add"] = tab_add;
     data["tab_del"]= tab_del;
@@ -146,8 +77,28 @@ var update = function(){
         type : 'post',
         data : JSON.stringify(data),
         contentType:"application/json; charset=utf-8",
-        dataType:"json"
-    });
+        dataType:"json",
+        success: function (msg) {
+            toastr.options = { 
+                "positionClass": "toast-top-center", 
+                onHidden : function () {  
+                    window.location.href = $(location).attr('href'); 
+                } 
+            };
+            toastr.success(msg.msg + "<br />La page va se recharger", 'Ok !');
+            
+            
+        },
+        error: function (msg) {
+            toastr.options = {
+                "positionClass": "toast-top-center",
+                onHidden: function () {
+                    window.location.href = $(location).attr('href');
+                }
+            };
+            toastr.error(msg.msg + + "<br />La page va se recharger", 'Shiiiit !');
+        }
+    })
 
     tab_add = [];
     tab_del = [];
