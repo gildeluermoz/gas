@@ -8,12 +8,15 @@
         <br />
         <hr /><br />
         <div class="container main-zone ng-scope ">
-          <div class="card bg-success text-white">
+          <div class="card bg-secondary text-white">
             <div class="card-body">
               Relais {{ group.group_name }} ({{ group.group_leader }}) - 
               {{ group_order_sum.total }}€
               {% if 'D' in user_right %}
-                <button onClick="deleteRaw('/gas/order/delete/{{ delivery.id_delivery }}/{{ group.id_group }}')" type="submit" class="btn  btn-outline-danger btn-sm float-right">
+                <button 
+                  onClick="deleteRaw('/gas/order/delete/{{ delivery.id_delivery }}/{{ group.id_group }}')" 
+                  type="submit" 
+                  class="btn btn-outline-danger btn-sm border border-white text-white float-right">
                   Supprimer
                 </button>
               {%endif%}
@@ -21,7 +24,7 @@
               <button 
                 onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' 
                 id="submit"
-                class="btn btn-outline-light btn-sm float-right">
+                class="btn btn-outline-success btn-sm border border-white text-white float-right">
                 Modifier
               </button>
               {%endif%}

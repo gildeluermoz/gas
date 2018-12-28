@@ -4,20 +4,24 @@
       {% include "head-appli.html" %}
 
       <div class="container main-zone ng-scope">
-        <h2>{{title}}</h2>
+        <div class="card p-4 mb-3 bg-secondary border border-0 text-white">
+          <h2>{{title}}
+            <button 
+              onclick='window.location.href="/gas/order/choice/{{ delivery.id_delivery }}"' 
+              id="submit" 
+              class="btn btn-outline-success btn-sm border border-white text-white float-right">
+              Nouvelle commande
+            </button>
+
+          </h2>
+        </div>
       </div>
       
-      <br /><hr /><br />
+      <hr /><br />
       <div class="container main-zone ng-scope ">
         <div class="card bg-success text-white">
           <div class="card-body">
             Commandes des relais
-            <button 
-              onclick='window.location.href="/gas/order/choice/{{ delivery.id_delivery }}"' 
-              id="submit"  
-              class="btn btn-outline-light btn-sm float-right">
-              Nouvelle commande
-            </button>
           </div>
         </div>
             {% for o in orders %}
@@ -25,7 +29,10 @@
                 <div class="card-header bg-secondary text-white" data-toggle="collapse" data-target="#group{{ o.group.id_group }}">
                   {{ o.group['group_name'] }} - {{o.group_price}}€
                   {% if 'D' in user_right %}
-                  <button onClick="deleteRaw('/gas/order/delete/{{ delivery.id_delivery }}/{{ o.group.id_group }}')" type="submit" class="btn  btn-outline-danger btn-sm float-right">
+                  <button 
+                    onClick="deleteRaw('/gas/order/delete/{{ delivery.id_delivery }}/{{ o.group.id_group }}')" 
+                    type="submit" 
+                    class="btn btn-outline-danger btn-sm border border-white text-white float-right">
                     Supprimer
                   </button>
                   {%endif%}
@@ -33,7 +40,7 @@
                   <button 
                     onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ o.group.id_group }}"' 
                     id="submit" 
-                    class="btn btn-outline-light btn-sm float-right"
+                    class="btn btn-outline-success btn-sm border border-white text-white float-right"
                     style="margin:0 3px">
                     Modifier
                   </button>
