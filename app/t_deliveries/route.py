@@ -1,11 +1,13 @@
 from flask import (
     Blueprint, redirect, url_for, render_template,
-    request, flash
+    request, flash, send_file
 )
 
 from sqlalchemy import exc
 
 from datetime import datetime
+
+from weasyprint import HTML
 
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
@@ -83,7 +85,7 @@ def deliveries():
 
 
 @route.route('delivery/info/<id_delivery>', methods=['GET'])
-@fnauth.check_auth(2, False, URL_REDIRECT)
+# @fnauth.check_auth(2, False, URL_REDIRECT)
 def info(id_delivery):
     """
     Route affichant le résumé d'une livraison
@@ -118,6 +120,47 @@ def info(id_delivery):
         title="Livraison " + delivery['delivery_name']
     )
 
+@route.route('delivery/pinfo/<id_delivery>', methods=['GET'])
+def pinfo(id_delivery):
+    """
+    Route affichant le résumé d'une livraison
+    Des liens permettent de créer ou de voir la commande des relais
+    """
+
+     # get delivery informations with id_delivery filter
+    delivery = TDeliveries.get_one(id_delivery)
+    delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
+    if delivery['order_limit_date']:
+        delivery['order_limit_date'] = datetime.strptime(delivery['order_limit_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
+
+    # get delivery products with id_delivery filter
+    q = db.session.query(TProducts)
+    q = q.filter(TProducts.id_delivery == id_delivery)
+    data = q.all() 
+    if data:
+        products = [p.as_dict() for p in data]
+    else:
+        products = list()
+
+    return render_template(
+        'print_delivery.html',
+        products=products, 
+        delivery=delivery,
+        title="Livraison " + delivery['delivery_name']
+    )
+
+@route.route('delivery/printinfo/<id_delivery>', methods=['GET'])
+@fnauth.check_auth(4, False, URL_REDIRECT)
+def printinfo(id_delivery):
+    html = HTML(url_for('delivery.pinfo', id_delivery=id_delivery))
+    pdf_file = html.write_pdf('../app/static/pdf/toto.pdf')
+    
+    return send_file(
+        'app/static/pdf/toto.pdf',  # file path or file-like object
+        'application/pdf',
+        as_attachment=True,
+        attachment_filename="info_delivery.pdf"
+    )
 
 @route.route('delivery/add/new', defaults={'id_delivery': None}, methods=['GET', 'POST'])
 @route.route('delivery/update/<id_delivery>', methods=['GET', 'POST'])
