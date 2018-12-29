@@ -1,5 +1,6 @@
 *.*~
 var/
+app/static/pdf/*.pdf
 
 gas.pid
 config.py

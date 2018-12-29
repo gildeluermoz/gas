@@ -17,8 +17,14 @@
           </button>
           <button 
             onclick='window.location.href="/gas/order/choice/{{ delivery.id_delivery }}"' 
-            id="submit" class="btn btn-outline-success btn-sm border border-white text-white float-right">
+            id="submit" class="btn btn-outline-success btn-sm border border-white text-white float-right"
+            style="margin: 0 3px">
             Ajouter une commande à cette livraison
+          </button>
+          <button 
+            onclick='window.location.href="/gas/delivery/print/{{ delivery.id_delivery }}"' 
+            id="submit" class="btn btn-outline-info btn-sm border border-white text-white float-right">
+            Imprimer
           </button>
           </h2>
           </div>
@@ -52,7 +58,9 @@
             {% endif %}
             Livraison le {{ delivery.delivery_date }}
             <br />
-            {{delivery.delivery_comment }}
+            {{ delivery.delivery_comment }}
+            <br />
+            Pour commander : <a href="{{ url }}">{{ url }}</a>
           </div>
         </div>
 

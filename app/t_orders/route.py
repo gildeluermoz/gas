@@ -1,6 +1,6 @@
 from flask import (
     redirect, url_for, render_template,
-    Blueprint, request, flash
+    Blueprint, request, flash, send_file
 )
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
@@ -8,6 +8,8 @@ from wtforms.validators import DataRequired
 from sqlalchemy import exc, and_
 
 from datetime import datetime
+
+from weasyprint import HTML
 
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
@@ -113,6 +115,97 @@ def info(id_delivery):
         results=results, 
         sums=sums, 
         title="Commandes pour la livraison du " + delivery['delivery_date']
+    )
+
+def printorderinfo(id_delivery):
+    """
+    Route permettant d'imprimer le résumé d'une commande
+    """
+
+     # get delivery informations with id_delivery filter
+    delivery = TDeliveries.get_one(id_delivery)
+    delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
+
+    # get products order in t_products table with id_delivery filter
+    q = db.session.query(TOrders.id_group).distinct()
+    q.join(TProducts, TProducts.id_product == TOrders.id_product)
+    q = q.filter(TProducts.id_delivery == id_delivery)
+    data = q.all() 
+    if data:
+         ordergroups = [p[0] for p in data]
+    else:
+        flash("Aucun produit n'a été enregistré pour cette livraison.")
+        return render_template(
+            'error.html', 
+            title="Houps ! Un petit soucis"
+        )
+
+    # get orders details
+    orders = list()
+    for og in ordergroups:
+        order = dict()
+        q = db.session.query(TOrders)
+        q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
+        q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
+        q = q.filter(and_(TProducts.id_delivery == id_delivery, TOrders.id_group == og))
+        order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':o.product_case_number*o.product_rel.selling_price} for o in q.all()]
+        order['group'] = TGroups.get_one(og)
+        mysum = 0
+        if len(order['products']) > 0:
+            for p in order['products']:
+                mysum = mysum + p['price'] 
+                order['group_price'] = mysum
+        else:
+            flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
+            return render_template(
+                'error.html', 
+                title="Houps ! Un petit soucis"
+            )
+        orders.append(order)
+
+    # get orders sums
+    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
+    results = list()
+    nbc = 0
+    w = 0 
+    selling = 0 
+    buying = 0
+    benef = 0
+    for r in q.all():
+        result = dict()
+        result = r.as_dict()
+        results.append(result)
+        nbc = nbc + r.case_number
+        w = w + r.weight
+        selling = selling + r.selling_price
+        buying = buying + r.buying_price
+        benef = benef + r.benefice
+    sums = dict()
+    sums['case_number'] = nbc
+    sums['weight'] = w
+    sums['selling'] = selling
+    sums['buying'] = buying
+    sums['benefice'] = benef
+
+    return render_template(
+        'print_order.html', 
+        orders=orders, 
+        delivery=delivery,
+        results=results, 
+        sums=sums, 
+        title="Livraison du " + delivery['delivery_date']
+    )
+
+@route.route('order/print/<id_delivery>', methods=['GET'])
+@fnauth.check_auth(4, False, URL_REDIRECT)
+def printorder(id_delivery):
+    html = HTML(string=printorderinfo(id_delivery))
+    pdf_file = html.write_pdf('../app/static/pdf/info_order.pdf')
+    return send_file(
+        'app/static/pdf/info_order.pdf',  # file path or file-like object
+        'application/pdf',
+        as_attachment=True,
+        attachment_filename="commande.pdf"
     )
 
 @route.route('order/choice', defaults={'id_delivery': None, 'id_group': None}, methods=['GET', 'POST'])

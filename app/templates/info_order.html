@@ -9,8 +9,15 @@
             <button 
               onclick='window.location.href="/gas/order/choice/{{ delivery.id_delivery }}"' 
               id="submit" 
-              class="btn btn-outline-success btn-sm border border-white text-white float-right">
+              class="btn btn-outline-success btn-sm border border-white text-white float-right"
+              style="margin: 0 3px;">
               Nouvelle commande
+            </button>
+            <button 
+              onclick='window.location.href="/gas/order/print/{{ delivery.id_delivery }}"' 
+              id="submit" 
+              class="btn btn-outline-info btn-sm border border-white text-white float-right">
+              Imprimer
             </button>
 
           </h2>
@@ -27,7 +34,7 @@
             {% for o in orders %}
               <div class="card" >
                 <div class="card-header bg-secondary text-white" data-toggle="collapse" data-target="#group{{ o.group.id_group }}">
-                  {{ o.group['group_name'] }} - {{o.group_price}}€
+                  {{ o.group['group_name'] }} - {{o.group_price}} €
                   {% if 'D' in user_right %}
                   <button 
                     onClick="deleteRaw('/gas/order/delete/{{ delivery.id_delivery }}/{{ o.group.id_group }}')" 
@@ -49,7 +56,7 @@
                 </div>
                 <div id="group{{ o.group.id_group }}" class="card-body collapse show">
                 {% for p in o.products %}
-                  <li  class="list-unstyled"><kbd>{{p.product.product_name}}</kbd> {{ p.nb }} caisse(s) = {{ p.price }}€</li>
+                  <li  class="list-unstyled"><kbd>{{p.product.product_name}}</kbd> {{ p.nb }} caisse(s) = {{ p.price }} €</li>
                 {% endfor %}
                 </div>
               </div>
@@ -63,10 +70,10 @@
             <li class="list-group-item list-unstyled">
               <kbd>{{ p.product_name }}</kbd> :
               <mark style="background-color: #fcf8e3;padding:.2em;">{{ p.case_number }} caisses</mark> = 
-              {{ p.weight }}Kg -
-              Vente : {{ p.selling_price }}€, 
-              <mark style="background-color: #fcf8e3;padding:.2em;">Achat : {{ p.buying_price }}€</mark>, 
-              Bénéfice : {{ p.benefice }}€
+              {{ p.weight }} Kg -
+              Vente : {{ p.selling_price }} €, 
+              <mark style="background-color: #fcf8e3;padding:.2em;">Achat : {{ p.buying_price }} €</mark>, 
+              Bénéfice : {{ p.benefice }} €
             </li>
           {% endfor %}
           </ul>
@@ -76,11 +83,11 @@
             <div class="card-body">Résultats</div>
           </div>
           <ul class="list-group">
-            <li class="list-group-item">Nombre total de caisses : {{ sums.case_number }}</li>
-            <li class="list-group-item">Poids total : {{ sums.weight }}Kg</li>
-            <li class="list-group-item">Somme des ventes : {{ sums.selling }}€</li>
-            <li class="list-group-item">Montant des achats : {{ sums.buying }}€</li>
-            <li class="list-group-item">Bénéfice total : {{ sums.benefice }}€</li>
+            <li class="list-group-item">{{ sums.case_number }} caisses</li>
+            <li class="list-group-item">Poids total : {{ sums.weight }} Kg</li>
+            <li class="list-group-item">Total des ventes : {{ sums.selling }} €</li>
+            <li class="list-group-item">Montant des achats : {{ sums.buying }} €</li>
+            <li class="list-group-item">Bénéfice total : {{ sums.benefice }} €</li>
           </ul>
       </div>
   </body>

@@ -114,14 +114,14 @@ def info(id_delivery):
 
     return render_template(
         'info_delivery.html',
-        user_right=user_right, 
+        user_right=user_right,
+        url=config.URL_APPLICATION + '/order/choice/' + id_delivery, 
         products=products, 
         delivery=delivery,
         title="Livraison " + delivery['delivery_name']
     )
 
-@route.route('delivery/pinfo/<id_delivery>', methods=['GET'])
-def pinfo(id_delivery):
+def printdeliveryinfo(id_delivery):
     """
     Route affichant le résumé d'une livraison
     Des liens permettent de créer ou de voir la commande des relais
@@ -144,22 +144,22 @@ def pinfo(id_delivery):
 
     return render_template(
         'print_delivery.html',
+        url=config.URL_APPLICATION + '/order/choice/' + id_delivery,
         products=products, 
         delivery=delivery,
         title="Livraison " + delivery['delivery_name']
     )
 
-@route.route('delivery/printinfo/<id_delivery>', methods=['GET'])
+@route.route('delivery/print/<id_delivery>', methods=['GET'])
 @fnauth.check_auth(4, False, URL_REDIRECT)
-def printinfo(id_delivery):
-    html = HTML(url_for('delivery.pinfo', id_delivery=id_delivery))
-    pdf_file = html.write_pdf('../app/static/pdf/toto.pdf')
-    
+def printdelivery(id_delivery):
+    html = HTML(string=printdeliveryinfo(id_delivery))
+    pdf_file = html.write_pdf('../app/static/pdf/delivery.pdf')
     return send_file(
-        'app/static/pdf/toto.pdf',  # file path or file-like object
+        'app/static/pdf/delivery.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
-        attachment_filename="info_delivery.pdf"
+        attachment_filename="livraison.pdf"
     )
 
 @route.route('delivery/add/new', defaults={'id_delivery': None}, methods=['GET', 'POST'])

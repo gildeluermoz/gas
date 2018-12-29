@@ -1,2 +1,14 @@
-
+@media print {
+    div{page-break-inside: avoid;} 
+}
+.print_product{
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    font-size:2em;
+    padding: .2rem .4rem;
+    color: #fff;
+    background-color: #212529;
+    border-radius: .2rem;
+    font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
 
