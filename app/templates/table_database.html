@@ -21,16 +21,16 @@
                   <th scope="col">{{ name }}</th>
                 {% endfor %}
                 {% if otherCol == 'True'%}
-                  <th scope="col"><i title="{{ Members }}" class="fa fa-user font-medium" aria-hidden="true"></i></th>
+                  <th style="vertical-align: middle; text-align: center" scope="col"><i title="{{ Members }}" class="fa fa-user font-medium" aria-hidden="true"></i></th>
                 {%endif%}
                 {% if see == 'True'%}
-                <th scope="col"><i title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></i></th>
+                <th style="vertical-align: middle; text-align: center" scope="col"><i title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></i></th>
                 {%endif%}
                 {% if 'U' in user_right %}
-                  <th scope="col"><i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i></th>
+                  <th style="vertical-align: middle; text-align: center" scope="col"><i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i></th>
                 {%endif%}
                 {% if 'D' in user_right %}
-                  <th scope="col"><i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i></th>
+                  <th style="vertical-align: middle; text-align: center" scope="col"><i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i></th>
                 {%endif%}
               </tr>
             </thead>
