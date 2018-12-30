@@ -101,7 +101,8 @@ CREATE TABLE IF NOT EXISTS t_deliveries (
 CREATE TABLE IF NOT EXISTS t_products (
     id_product serial NOT NULL,
     id_delivery character varying(100) NOT NULL,
-    product_name character varying(50),
+    product_name character varying(50) NOT NULL,
+    product_unit character varying(50) NOT NULL,
     buying_price decimal NOT NULL,
     selling_price decimal NOT NULL,
     case_weight integer NOT NULL,
@@ -182,7 +183,6 @@ WHERE u.active = true
 -- DROP VIEW gas.v_orders_result;
 -- DROP VIEW gas.v_group_orders_detail;
 
-
 CREATE OR REPLACE VIEW gas.v_group_orders_detail AS 
  SELECT d.id_delivery,
     g.id_group,
@@ -190,6 +190,7 @@ CREATE OR REPLACE VIEW gas.v_group_orders_detail AS
     g.group_name,
     p.id_product,
     p.product_name,
+    p.product_unit,
     o.product_case_number,
     o.group_discount,
     round(p.selling_price * o.product_case_number * (1-(o.group_discount/100))::numeric,2) AS selling_price,
@@ -212,7 +213,8 @@ SELECT
   v.id_product, 
   v.delivery_name,
   d.delivery_discount, 
-  v.product_name, 
+  v.product_name,
+  v.product_unit, 
   sum(v.product_case_number) AS case_number, 
   sum(v.selling_price) AS selling_price,
   sum(v.buying_price-(v.buying_price*COALESCE(d.delivery_discount,0))) AS buying_price,
@@ -220,4 +222,4 @@ SELECT
   sum(v.weight) as weight
 FROM gas.v_group_orders_detail v
 JOIN gas.t_deliveries d ON d.id_delivery = v.id_delivery
-GROUP BY v.id_delivery, v.id_product, v.delivery_name, d.delivery_discount, v.product_name;
+GROUP BY v.id_delivery, v.id_product, v.delivery_name, d.delivery_discount, v.product_name, v.product_unit;

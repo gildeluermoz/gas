@@ -35,7 +35,7 @@
             {% for go in group_order %}
               <div class="card">
                 <div class="card-body">
-                  <li class="list-unstyled"><kbd>{{ go.product_name }}</kbd> {{ go.product_case_number }} caisses = {{ go.selling_price }}€</li>
+                  <li class="list-unstyled"><kbd>{{ go.product_name }}</kbd> {{ go.product_case_number }} {{ go.product_unit }}s = {{ go.selling_price }}€</li>
                 </div>
               </div> 
             {% endfor %}

@@ -206,6 +206,7 @@ class TProducts(GenericRepository):
     id_product = db.Column(db.Integer, primary_key = True)
     id_delivery =db.Column(db.Unicode, ForeignKey('gas.t_deliveries.id_delivery'))
     product_name = db.Column(db.Unicode)
+    product_unit = db.Column(db.Unicode)
     buying_price = db.Column(db.Numeric)
     selling_price = db.Column(db.Numeric)
     case_weight = db.Column(db.Integer)
@@ -230,9 +231,9 @@ class TOrders(GenericRepository):
     @classmethod
     def add_cor(cls,id_group, products_number):
         """
-        Methode qui ajoute des relations group <-> produits --> nombre de caisses
+        Methode qui ajoute des relations group <-> produits --> nombre d'unités
 
-        Avec pour paramètres un id de group et un id_produit et un nombre de caisse
+        Avec pour paramètres un id de group et un id_produit et un nombre d'unités
         """
 
         dict_add = dict()
@@ -290,6 +291,7 @@ class VOrdersResult(GenericRepository):
     delivery_name = db.Column(db.Unicode)
     delivery_discount = db.Column(db.Numeric)
     product_name = db.Column(db.Unicode)
+    product_unit = db.Column(db.Unicode)
     case_number = db.Column(db.Integer)
     weight = db.Column(db.Numeric)
     selling_price = db.Column(db.Numeric)
@@ -311,6 +313,7 @@ class VGroupOrdersDetail(GenericRepository):
     delivery_name = db.Column(db.Unicode)
     group_name = db.Column(db.Unicode)
     product_name = db.Column(db.Unicode)
+    product_unit = db.Column(db.Unicode)
     product_case_number = db.Column(db.Integer)
     selling_price = db.Column(db.Numeric)
     buying_price = db.Column(db.Numeric)

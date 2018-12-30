@@ -33,7 +33,7 @@ class Order(FlaskForm):
 
     @classmethod
     def append_nbcase(cls, name, label):
-        setattr(cls, name, IntegerField(label, validators=[InputRequired(message = 'Le nombre de caisse est obligatoire. Aucune = "0"')]))
+        setattr(cls, name, IntegerField(label, validators=[InputRequired(message = 'La quantité est obligatoire. Aucune = "0"')]))
         return cls
 
 class OrderChoice(FlaskForm):

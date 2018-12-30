@@ -44,8 +44,8 @@ def products():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['Actif', 'Livraison', 'Nom', 'Achat', 'Vente', 'Poids', 'Remarques']  # noqa
-    columns = ['active', 'id_product', 'delivery_name', 'product_name', 'buying_price', 'selling_price', 'case_weight',  'product_comment']  # noqa
+    fLine = ['Actif', 'Livraison', 'Nom', 'Unité', 'Achat', 'Vente', 'Poids', 'Remarques']  # noqa
+    columns = ['active', 'id_product', 'delivery_name', 'product_name', 'product_unit','buying_price', 'selling_price', 'case_weight',  'product_comment']  # noqa
     contents = TProducts.get_all(columns)
     tab = []
     for data in contents:
@@ -148,6 +148,7 @@ def process(form, product):
     form.active.process_data(product['active'])
     form.id_delivery.process_data(product['id_delivery'])
     form.product_name.process_data(product['product_name'])
+    form.product_unit.process_data(product['product_unit'])
     form.buying_price.process_data(product['buying_price'])
     form.selling_price.process_data(product['selling_price'])
     form.case_weight.process_data(product['case_weight'])

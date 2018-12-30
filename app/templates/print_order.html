@@ -45,7 +45,7 @@
               {% for p in results %}
                 <li class="list-unstyled">
                   <kbd>{{ p.product_name }}</kbd> :
-                  <mark style="background-color: #fcf8e3;padding:.2em;">{{ p.case_number }} caisses</mark> = 
+                  <mark style="background-color: #fcf8e3;padding:.2em;">{{ p.case_number }} {{ p.product_unit }}s</mark> = 
                   {{ p.weight }} Kg -
                   Vente : {{ p.selling_price }} €, 
                   <mark style="background-color: #fcf8e3;padding:.2em;">Achat : {{ p.buying_price }} €</mark>, 
@@ -64,7 +64,7 @@
           <div class="card">
             <div class="card-body">
               <ul>
-                <li class="list-unstyled">{{ sums.case_number }} caisses pour {{ sums.weight }} Kg</li>
+                <li class="list-unstyled">{{ sums.case_number }} unités d'emballage pour {{ sums.weight }} Kg</li>
                 <li class="list-unstyled">Somme des ventes : {{ sums.selling }} €</li>
                 <li class="list-unstyled">Montant des achats : {{ sums.buying }} €</li>
                 <li class="list-unstyled">Bénéfice total : {{ sums.benefice }} €</li>
