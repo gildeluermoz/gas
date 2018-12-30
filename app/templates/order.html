@@ -24,6 +24,10 @@
                 {{ wtf.form_field(form.id_group, id="inputGroupSelect01") }}
             {% endif %}
             
+            {% if 'group_discount' in form %}
+                {{ wtf.form_field(form.group_discount) }}
+            {% endif %}
+            
             {% for nbc in nbcase %}
                 <p>
                     {{ wtf.form_field(form[nbc]) }}

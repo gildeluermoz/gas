@@ -5,9 +5,9 @@
 from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, HiddenField, SelectField, 
-    IntegerField, validators
+    IntegerField, validators, DecimalField
 )
-from wtforms.validators import DataRequired, InputRequired
+from wtforms.validators import DataRequired, InputRequired, NumberRange
 
 # from app.env import db, URL_REDIRECT
 # from app.models import TProducts
@@ -20,6 +20,15 @@ class Order(FlaskForm):
         default=0,
         validators=[DataRequired(message = "Merci de choisir un relais.")]
     )
+    group_discount = DecimalField(
+        'Remise relais en pourcentage (de 0 à 100)',
+        default=0.0,
+        validators=[
+            InputRequired(message = 'La remise est obligatoire. Aucune = "0", Gratuité = "100"'),
+            NumberRange(min=0, max=100, message="La valeur de la remise doit être comprise entre 0 et 100")
+        ]
+    )
+    hidden_group_discount = HiddenField(default=0.0)
     submit = SubmitField('Enregistrer')
 
     @classmethod

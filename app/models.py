@@ -223,6 +223,7 @@ class TOrders(GenericRepository):
     id_group = db.Column(db.Integer,ForeignKey('gas.t_groups.id_group'), primary_key = True)
     id_product = db.Column(db.Integer, ForeignKey('gas.t_products.id_product'),primary_key = True)
     product_case_number = db.Column(db.Integer)
+    group_discount = db.Column(db.Numeric)
     group_rel = relationship("TGroups")
     product_rel = relationship("TProducts")
 

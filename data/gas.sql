@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS t_orders (
     id_group integer NOT NULL,
     id_product integer NOT NULL,
     product_case_number integer NOT NULL,
+    group_discount decimal NOT NULL DEFAULT 0,
     date_insert timestamp without time zone,
     date_update timestamp without time zone
 );
@@ -182,23 +183,23 @@ WHERE u.active = true
 -- DROP VIEW gas.v_group_orders_detail;
 
 
-CREATE OR REPLACE VIEW gas.v_group_orders_detail AS
-SELECT 
-  d.id_delivery, 
-  g.id_group, 
-  d.delivery_name, 
-  g.group_name, 
-  p.id_product, 
-  p.product_name, 
-  o.product_case_number, 
-  p.selling_price * o.product_case_number AS selling_price, 
-  p.buying_price * o.product_case_number AS buying_price,
-  p.case_weight  * o.product_case_number AS weight
-FROM gas.t_orders o
-JOIN gas.t_groups g ON g.id_group = o.id_group
-JOIN gas.t_products p ON p.id_product = o.id_product
-JOIN gas.t_deliveries d ON d.id_delivery = p.id_delivery
-ORDER BY d.id_delivery, p.id_product, g.id_group;
+CREATE OR REPLACE VIEW gas.v_group_orders_detail AS 
+ SELECT d.id_delivery,
+    g.id_group,
+    d.delivery_name,
+    g.group_name,
+    p.id_product,
+    p.product_name,
+    o.product_case_number,
+    o.group_discount,
+    round(p.selling_price * o.product_case_number * (1-(o.group_discount/100))::numeric,2) AS selling_price,
+    p.buying_price * o.product_case_number::numeric AS buying_price,
+    p.case_weight * o.product_case_number AS weight
+   FROM gas.t_orders o
+     JOIN gas.t_groups g ON g.id_group = o.id_group
+     JOIN gas.t_products p ON p.id_product = o.id_product
+     JOIN gas.t_deliveries d ON d.id_delivery::text = p.id_delivery::text
+  ORDER BY d.id_delivery, p.id_product, g.id_group;
 
 CREATE OR REPLACE VIEW gas.v_group_orders_sum AS
 SELECT id_delivery, id_group, delivery_name, group_name, sum(selling_price) AS total

@@ -68,13 +68,13 @@ def info(id_delivery):
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TOrders.id_group == og))
-        order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':o.product_case_number*o.product_rel.selling_price} for o in q.all()]
+        order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1-(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
         if len(order['products']) > 0:
             for p in order['products']:
                 mysum = mysum + p['price'] 
-                order['group_price'] = mysum
+                order['group_price'] = round(mysum,2)
         else:
             flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
             return render_template(
@@ -103,7 +103,7 @@ def info(id_delivery):
     sums = dict()
     sums['case_number'] = nbc
     sums['weight'] = w
-    sums['selling'] = selling
+    sums['selling'] = round(selling,2)
     sums['buying'] = buying
     sums['benefice'] = benef
 
@@ -148,7 +148,7 @@ def printorderinfo(id_delivery):
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TOrders.id_group == og))
-        order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':o.product_case_number*o.product_rel.selling_price} for o in q.all()]
+        order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1-(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
         if len(order['products']) > 0:
@@ -183,7 +183,7 @@ def printorderinfo(id_delivery):
     sums = dict()
     sums['case_number'] = nbc
     sums['weight'] = w
-    sums['selling'] = selling
+    sums['selling'] = round(selling,2)
     sums['buying'] = buying
     sums['benefice'] = benef
 
@@ -313,6 +313,13 @@ def addorupdate(id_delivery, id_group):
         else:
             title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
         
+        if request.method == 'POST' and user_profil < 4:
+            form.hidden_group_discount.process_data(form.data['hidden_group_discount'])
+        else:
+            form.hidden_group_discount.process_data(form.data['group_discount'])
+        if user_profil < 4:
+            del form.group_discount
+
         if request.method == 'POST':
             if form.validate_on_submit() and form.validate():
                 if id_group is None:
@@ -322,10 +329,20 @@ def addorupdate(id_delivery, id_group):
                 for key, value in form_order.items():
                     post_order = dict()
                     post_order['id_group'] = id_group
+                    post_order['group_discount'] = form.data['hidden_group_discount']
                     if key[0:2] == 'nb':
                         post_order['id_product'] = key[2:]
                         post_order['product_case_number'] = value
-                        TOrders.update(post_order)
+                        try:
+                            TOrders.update(post_order)
+                        except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+                            flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+                            flash(e)
+                            return render_template(
+                                'error.html', 
+                                title="Houps ! Une erreur s'est produite"
+                            )
+                        
                 q = db.session.query(VGroupOrdersDetail)
                 q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group))
                 group_order = [go.as_dict() for go in q.all()]
@@ -395,4 +412,6 @@ def process(form, order):
     nbc = 'nb'+str(order['id_product'])
     form[nbc].process_data(order['product_case_number'] or 0)
     form.id_group.process_data(order['id_group'])
+    form.group_discount.process_data(order['group_discount'])
+    form.hidden_group_discount.process_data(order['group_discount'])
     return form
