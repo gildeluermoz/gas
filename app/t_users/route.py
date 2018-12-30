@@ -48,7 +48,7 @@ def users():
         user_right = ['C','R','U','D']
     else:
         user_right = ['R']
-    fLine = ['Actif', 'Identifiant', 'Nom', 'Prenom', 'Email', 'Relais', 'Remarques']  # noqa
+    fLine = ['Actif', 'Identifiant', 'Nom', 'Prenom', 'Email', config.WORD_GROUP.capitalize(), 'Remarques']  # noqa
     columns = ['active', 'id_user', 'identifiant', 'last_name', 'first_name', 'email', 'group_name', 'user_comment']  # noqa
     contents = TUsers.get_all(columns)
     tab = []

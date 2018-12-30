@@ -5,9 +5,8 @@ URL_APPLICATION = 'http://localhost:3001'
 
 SECRET_KEY = 'super secret key'
 
-""" ID of application GAS"""
-
-ID_APP = 1
+#VOCABULARY
+WORD_GROUP = 'relais'
 
 """ Authentification crypting method (hash or md5) """
 PASS_METHOD = 'hash'

@@ -58,8 +58,8 @@ def groups():
         pathD=config.URL_APPLICATION + "/group/delete/",
         pathA=config.URL_APPLICATION + '/group/add/new',
         pathP=config.URL_APPLICATION + '/group/members/',
-        name="un relais",
-        name_list="Relais",
+        name="un " + config.WORD_GROUP,
+        name_list=config.WORD_GROUP.capitalize(),
         otherCol='True',
         Members="Membres",
         see='False'
@@ -85,7 +85,7 @@ def addorupdate(id_group):
                 form_group.pop('id_group')
                 TGroups.post(form_group)
                 return redirect(url_for('group.groups'))
-        return render_template('group.html', form=form, title="Formulaire des relais")
+        return render_template('group.html', form=form, title="Formulaire des "+config.WORD_GROUP)
     else:
         group = TGroups.get_one(id_group)
         if request.method == 'GET':
@@ -96,7 +96,7 @@ def addorupdate(id_group):
                 form_group['id_group'] = group['id_group']
                 TGroups.update(form_group)
                 return redirect(url_for('group.groups'))
-        return render_template('group.html', form=form, title="Formulaire Liste")
+        return render_template('group.html', form=form, title="Formulaire " + config.WORD_GROUP.capitalize())
 
 
 @route.route('group/members/<id_group>', methods=['GET', 'POST'])
@@ -116,7 +116,7 @@ def membres(id_group):
         "info_relais.html",
         table=tab,
         group=group,
-        name_list="Membres du relais"
+        name_list="Membres du " + config.WORD_GROUP
     )
     
 

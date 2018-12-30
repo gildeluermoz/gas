@@ -76,7 +76,7 @@ def info(id_delivery):
                 mysum = mysum + p['price'] 
                 order['group_price'] = round(mysum,2)
         else:
-            flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
+            flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
             return render_template(
                 'error.html', 
                 title="Houps ! Un petit soucis"
@@ -156,7 +156,7 @@ def printorderinfo(id_delivery):
                 mysum = mysum + p['price'] 
                 order['group_price'] = mysum
         else:
-            flash("Aucun relais n'a passé commande pour le moment sur cette livraison.")
+            flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
             return render_template(
                 'error.html', 
                 title="Houps ! Un petit soucis"
@@ -228,11 +228,11 @@ def orderchoice(id_delivery, id_group):
     form.id_delivery.choices = TDeliveries.selectActiveDeliveries(True) # True select only open deliveries
     form.id_group.choices = TGroups.selectActiveGroups()
 
-    title = "Choisir une livraison et un relais"
+    title = "Choisir une livraison et un  " + config.WORD_GROUP
 
     if id_delivery is not None:
         delivery = TDeliveries.get_one(id_delivery)
-        title = "Choisir un relais pour la livraison '" + delivery['delivery_name'] + "'"
+        title = "Choisir un "+config.WORD_GROUP+" pour la livraison '" + delivery['delivery_name'] + "'"
         if request.method == 'GET':
             form.id_delivery.process_data(id_delivery)
         del form.id_delivery
@@ -309,7 +309,7 @@ def addorupdate(id_delivery, id_group):
                     pass 
             del form.id_group
             group =  TGroups.get_one(id_group)
-            title = "Commande du relais '"+group['group_name']+"' pour la livraison du " + delivery['delivery_date']
+            title = "Commande du " + config.WORD_GROUP + " '" + group['group_name']+"' pour la livraison du " + delivery['delivery_date']
         else:
             title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
         
