@@ -307,6 +307,14 @@ def addorupdate(id_delivery, id_group):
         
         is_update = False
         if id_group is not None:
+            # prevent manual change of id_group in the URL for unauthorized users
+            if user_profil <= 3 and int(id_group) != user_from_token(request.cookies['token']).id_group:
+                id_group = user_from_token(request.cookies['token']).id_group
+                flash("Vous ne pouvez passer commande que pour votre " + config.WORD_GROUP)
+                return render_template(
+                    'error.html', 
+                    title="Hum ! petit soucis"
+                )
             for p in products:
                 try:
                     order = TOrders.get_one((id_group, p['id_product']))
