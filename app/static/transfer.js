@@ -166,7 +166,7 @@ $( document ).ready(function() {
 
     $('#tri').DataTable({
         "scrollY": "400px",
-        "scrollX": false
+        "scrollX": false,
         "scrollCollapse": true,
         "paging": true,
         "language": {
