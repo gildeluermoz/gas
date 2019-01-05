@@ -35,7 +35,7 @@ class User(db.Model):
         schema="gas",
     )
     id_user = db.Column(
-        db.Integer,
+        db.Unicode,
         TABLE_ID,
         primary_key=True,
     )
@@ -111,7 +111,7 @@ class AppUser(db.Model):
     __table_args__ = {'schema': 'gas'}
 
     id_user = db.Column(
-        db.Integer,
+        db.Unicode,
         db.ForeignKey('gas.t_users.id_user'),
         primary_key=True
     )
