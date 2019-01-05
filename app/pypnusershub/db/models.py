@@ -99,8 +99,6 @@ class User(db.Model):
             'identifiant': self.identifiant,
             'nom_role': self.nom_role,
             'prenom_role': self.prenom_role,
-            'id_organisme': self.id_organisme,
-            'groupe': self.groupe,
             'nom_complet': nom_role+' '+prenom_role
         }
 
@@ -125,6 +123,7 @@ class AppUser(db.Model):
     identifiant = db.Column(db.Unicode)
     _password_plus = db.Column('pass_plus', db.Unicode)
     id_profil = db.Column(db.Integer, primary_key=True)
+    id_group = db.Column(db.Integer)
 
     @property
     def password(self):
