@@ -30,7 +30,7 @@ class CorUserProfil(GenericRepository):
 
     __tablename__= "cor_user_profil"
     __table_args__={'schema':'gas'}
-    id_user = db.Column(db.Integer,ForeignKey('gas.t_users.id_user'), primary_key = True)
+    id_user = db.Column(db.Unicode,ForeignKey('gas.t_users.id_user'), primary_key = True)
     id_profil = db.Column(db.Integer,ForeignKey('gas.t_profils.id_profil'), primary_key = True)
 
     @classmethod
@@ -84,7 +84,7 @@ class TUsers(GenericRepository):
 
     __tablename__ = 't_users'
     __table_args__={'schema':'gas', 'extend_existing': True}
-    id_user = db.Column(db.Integer, primary_key = True)
+    id_user = db.Column(db.Unicode, primary_key = True)
     id_group =db.Column(db.Unicode, ForeignKey('gas.t_groups.id_group'))
     identifiant = db.Column(db.Unicode)
     last_name = db.Column(db.Unicode)

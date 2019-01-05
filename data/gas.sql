@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS t_groups (
 
 
 CREATE TABLE IF NOT EXISTS t_users (
-    id_user serial NOT NULL,
+    id_user character varying(100) NOT NULL DEFAULT MD5(random()::text),
     id_group integer,
     identifiant character varying(100),
     first_name character varying(50),
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS t_users (
 );
 
 CREATE TABLE IF NOT EXISTS cor_user_profil (
-    id_user integer NOT NULL,
+    id_user character varying(100) NOT NULL,
     id_profil integer NOT NULL
 );
 
@@ -178,7 +178,7 @@ ALTER TABLE ONLY t_orders ADD CONSTRAINT t_orders_id_product_fkey FOREIGN KEY (i
 --VIEWS--
 ---------
 CREATE OR REPLACE VIEW gas.v_userslist_for_gas AS (
-SELECT u.id_user, 0 as id_application, u.identifiant, u.pass_plus, c.id_profil
+SELECT u.id_user, u.id_group, 0 as id_application, u.identifiant, u.pass_plus, c.id_profil
 FROM gas.t_users u
 JOIN gas.cor_user_profil c ON c.id_user = u.id_user
 WHERE u.active = true

@@ -6,13 +6,12 @@ SET search_path = gas, pg_catalog;
 
 -- Insert administrator 
 INSERT INTO t_groups (id_group, group_name, group_comment, active) VALUES
-(0,'Tous','Représente tous les relais',TRUE);
+(0,'Aucun','Relais par défaut. Permet de créer un utilisateur qui n''appartient à aucun relais.',TRUE);
 SELECT pg_catalog.setval('t_groups_id_group_seq', (SELECT max(id_group)+1 FROM t_groups), false);
 
 INSERT INTO t_users (id_user, id_group, identifiant, last_name, first_name, user_comment, email, pass_plus) VALUES 
-(1, 0, 'admin', 'Administrateur', 'test', 'administrateur par défaut', NULL, '$2y$13$TMuRXgvIg6/aAez0lXLLFu0lyPk4m8N55NDhvLoUHh/Ar3rFzjFT.')
+('2734d3f237e741dbae27ba9c2ec04f3a', 0, 'admin', 'Administrateur', 'test', 'administrateur par défaut', NULL, '$2y$13$TMuRXgvIg6/aAez0lXLLFu0lyPk4m8N55NDhvLoUHh/Ar3rFzjFT.')
 ;
-SELECT pg_catalog.setval('t_users_id_user_seq', (SELECT max(id_user)+1 FROM t_users), false);
 
 INSERT INTO t_profils (id_profil, profil_code, profil_name, profil_comment) VALUES
 (0, '0', 'Aucun', 'Aucun droit')
@@ -25,5 +24,5 @@ INSERT INTO t_profils (id_profil, profil_code, profil_name, profil_comment) VALU
 SELECT pg_catalog.setval('t_profils_id_profil_seq', (SELECT max(id_profil)+1 FROM t_profils), false);
 
 INSERT INTO cor_user_profil (id_profil, id_user) VALUES
-(6, 1)
+(6, '2734d3f237e741dbae27ba9c2ec04f3a')
 ;
