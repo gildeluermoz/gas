@@ -210,8 +210,9 @@ def printorder(id_delivery):
 
 @route.route('order/choice', defaults={'id_delivery': None, 'id_group': None}, methods=['GET', 'POST'])
 @route.route('order/choice/<id_delivery>', defaults={'id_group': None}, methods=['GET', 'POST'])
+@route.route('order/choice/<id_delivery>/<id_group>', methods=['GET', 'POST'])
 @fnauth.check_auth(2, False, URL_REDIRECT)
-def orderchoice(id_delivery, id_group):
+def orderchoice(id_delivery=None, id_group=None):
     """
     Route affichant un formulaire préalable à la commande
     Il permet de choisir sa commande et son relais 
@@ -226,7 +227,12 @@ def orderchoice(id_delivery, id_group):
 
     form = orderchoiceform()
     form.id_delivery.choices = TDeliveries.selectActiveDeliveries(True) # True select only open deliveries
-    form.id_group.choices = TGroups.selectActiveGroups()
+
+    if user_profil <= 3:
+        id_group = user_from_token(request.cookies['token']).id_group
+        form.id_group.choices = TGroups.selectActiveGroups(id_group)
+    else:
+        form.id_group.choices = TGroups.selectActiveGroups()
 
     title = "Choisir une livraison et un  " + config.WORD_GROUP
 
@@ -235,13 +241,15 @@ def orderchoice(id_delivery, id_group):
         title = "Choisir un "+config.WORD_GROUP+" pour la livraison '" + delivery['delivery_name'] + "'"
         if request.method == 'GET':
             form.id_delivery.process_data(id_delivery)
+            form.id_group.process_data(id_group)
         del form.id_delivery
 
     if request.method == 'POST':
         if form.validate_on_submit() and form.validate():
             if id_delivery is None:
                 id_delivery = form.data['id_delivery']
-            id_group = form.data['id_group']
+            if id_group is None:
+                id_group = form.data['id_group']
             return redirect(url_for('order.addorupdate', id_delivery=id_delivery, id_group=id_group))
         else:
             errors = form.errors

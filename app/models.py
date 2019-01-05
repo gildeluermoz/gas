@@ -65,13 +65,15 @@ class TGroups(GenericRepository):
     active = db.Column(db.Boolean)
 
     @classmethod
-    def selectActiveGroups(cls):
+    def selectActiveGroups(cls, id_group=None):
         """
         Methode qui retourne un tableau de tuples de id_group et de nom de relais actif
         """
         q = db.session.query(cls)
         q = q.order_by(desc(cls.group_name))
         q = q.filter(and_(TGroups.active == True,TGroups.id_group != 0))
+        if id_group is not None:
+            q = q.filter(TGroups.id_group == id_group)
         return [(g.id_group, g.group_name) for g in q.all()]
 
 @serializable
