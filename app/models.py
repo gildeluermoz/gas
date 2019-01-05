@@ -275,7 +275,7 @@ class TProfils(GenericRepository):
         Methode qui retourne un tableau de tuples de code profil et de nom de profil
         Avec pour paramètres un code de profil et un nom de profil
         """
-        return [(d[profil_code], d[profil_name]) for d in cls.get_all()]
+        return [(d[profil_code], d[profil_name]) for d in cls.get_all(None, None, [profil_name])]
 
 
 @serializable

@@ -1,7 +1,6 @@
 from app.env import db
 
 
-
 class GenericRepository(db.Model):
     __abstract__ = True
 
@@ -25,29 +24,31 @@ class GenericRepository(db.Model):
             return db.session.query(cls).get(id)
 
     @classmethod
-    def get_all(cls, columns=None, params = None, recursif = True,as_model = False):
+    def get_all(cls, columns=None, params = None, orderbyfields = None, recursif = True, as_model = False):
 
         """
         Methode qui retourne un dictionnaire de tout les éléments d'un Model
         Avec pour paramètres:
-                            columns un tableau des colonnes que l'ont souhaite récupérer
-                            params un tableau contenant un dictionnaire de filtre [{'col': colonne à filtrer, 'filter': paramètre de filtrage}]
-                            si recursif != True on désactive la fonction récursive du as_dict()
-                            si as_model != False alors au lieu de retourner un dictionnaire on retourne une requête
+            columns, un tableau des colonnes que l'ont souhaite récupérer
+            params, un tableau contenant un dictionnaire de filtre [{'col': colonne à filtrer, 'filter': paramètre de filtrage}]
+            orderbyfields, un tableau des champ sur lesquels appliquer le order_by
+            si recursif != True on désactive la fonction récursive du as_dict()
+            si as_model != False alors au lieu de retourner un dictionnaire on retourne une requête
         Si as_model != False alors au lieu de retourner un dictionnaire on retourne une requête
         """
-
+        q = db.session.query(cls)
         if as_model == False:
-            if params == None :
-                return [data.as_dict(recursif,columns) for data in db.session.query(cls).all()]
-            else:
-                q = db.session.query(cls)
+            if params is not None:
                 for param in params :
                     nom_col = getattr(cls,param['col'])
                     q = q.filter(nom_col == param['filter'])
-                return [data.as_dict(recursif,columns) for data in q.all()]
-        else :
-            return db.session.query(cls)
+            if orderbyfields is not None:
+                for f in orderbyfields:
+                    fname = getattr(cls,f)
+                    q = q.order_by(fname)
+            return [data.as_dict(recursif,columns) for data in q.all()]
+        else:
+            return q
 
 
     @classmethod
