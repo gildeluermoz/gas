@@ -17,11 +17,11 @@ class GenericRepository(db.Model):
         Si as_model != False alors au lieu de retourner un dictionnaire on retourne une requête
         """
 
-        if as_model == False:
+        if as_model:
+            return db.session.query(cls).get(id)
+        else:
             data = db.session.query(cls).get(id)
             return data.as_dict(True)
-        else:
-            return db.session.query(cls).get(id)
 
     @classmethod
     def get_all(cls, columns=None, params = None, orderbyfields = None, recursif = True, as_model = False):

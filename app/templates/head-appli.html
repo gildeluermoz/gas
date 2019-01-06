@@ -14,9 +14,17 @@
                         <a style="color: #fff" class="nav-link active" href="{{ url_for('profil.profils') }}">Profils</a>
                     </li>
                 {% endif %}
-                {% if session['current_user']['id_profil'] >= 4 %}
+                {% if session['current_user']['id_profil'] >= 2 %} 
                     <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link" href="{{ url_for('user.users') }}">Utilisateurs</a>
+                        <a style="color: #fff" class="nav-link" href="{{ url_for('user.users') }}">
+                            {% if session['current_user']['id_profil'] == 2 %}
+                                Mon compte
+                            {% elif session['current_user']['id_profil'] == 3 %}
+                                Mon groupe
+                            {% else %}
+                                Utilisateurs
+                            {% endif %}
+                        </a>
                     </li>
                 {% endif %}
                 {% if session['current_user']['id_profil'] >= 4 %}

@@ -12,7 +12,7 @@ from flask_bcrypt import (
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 
-from app.env import URL_REDIRECT
+from app.env import db, URL_REDIRECT
 from app.t_users import forms as t_usersforms
 from app.models import TUsers, TGroups
 
@@ -23,7 +23,7 @@ route = Blueprint('user', __name__)
 
 
 @route.route('users/list', methods=['GET'])
-@fnauth.check_auth(4, False, URL_REDIRECT)
+@fnauth.check_auth(2, False, URL_REDIRECT)
 def users():
 
     """
@@ -42,15 +42,28 @@ def users():
         - un nom de listes --> name_list
         - ajoute une colonne pour accéder aux infos de l'utilisateur --> see
     """
+    
     user_profil = user_from_token(request.cookies['token']).id_profil
     user_right = list()
     if user_profil >= 4:
         user_right = ['C','R','U','D']
+    elif user_profil == 3 or user_profil == 2:
+        user_right = ['R','U']
     else:
         user_right = ['R']
+
     fLine = ['Actif', 'Identifiant', 'Nom', 'Prenom', 'Email', config.WORD_GROUP.capitalize(), 'Remarques']  # noqa
     columns = ['active', 'id_user', 'identifiant', 'last_name', 'first_name', 'email', 'group_name', 'user_comment']  # noqa
-    contents = TUsers.get_all(columns, None, ['last_name','first_name'])
+    if user_profil >= 4:
+        contents = TUsers.get_all(columns, None, ['last_name','first_name'])
+    if user_profil == 3:
+        id_group = user_from_token(request.cookies['token']).id_group
+        q = db.session.query(TUsers).filter(TUsers.id_group==id_group)
+        contents = [data.as_dict(True,columns) for data in q.all()]
+    if user_profil == 2:
+        id_user = user_from_token(request.cookies['token']).id_user
+        q = db.session.query(TUsers).filter(TUsers.id_user==id_user)
+        contents = [data.as_dict(True,columns) for data in q.all()]
     tab = []
     for data in contents:
         g = data
@@ -77,7 +90,7 @@ def users():
 
 @route.route('user/add/new', defaults={'id_user': None}, methods=['GET', 'POST'])
 @route.route('user/update/<id_user>', methods=['GET', 'POST'])
-@fnauth.check_auth(4, False, URL_REDIRECT)
+@fnauth.check_auth(2, False, URL_REDIRECT)
 def addorupdate(id_user):
 
     """
@@ -86,8 +99,14 @@ def addorupdate(id_user):
     Retourne un template accompagné du formulaire pré-rempli ou non selon le paramètre id_user
     Une fois le formulaire validé on retourne une redirection vers la liste des users
     """
+    user_profil = user_from_token(request.cookies['token']).id_profil
     form = t_usersforms.Utilisateur()
-    form.id_group.choices = TGroups.selectActiveGroups()
+
+    if user_profil <= 2:
+        id_group = user_from_token(request.cookies['token']).id_group
+        form.id_group.choices = TGroups.selectActiveGroups(id_group)
+    else:
+        form.id_group.choices = TGroups.selectActiveGroups()
 
     if id_user is not None:
         user = TUsers.get_one(id_user)
@@ -115,12 +134,11 @@ def addorupdate(id_user):
                 form_user.pop('pass_plus')
 
             if id_user is not None:
-                form_user['id_user'] = user['id_user']
+                form_user['id_user'] = id_user
                 TUsers.update(form_user)
             else:
                 TUsers.post(form_user)
             return redirect(url_for('user.users'))
-
         else:
             errors = form.errors
             flash(errors)
@@ -131,7 +149,7 @@ def addorupdate(id_user):
 
 
 @route.route('user/delete/<id_user>', methods=['GET', 'POST'])
-@fnauth.check_auth(4, False, URL_REDIRECT)
+@fnauth.check_auth(3, False, URL_REDIRECT)
 def deluser(id_user):
     """
     Route qui supprime un utilisateur dont l'id est donné en paramètres dans l'url

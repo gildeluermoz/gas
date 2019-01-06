@@ -49,12 +49,10 @@ login = function() {
         contentType:"application/json; charset=utf-8",
         dataType:"json",
         success: function(response){
-            console.log(response);
             window.location.href = '{{url_application}}';
         },
         error: function(error){
             $("#login-error" ).show();
-            console.log(error);
         }
     });
 };
