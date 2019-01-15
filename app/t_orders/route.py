@@ -200,7 +200,7 @@ def printorderinfo(id_delivery):
 @fnauth.check_auth(4, False, URL_REDIRECT)
 def printorder(id_delivery):
     html = HTML(string=printorderinfo(id_delivery))
-    pdf_file = html.write_pdf('../app/static/pdf/info_order.pdf')
+    pdf_file = html.write_pdf('app/static/pdf/info_order.pdf')
     return send_file(
         'app/static/pdf/info_order.pdf',  # file path or file-like object
         'application/pdf',
