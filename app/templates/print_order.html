@@ -1,76 +1,57 @@
 <html>
   {% include "header.html" %}
   <body>
-      {% include "head-appli.html" %}
+    <div class="print_head">
+      {{title}}
+    </div>
+    <br />
 
-      <div class="container main-zone ng-scope">
-        <div class="card p-4 mb-3 bg-secondary border border-0 text-white">
-          <h2>{{title}}</h2>
-        </div>
+    {% for o in orders %}
+    <div class="print_card">
+      <div class="print_title">
+        {{ o.group['group_name'].upper() }} <span style="float:right;"> {{o.group_price}} €</span>
       </div>
-      
-      <hr /><br />
-      <div class="container main-zone ng-scope ">
-        <div class="card bg-light text-secondary">
-          <div class="card-body">
-            <h3>COMMANDES DES RELAIS</h3>
-          </div>
+        {% for p in o.products %}
+          <!-- <div class="card bg-light"> -->
+            <!-- <div class="col-sm-4 text-center"> -->
+              <div class="print_product">{{p.product.product_name.upper()}} {{ p.nb }}</div>
+            <!-- </div> -->
+          <!-- </div> -->
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <br/>
+      <div class="print_card">
+        <div class="print_title">
+          BILAN (remise globale -{{results[0].delivery_discount*100}} %)
         </div>
-            {% for o in orders %}
-              <div class="card bg-secondary text-white">
-                <h3>{{ o.group['group_name'].upper() }} - {{o.group_price}} €</h3>
-              </div>
-              <div class="card">
-                <div class="card-body">
-                    {% for p in o.products %}
-                      <!-- <div class="card bg-light"> -->
-                        <!-- <div class="col-sm-4 text-center"> -->
-                          <span class="print_product">{{p.product.product_name.upper()}} {{ p.nb }}</span> 
-                          ***
-                           
-                        <!-- </div> -->
-                      <!-- </div> -->
-                    {% endfor %}
-                </div>
-              </div>
-            {% endfor %}
-            <br/>
-          <div class="card bg-light text-secondary">
-            <div class="card-body">
-              <h3>BILAN (remise globale -{{results[0].delivery_discount*100}} %)</h3>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              {% for p in results %}
-                <li class="list-unstyled">
-                  <kbd>{{ p.product_name }}</kbd> :
-                  <mark style="background-color: #fcf8e3;padding:.2em;">{{ p.case_number }} {{ p.product_unit }}s</mark> = 
-                  {{ p.weight }} Kg -
-                  Vente : {{ p.selling_price }} €, 
-                  <mark style="background-color: #fcf8e3;padding:.2em;">Achat : {{ p.buying_price }} €</mark>, 
-                  Bénéfice : {{ p.benefice }} €
-                </li>
-              {% endfor %}
-            </div>
-          </div>
+        <ul >
+          {% for p in results %}
+            <li class="list-unstyled">
+              <kbd>{{ p.product_name }}</kbd> :
+              <mark style="background-color: #fcf8e3;padding:.2em;">{{ p.case_number }} {{ p.product_unit }}s</mark> = 
+              {{ p.weight }} Kg -
+              Vente : {{ p.selling_price }} €, 
+              <mark style="background-color: #fcf8e3;padding:.2em;">Achat : {{ p.buying_price }} €</mark>, 
+              Bénéfice : {{ p.benefice }} €
+            </li>
+          {% endfor %}
+          </ul>
+      </div>
 
-          <br />
-          <div class="card bg-light text-secondary">
-            <div class="card-body">
-              <h3>TOTAUX</h3>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <ul>
-                <li class="list-unstyled">{{ sums.case_number }} unités d'emballage pour {{ sums.weight }} Kg</li>
-                <li class="list-unstyled">Somme des ventes : {{ sums.selling }} €</li>
-                <li class="list-unstyled">Montant des achats : {{ sums.buying }} €</li>
-                <li class="list-unstyled">Bénéfice total : {{ sums.benefice }} €</li>
-              </ul>
-            </div>
-          </div>
+      <br />
+      <div class="print_card">
+        <div class="print_title">
+          TOTAUX
+        </div>
+        <div >
+          <ul>
+            <li class="list-unstyled">{{ sums.case_number }} unités d'emballage pour {{ sums.weight }} Kg</li>
+            <li class="list-unstyled">Somme des ventes : {{ sums.selling }} €</li>
+            <li class="list-unstyled">Montant des achats : {{ sums.buying }} €</li>
+            <li class="list-unstyled">Bénéfice total : {{ sums.benefice }} €</li>
+          </ul>
+        </div>
       </div>
   </body>
 </html>

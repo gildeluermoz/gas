@@ -1,13 +1,53 @@
 @media print {
     div{page-break-inside: avoid;} 
 }
-.print_product{
-    box-sizing: border-box;
-    white-space: pre-wrap;
-    font-size:2em;
-    padding: .2rem .4rem;
+.print_head{
+    width: 100%;
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+    margin-bottom: .5rem;
+    padding: 0 30px;
+    font-size: 3em;
+    font-family: inherit;
+    font-weight: 300;
     color: #fff;
-    background-color: #212529;
+    background: #2e3031;
+    border-radius: .2rem;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 50px;
+}
+.print_card{
+    border-radius: .2rem;
+    border-style: solid;
+    border-width: 1px; 
+    margin-bottom: 10px; 
+}
+
+.print_title{
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    margin-bottom: .5rem;
+    padding: 0 30px;
+    font-size: 2em;
+    font-family: inherit;
+    font-weight: 800;
+    color: #fff;
+    background: #6c757d;
+    border-radius: .2rem;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.print_product{
+    display: inline-block;
+    width: 48%;
+    font-size:2em;
+    font-weight: 800;
+    padding: .2rem .4rem;
+    color: #000;
     border-radius: .2rem;
     font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
 }
