@@ -205,6 +205,7 @@ CREATE OR REPLACE VIEW gas.v_group_orders_detail AS
      JOIN gas.t_groups g ON g.id_group = o.id_group
      JOIN gas.t_products p ON p.id_product = o.id_product
      JOIN gas.t_deliveries d ON d.id_delivery::text = p.id_delivery::text
+   WHERE p.active = true
   ORDER BY d.id_delivery, p.id_product, g.id_group;
 
 CREATE OR REPLACE VIEW gas.v_group_orders_sum AS

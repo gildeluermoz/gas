@@ -49,7 +49,7 @@ def info(id_delivery):
     # get products order in t_products table with id_delivery filter
     q = db.session.query(TOrders.id_group).distinct()
     q.join(TProducts, TProducts.id_product == TOrders.id_product)
-    q = q.filter(TProducts.id_delivery == id_delivery)
+    q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
     data = q.all() 
     if data:
          ordergroups = [p[0] for p in data]
@@ -67,7 +67,7 @@ def info(id_delivery):
         q = db.session.query(TOrders)
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
-        q = q.filter(and_(TProducts.id_delivery == id_delivery, TOrders.id_group == og))
+        q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True, TOrders.id_group == og))
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1-(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
@@ -129,7 +129,7 @@ def printorderinfo(id_delivery):
     # get products order in t_products table with id_delivery filter
     q = db.session.query(TOrders.id_group).distinct()
     q.join(TProducts, TProducts.id_product == TOrders.id_product)
-    q = q.filter(TProducts.id_delivery == id_delivery)
+    q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
     data = q.all() 
     if data:
          ordergroups = [p[0] for p in data]
@@ -147,7 +147,7 @@ def printorderinfo(id_delivery):
         q = db.session.query(TOrders)
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
-        q = q.filter(and_(TProducts.id_delivery == id_delivery, TOrders.id_group == og))
+        q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True, TOrders.id_group == og))
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1-(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
@@ -283,9 +283,9 @@ def addorupdate(id_delivery, id_group):
     is_open = delivery['is_open']
 
     if is_open:
-        # get products order in t_products table with id_delivery filter
+        # get active products order in t_products table with id_delivery filter
         q = db.session.query(TProducts)
-        q = q.filter(TProducts.id_delivery == id_delivery)
+        q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
         products = [p.as_dict() for p in q.all()]
         if len(products) == 0:
             flash("Aucun produit n'a été enregistré pour cette livraison.")
