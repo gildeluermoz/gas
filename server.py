@@ -59,10 +59,13 @@ with app.app_context():
         def index():
             ''' Route par défaut de l'application '''
             if "current_user" in session.keys():
-                if session["current_user"]['id_profil'] > 2:
-                    return redirect(url_for('delivery.deliveries'))
+                if session["current_user"]:
+                    if session["current_user"]['id_profil'] > 2:
+                        return redirect(url_for('delivery.deliveries'))
+                    else:
+                        return redirect(url_for('user.users'))
                 else:
-                    return redirect(url_for('user.users'))
+                    return redirect(url_for('login.auth'))
             else:
                 return redirect(url_for('login.auth'))
 
