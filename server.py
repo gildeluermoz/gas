@@ -58,10 +58,13 @@ with app.app_context():
         @app.route('/')
         def index():
             ''' Route par défaut de l'application '''
-            if session["current_user"]['id_profil'] > 2:
-                return redirect(url_for('delivery.deliveries'))
+            if "current_user" in session.keys():
+                if session["current_user"]['id_profil'] > 2:
+                    return redirect(url_for('delivery.deliveries'))
+                else:
+                    return redirect(url_for('user.users'))
             else:
-                return redirect(url_for('user.users'))
+                return redirect(url_for('login.auth'))
 
         @app.route('/constants.js')
         def constants_js():
