@@ -36,13 +36,13 @@ Installation et configuration du serveur
 ========================================
 
 Installation pour Debian 9.
-
-:notes:
-
     * Cette documentation concerne une installation sur Debian. Pour tout autre environemment les commandes sont à adapter.
-    * Vérifier que le répertoire ``/tmp`` existe et que l'utilisateur ``www-data`` y ait accès en lecture/écriture
+    * Vérifier que le répertoire ``/tmp`` existe et que l'utilisateur ``www-data`` y ait accès en lecture/écriture.
 
 
+Installation de l'environnement logiciel
+----------------------------------------
+ 
   ::  
   
     nano /etc/apt/sources.list
