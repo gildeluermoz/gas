@@ -65,9 +65,9 @@ with app.app_context():
                     else:
                         return redirect(url_for('user.users'))
                 else:
-                    return redirect(url_for('login.auth'))
+                    return render_template('login.html', id_app=0)
             else:
-                return redirect(url_for('login.auth'))
+                return render_template('login.html', id_app=0)
 
         @app.route('/constants.js')
         def constants_js():
