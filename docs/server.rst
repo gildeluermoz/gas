@@ -1,11 +1,8 @@
-.. image:: http://geonature.fr/img/logo-pne.jpg
-    :target: http://www.ecrins-parcnational.fr
-    
 =======
 SERVEUR
 =======
 
-Cette documentation décrit l'installation indépendante de UsersHub. Il est aussi possible de l'installation avec le script automatisé d'installation globale de GeoNature (https://github.com/PnEcrins/GeoNature/tree/master/docs/install_all).
+Cette documentation décrit l'installation du serveur accueillant GAS.
 
 Prérequis
 =========
@@ -13,12 +10,14 @@ Prérequis
 * Ressources minimum serveur :
 
 Un serveur disposant d'au moins de 1 Go RAM et de 5 Go d'espace disque.
+Sudo est installé
 
-* Disposer d'un utilisateur linux (nommé ``synthese`` dans notre exemple). Le répertoire de cet utilisateur ``synthese`` doit être dans ``/home/synthese``. Si vous souhaitez utiliser un autre utilisateur linux, vous devrez adapter les lignes de commande proposées dans cette documentation ainsi que dans les fichiers ``install_db.sh`` et ``install_app.sh``
+* Disposer d'un utilisateur linux autre que root (recommandé)
+Cet utilisateur est membre de sudo
  
   ::  
   
-    sudo adduser --home /home/synthese synthese
+    sudo adduser --home /home/myuser myuser
 
 
 * Récupérer le zip de l'application sur le Github du projet (X.Y.Z à remplacer par la version souhaitée de UsersHub)
@@ -26,67 +25,61 @@ Un serveur disposant d'au moins de 1 Go RAM et de 5 Go d'espace disque.
   ::  
   
     cd /tmp
-    wget https://github.com/PnEcrins/UsersHub/archive/vX.Y.Z.zip
-    unzip vX.Y.Z.zip
-    mkdir -p /home/synthese/usershub
-    cp usershub-X.Y.Z/* /home/synthese/usershub
-    cd /home/synthese
+    wget https://github.com/gildeluermoz/gas/archive/X.Y.Z.zip
+    unzip X.Y.Z.zip
+    mkdir -p /home/myuser/gas
+    cp gas-X.Y.Z/* /home/myuser/gas
+    cd /home/gas
 
 
 Installation et configuration du serveur
 ========================================
 
-Installation pour Debian 7.
+Installation pour Debian 9.
 
 :notes:
 
-    Cette documentation concerne une installation sur Debian. Pour tout autre environemment les commandes sont à adapter.
+    * Cette documentation concerne une installation sur Debian. Pour tout autre environemment les commandes sont à adapter.
+    * Vérifier que le répertoire ``/tmp`` existe et que l'utilisateur ``www-data`` y ait accès en lecture/écriture
 
 
-
-:notes:
-
-    Bien qu'indépendante, cette documentation est en lien avec l'installation de GeoNature : https://github.com/PnEcrins/GeoNature.
-
-::
-
-    su - 
-    apt-get install apache2 php5 libapache2-mod-php5 php5-gd libapache2-mod-wsgi php5-pgsql sudo
-    usermod -g www-data synthese
-    usermod -a -G root synthese
-    adduser synthese sudo
-    exit
+  ::  
+  
+    nano /etc/apt/sources.list
+        #ajouter les backports et retirer les src 
+    apt-get update
+    apt-get upgrade
+    apt-get install -y sudo ca-certificates
+    adduser --home /home/myuser myuser
+    adduser myuser sudo
+    usermod -g www-data myuser
+    usermod -a -G root myuser
+        #Fermer la console et la réouvrir pour que les modifications soient prises en compte.
     
-Fermer la console et la réouvrir pour que les modifications soient prises en compte.
-    
+    sudo apt-get install -y postgresql
+    sudo apt-get install -y python3 python3-dev python3-pip python3-setuptools python-virtualenv python3-wheel build-essential libssl-dev python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+    pip3 install --upgrade pip virtualenv
+    apt-get install -y curl
+    su myuser
+    cd
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    sudo apt-get install -y supervisor
+    sudo apt-get install -y apache2
+    sudo a2enmod rewrite
+    sudo a2enmod proxy
+    sudo a2enmod proxy_http
+    sudo apache2ctl restart
+    sudo -n -u postgres -s psql -c "CREATE ROLE my_pg_user WITH LOGIN PASSWORD 'userpass_change_it';"
+    sudo -n -u postgres -s psql -c "CREATE ROLE my_pg_superuser WITH SUPERUSER LOGIN PASSWORD 'userpass_change_it';"
 
-* Vérifier que le répertoire ``/tmp`` existe et que l'utilisateur ``www-data`` y ait accès en lecture/écriture
+    # pour accéder à postresql avec pg_admin
+    sed -e "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" -i /etc/postgresql/9.6/main/postgresql.conf
+    sudo nano /etc/postgresql/9.6/main/pg_hba.conf
+        # ajouter un ligne avec
+        # host  all all 0.0.0.0/0  md5
+    sudo service postgresql restart
 
-Installation et configuration de PosgreSQL
-==========================================
-
-* Sur Debian 7, configuration des dépots pour avoir les dernières versions de PostgreSQL (9.3) et PostGIS (2.1) (voir http://foretribe.blogspot.fr/2013/12/the-posgresql-and-postgis-install-on.html)
- 
-  ::  
-  
-    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" >> /etc/apt/sources.list'
-    sudo wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-    sudo apt-get update
-
-* Installation de PostreSQL
- 
-  ::  
-  
-    sudo apt-get install postgresql-9.3 postgresql-client-9.3
-    sudo adduser postgres sudo
-        
-* Configuration de PostgreSQL - permettre l'écoute de toutes les IP
- 
-  ::  
-  
-    sed -e "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" -i /etc/postgresql/9.3/main/postgresql.conf
-    sudo sed -e "s/# IPv4 local connections:/# IPv4 local connections:\nhost\tall\tall\tde.la.merde.0\/33\t md5/g" -i /etc/postgresql/9.3/main/pg_hba.conf
-    /etc/init.d/postgresql restart
 
 * Création d'un super-utilisateur PostgreSQL
  
@@ -94,17 +87,10 @@ Installation et configuration de PosgreSQL
   
     sudo su postgres
     psql
-    CREATE ROLE geonatuser WITH LOGIN PASSWORD 'monpassachanger';
+    CREATE ROLE gasuser WITH SUPERUSER LOGIN PASSWORD 'monpassachanger';
     \q
     exit
 
-L'utilisateur ``geonatuser`` est super utilisateur de PostgreSQL il sera utilisé par l'application pour se connecter à sa propre base de données mais aussi à toutes les autres bases qu'UsersHub doit gérer.
+L'utilisateur ``gasuser`` est super utilisateur de PostgreSQL il sera utilisé par l'application pour se connecter à sa propre base de données mais aussi à toutes les autres bases qu'UsersHub doit gérer.
 
-L'application fonctionne avec par default le mot de passe ``monpassachanger`` mais il est conseillé de le modifier !
-
-Ce mot de passe, ainsi que l'utilisateur PostgreSQL ``geonatuser`` créés ci-dessus sont des valeurs par défaut utiliser à plusieurs reprises dans l'application. Ils peuvent cependant être changés. S'ils doivent être changés, ils doivent l'être dans plusieurs fichiers de l'application : 
-
-- config/settings.ini
-- config/connecter.php
-- config/dbconnexions.json
-    
+L'application fonctionne avec par default le mot de passe ``monpassachanger`` mais il est conseillé de le modifier !  

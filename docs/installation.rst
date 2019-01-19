@@ -16,11 +16,6 @@ Renseigner le nom de la base de données, l'utilisateur PostgreSQL et son mot de
 
 ATTENTION : Les valeurs renseignées dans ce fichier sont utilisées par le script d'installation de la base de données ``install_db.sh``. L'utilisateurs PostgreSQL doit être en concordance avec celui créé lors de la dernière étape de l'installation serveur ``Création d'un utilisateur PostgreSQL``. 
 
-:notes:
-
-    Si vous installer UsersHub dans le cadre de la gestion des utilisateurs de GeoNature, il est conseillé d'utiliser les mêmes utilisateurs PostgreSQL que pour GeoNature.
-
-
 
 Création de la base de données
 ==============================
@@ -29,44 +24,46 @@ Création de la base de données
  
   ::  
   
-    cd /home/synthese/usershub
+    cd /home/myuser/gas
     sudo ./install_db.sh
+
 
 Configuration de l'application
 ==============================
 
-* Se loguer sur le serveur avec l'utilisateur linux ``synthese``
+* Se loguer sur le serveur avec l'utilisateur linux ``myuser``
    
 
 * Installation et configuration de l'application
  
   ::  
   
-    cd /home/synthese/usershub
+    cd /home/myuser/gas
     ./install_app.sh
+
+Vérifier et mettre à jour le paramètre `URL_APPLICATION` dans `config/config.py`
+
 
 Configuration apache
 ====================
 
-Créer le fichier `/etc/apache2/sites-avalaible/usershub.conf` avec ce contenu
+Créer le fichier `/etc/apache2/sites-avalaible/gas.conf` avec ce contenu
  
   ::  
   
-    <Location /usershub2>
-        ProxyPass  http://localhost:5001
-        ProxyPassReverse  http://localhost:5001
+    <Location /gas>
+        ProxyPass  http://localhost:3001
+        ProxyPassReverse  http://localhost:3001
     </Location>
 
 Activé le site et recharger la conf apache
  
   ::  
   
-    sudo a2ensite usershub
+    sudo a2ensite gas.conf
     sudo service apache2 restart
 
-UsersHub peut fonctionner seul avec sa propre base de données mais il est configurer par défaut pour fonctionner avec GeoNature. Vous devez renseigner les paramêtres de connexion à la base de GeoNature.
-
-* Pour tester, se connecter à l'application via http://mon-domaine.fr/usershub et les login et pass admin/admin
+* Pour tester, se connecter à l'application via http://mon-domaine.fr/gas et les login et pass admin/admin
 
 * choisir le mode d'authentification dans le fichier ``config/config.php``
 
@@ -78,6 +75,4 @@ Mise à jour de l'application
 Personnalisation
 ----------------
 
-Vous pouvez changer le bandeau de l'application en remplaçant le fichier ``web/images/bandeau_utilisateurs.png`` par un bandeau personnalisé.
-
-Vous pouvez changer le logo de l'application en remplaçant le fichier ``web/images/main_logo.png`` une image de votre choix.
+Todo
