@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, session, flash
 )
 from app import genericRepository
-from app.auth import forms as authforms
+from app.login import forms as authforms
 from app.models import TUsers
 from app.utils.utilssqlalchemy import json_resp
 from app.env import db
