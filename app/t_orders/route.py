@@ -286,6 +286,7 @@ def addorupdate(id_delivery, id_group):
         # get active products order in t_products table with id_delivery filter
         q = db.session.query(TProducts)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
+        q = q.order_by(TProducts.id_product)
         products = [p.as_dict() for p in q.all()]
         if len(products) == 0:
             flash("Aucun produit n'a été enregistré pour cette livraison.")
