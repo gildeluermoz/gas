@@ -12,7 +12,7 @@ from flask_bcrypt import (
 
 from app.utils.utilssqlalchemy import serializable
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy import ForeignKey, distinct, and_, desc
+from sqlalchemy import ForeignKey, distinct, and_, desc, FetchedValue
 from app.genericRepository import GenericRepository
 from config import config
 
@@ -84,7 +84,7 @@ class TUsers(GenericRepository):
 
     __tablename__ = 't_users'
     __table_args__={'schema':'gas', 'extend_existing': True}
-    id_user = db.Column(db.Unicode, primary_key = True)
+    id_user = db.Column(db.Unicode, server_default=FetchedValue(), primary_key = True)
     id_group =db.Column(db.Unicode, ForeignKey('gas.t_groups.id_group'))
     identifiant = db.Column(db.Unicode)
     last_name = db.Column(db.Unicode)
@@ -173,7 +173,7 @@ class TDeliveries(GenericRepository):
 
     __tablename__='t_deliveries'
     __table_args__ = {'schema':'gas', 'extend_existing': True}
-    id_delivery = db.Column(db.Unicode, primary_key = True)
+    id_delivery = db.Column(db.Unicode, server_default=FetchedValue(), primary_key = True)
     delivery_name = db.Column(db.Unicode)
     delivery_date = db.Column(db.Date)
     order_limit_date = db.Column(db.Date)
