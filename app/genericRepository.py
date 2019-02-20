@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from app.env import db
 
 
@@ -24,7 +25,7 @@ class GenericRepository(db.Model):
             return data.as_dict(True)
 
     @classmethod
-    def get_all(cls, columns=None, params = None, orderbyfields = None, recursif = True, as_model = False):
+    def get_all(cls, columns=None, params = None, orderbyfields = None, sortdirection = 'asc', recursif = True, as_model = False):
 
         """
         Methode qui retourne un dictionnaire de tout les éléments d'un Model
@@ -45,7 +46,10 @@ class GenericRepository(db.Model):
             if orderbyfields is not None:
                 for f in orderbyfields:
                     fname = getattr(cls,f)
-                    q = q.order_by(fname)
+                    if sortdirection == 'desc':
+                        q = q.order_by(desc(fname))
+                    else:
+                        q = q.order_by(fname)
             return [data.as_dict(recursif,columns) for data in q.all()]
         else:
             return q
