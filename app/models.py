@@ -75,7 +75,8 @@ class TGroups(GenericRepository):
         if id_group is not None:
             q = q.filter(TGroups.id_group == id_group)
         activegroups = [(g.id_group, g.group_name) for g in q.all()]
-        activegroups.insert(0,(0, 'Cliquer ici pour choisir'))
+        if id_group is None:
+            activegroups.insert(0,(0, 'Cliquer ici pour choisir'))
         return activegroups
 
 @serializable
