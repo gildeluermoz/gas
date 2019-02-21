@@ -16,7 +16,12 @@ class Utilisateur(FlaskForm):
     last_name = StringField('Nom', validators=[DataRequired()])
     first_name = StringField('Prenom')
     user_comment = TextAreaField('Commentaire')
-    id_group = SelectField(config.WORD_GROUP.capitalize(), coerce=int, choices=[], default=0)
+    id_group = SelectField(
+        config.WORD_GROUP.capitalize(), 
+        coerce=int, choices=[], 
+        default=[],
+        validators=[DataRequired(message = "Merci de choisir un " + config.WORD_GROUP)]
+    )
     identifiant = StringField('Identifiant')
     pass_plus = PasswordField('Mot de passe')
     mdpconf = PasswordField('Confirmation')

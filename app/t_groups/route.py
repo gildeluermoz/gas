@@ -52,6 +52,8 @@ def groups():
         fLine=fLine,
         line=columns,
         table=contents,
+        sortdirection='asc',
+        sortcol=1,
         key="id_group",
         pathI=config.URL_APPLICATION + '/group/info/',
         pathU=config.URL_APPLICATION + "/group/update/",

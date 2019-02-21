@@ -59,6 +59,8 @@ def products():
         fLine=fLine,
         line=columns,
         table=tab,
+        sortdirection='desc',
+        sortcol=1,
         see="False",
         key="id_product",
         pathI=config.URL_APPLICATION + "/product/info/",

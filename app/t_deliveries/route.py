@@ -71,6 +71,8 @@ def deliveries():
         table=contents,
         fLine=fLine,
         line=columns,
+        sortdirection='desc',
+        sortcol=3,
         pathI=config.URL_APPLICATION + '/delivery/info/',
         pathU=config.URL_APPLICATION + '/delivery/update/',
         key='id_delivery',

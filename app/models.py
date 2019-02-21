@@ -71,10 +71,12 @@ class TGroups(GenericRepository):
         """
         q = db.session.query(cls)
         q = q.order_by(desc(cls.group_name))
-        q = q.filter(and_(TGroups.active == True,TGroups.id_group != 0))
+        q = q.filter(and_(TGroups.active==True, TGroups.id_group != 0))
         if id_group is not None:
             q = q.filter(TGroups.id_group == id_group)
-        return [(g.id_group, g.group_name) for g in q.all()]
+        activegroups = [(g.id_group, g.group_name) for g in q.all()]
+        activegroups.insert(0,(0, 'Cliquer ici pour choisir'))
+        return activegroups
 
 @serializable
 class TUsers(GenericRepository):

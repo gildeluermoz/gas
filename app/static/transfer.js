@@ -144,7 +144,7 @@ $( document ).ready(function() {
     var data_select = {}
 
     $.fn.dataTable.moment('DD/M/YYYY');
-
+    
     $('#user').DataTable({
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
@@ -182,13 +182,22 @@ $( document ).ready(function() {
             "iDisplayLength": 25
         }
     } );
+    sortCol = 0;
+    sortDirection = 'desc';
+    if (typeof $('#tri').length > 0){
+        sortCol = $('#tri')[0].attributes.sortcol.value;
+        sortDirection = $('#tri')[0].attributes.sortdirection.value;
+        if (sortCol === null || sortCol === "") { sortCol = 0;}
+        if (sortDirection === null || sortDirection === "") { sortDirection = 'desc';}
+    }
 
     $('#tri').DataTable({
         "scrollY": "400px",
         "scrollX": false,
         "scrollCollapse": true,
         "paging": true,
-        "order": [[3, "desc"]],
+        "pageLength":50,
+        "order": [[sortCol, sortDirection]],
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
             "zeroRecords": "Aucunes données",

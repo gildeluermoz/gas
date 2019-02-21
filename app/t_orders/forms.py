@@ -41,15 +41,14 @@ class OrderChoice(FlaskForm):
         'Je choisi une livraison', 
         coerce=str, 
         choices=[],
-        default=0, 
+        default=[], 
         validators=[DataRequired(message = "Merci de choisir une livraison.")]
     )
     id_group = SelectField(
         "Je choisi mon " + config.WORD_GROUP, 
         coerce=int, 
         choices=[], 
-        default=0,
+        default=[],
         validators=[DataRequired(message = "Merci de choisir un " + config.WORD_GROUP)]
     )
     submit = SubmitField("C'est parti")
-
