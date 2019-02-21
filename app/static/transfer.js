@@ -120,11 +120,30 @@ var deleteRaw = function (path){
        window.location.href = path;
 }
 
+//permettre un tri par date dans le datatable
+$.fn.dataTable.moment = function (format, locale) {
+    var types = $.fn.dataTable.ext.type;
+
+    // Add type detection
+    types.detect.unshift(function (d) {
+        return moment(d, format, locale, true).isValid() ?
+            'moment-' + format :
+            null;
+    });
+
+    // Add sorting method - use an integer for the sorting
+    types.order['moment-' + format + '-pre'] = function (d) {
+        return moment(d, format, locale, true).unix();
+    };
+};
+
 $( document ).ready(function() {
 
     var tab_add = []
     var tab_del = []
     var data_select = {}
+
+    $.fn.dataTable.moment('DD/M/YYYY');
 
     $('#user').DataTable({
         "language": {
@@ -169,6 +188,7 @@ $( document ).ready(function() {
         "scrollX": false,
         "scrollCollapse": true,
         "paging": true,
+        "order": [[3, "desc"]],
         "language": {
             "lengthMenu": "Afficher _MENU_ éléments par page",
             "zeroRecords": "Aucunes données",

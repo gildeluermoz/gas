@@ -38,10 +38,10 @@
               {% for elt in table %}
                 <tr>
                   {% for name in line %}
-                    {%if elt[name] is sameas true %}
-                      <td style="vertical-align: middle;">Oui</td>
-                    {%elif elt[name] is sameas false%}
-                      <td style="vertical-align: middle;">Non</td>
+                    {%if elt[name] is sameas false %}
+                      <td style="vertical-align: middle; text-align: center">Non</td>
+                    {%elif elt[name] is sameas true%}
+                      <td style="vertical-align: middle; text-align: center">Oui</td>
                     {%else%}
                       {%if name != key %}
                         <td style="vertical-align: middle;">{{ elt[name] | safe }}</td>
@@ -49,7 +49,7 @@
                     {%endif%}
                   {% endfor %}
                   {% if see == 'True'%}
-                  <td style="vertical-align: middle; align: center">
+                  <td style="vertical-align: middle; text-align: center">
                     <a href="{{pathI}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm ">
                         <i class="fa fa-eye font-medium" aria-hidden="true"></i>
@@ -58,7 +58,7 @@
                   </td>
                   {%endif%}
                   {% if otherCol == 'True'%}
-                    <td style="vertical-align: middle; align: center">
+                    <td style="vertical-align: middle; text-align: center">
                       <a href="{{pathP}}{{elt[key]}}" title="Liste des {{Members.lower()}}">
                         <button type="submit" class="btn btn-secondary btn-sm ">
                           <i class="fa fa-user font-medium" aria-hidden="true"></i>

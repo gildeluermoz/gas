@@ -45,8 +45,8 @@ def products():
     else:
         user_right = ['R']
     fLine = ['Actif', 'Livraison', 'Nom', 'Unité', 'Achat', 'Vente', 'Poids', 'Remarques']  # noqa
-    columns = ['active', 'id_product', 'delivery_name', 'product_name', 'product_unit','buying_price', 'selling_price', 'case_weight',  'product_comment']  # noqa
-    contents = TProducts.get_all(columns=columns,orderbyfields=['id_product'],sortdirection='desc')
+    columns = ['active', 'id_product', 'delivery_name', 'product_name', 'product_unit', 'buying_price', 'selling_price', 'case_weight', 'product_comment']  # noqa
+    contents = TProducts.get_all(columns=columns, orderbyfields=['id_product'], sortdirection='desc')
     tab = []
     for data in contents:
         g = data

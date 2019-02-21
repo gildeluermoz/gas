@@ -25,7 +25,7 @@ class GenericRepository(db.Model):
             return data.as_dict(True)
 
     @classmethod
-    def get_all(cls, columns=None, params = None, orderbyfields = None, sortdirection = 'asc', recursif = True, as_model = False):
+    def get_all(cls, columns=None, params=None, orderbyfields=None, sortdirection='asc', recursif=True, as_model=False):
 
         """
         Methode qui retourne un dictionnaire de tout les éléments d'un Model
@@ -35,22 +35,21 @@ class GenericRepository(db.Model):
             orderbyfields, un tableau des champ sur lesquels appliquer le order_by
             si recursif != True on désactive la fonction récursive du as_dict()
             si as_model != False alors au lieu de retourner un dictionnaire on retourne une requête
-        Si as_model != False alors au lieu de retourner un dictionnaire on retourne une requête
         """
         q = db.session.query(cls)
-        if as_model == False:
+        if not as_model:
             if params is not None:
-                for param in params :
-                    nom_col = getattr(cls,param['col'])
+                for param in params:
+                    nom_col = getattr(cls, param['col'])
                     q = q.filter(nom_col == param['filter'])
             if orderbyfields is not None:
                 for f in orderbyfields:
-                    fname = getattr(cls,f)
+                    fname = getattr(cls, f)
                     if sortdirection == 'desc':
                         q = q.order_by(desc(fname))
                     else:
                         q = q.order_by(fname)
-            return [data.as_dict(recursif,columns) for data in q.all()]
+            return [data.as_dict(recursif, columns) for data in q.all()]
         else:
             return q
 

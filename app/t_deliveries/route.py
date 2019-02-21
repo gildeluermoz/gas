@@ -55,7 +55,7 @@ def deliveries():
         user_right = ['R']
     fLine = ['Active', 'Ouverte', 'Nom', 'Date', 'Commentaire', 'Commander']
     columns = ['active', 'is_open', 'id_delivery', 'delivery_name', 'delivery_date', 'delivery_comment']
-    contents = TDeliveries.get_all(columns)
+    contents = TDeliveries.get_all(columns=columns, orderbyfields=['delivery_date'], sortdirection='desc')
     # contents.append(c['delivery_order_link'])
     for c in contents:
         c['delivery_date'] = datetime.strptime(c['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
@@ -63,7 +63,8 @@ def deliveries():
             c['delivery_order_link'] = '<a href="'+config.URL_APPLICATION + '/order/choice/' + str(c['id_delivery'])+'">'+config.URL_APPLICATION + '/order/choice/' + str(c['id_delivery']) + '</a>'
         else:
             c['delivery_order_link'] = "Commande fermée"
-    columns.append('delivery_order_link')   
+    columns.append('delivery_order_link')
+    print(contents)
     return render_template(
         'table_database.html',
         user_right=user_right,
@@ -94,7 +95,7 @@ def info(id_delivery):
     user_profil = user_from_token(request.cookies['token']).id_profil
     user_right = list()
     if user_profil >= 4:
-        user_right = ['C','R','U','D']
+        user_right = ['C', 'R', 'U', 'D']
     else:
         user_right = ['R']
      # get delivery informations with id_delivery filter
