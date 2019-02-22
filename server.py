@@ -4,7 +4,7 @@
 """
 
 import json
-
+import os
 from flask import Flask, redirect, url_for, request, session, render_template
 from flask_bootstrap import Bootstrap
 from app.env import db
@@ -111,7 +111,6 @@ with app.app_context():
 
         from app.login import route
         app.register_blueprint(route.route, url_prefix='/login')
-
 
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True

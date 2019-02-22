@@ -13,7 +13,7 @@ from weasyprint import HTML
 
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
-from app.env import db, URL_REDIRECT
+from app.env import db, URL_REDIRECT, APP_ROOT
 from app.t_orders.forms import Order as orderform
 from app.t_orders.forms import OrderChoice as orderchoiceform
 from app.models import (TProducts, TGroups, TOrders, 
@@ -200,9 +200,9 @@ def printorderinfo(id_delivery):
 @fnauth.check_auth(4, False, URL_REDIRECT)
 def printorder(id_delivery):
     html = HTML(string=printorderinfo(id_delivery))
-    pdf_file = html.write_pdf('app/static/pdf/info_order.pdf')
+    pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/info_order.pdf')
     return send_file(
-        'app/static/pdf/info_order.pdf',  # file path or file-like object
+        APP_ROOT+'/static/pdf/info_order.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
         attachment_filename="commande.pdf"

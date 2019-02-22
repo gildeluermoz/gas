@@ -12,7 +12,7 @@ from weasyprint import HTML
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 
-from app.env import db, URL_REDIRECT
+from app.env import db, URL_REDIRECT, APP_ROOT
 
 from app import genericRepository
 from app.t_deliveries import forms as deliveriesforms
@@ -64,7 +64,6 @@ def deliveries():
         else:
             c['delivery_order_link'] = "Commande fermée"
     columns.append('delivery_order_link')
-    print(contents)
     return render_template(
         'table_database.html',
         user_right=user_right,
@@ -157,9 +156,9 @@ def printdeliveryinfo(id_delivery):
 @fnauth.check_auth(4, False, URL_REDIRECT)
 def printdelivery(id_delivery):
     html = HTML(string=printdeliveryinfo(id_delivery))
-    pdf_file = html.write_pdf('../app/static/pdf/delivery.pdf')
+    pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/delivery.pdf')
     return send_file(
-        'app/static/pdf/delivery.pdf',  # file path or file-like object
+        APP_ROOT+'/static/pdf/delivery.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
         attachment_filename="livraison.pdf"
