@@ -59,7 +59,6 @@ def info(id_delivery):
             'error.html', 
             title="Houps ! Un petit soucis"
         )
-
     # get orders details
     orders = list()
     for og in ordergroups:
@@ -68,6 +67,7 @@ def info(id_delivery):
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True, TOrders.id_group == og))
+        print(q)
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1-(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
@@ -76,13 +76,16 @@ def info(id_delivery):
                 mysum = mysum + p['price'] 
                 order['group_price'] = round(mysum,2)
         else:
-            flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
-            return render_template(
-                'error.html', 
-                title="Houps ! Un petit soucis"
-            )
-        orders.append(order)
+            order['group_price'] = 0
+            order['products'] = {}
 
+        orders.append(order)
+    if len(orders) == 0:
+        flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
+        return render_template(
+            'error.html', 
+            title="Houps ! Un petit soucis"
+        )
     # get orders sums
     q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
     results = list()

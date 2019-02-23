@@ -55,9 +55,14 @@
                   
                 </div>
                 <div id="group{{ o.group.id_group }}" class="card-body collapse show">
-                {% for p in o.products %}
-                  <li  class="list-unstyled"><kbd>{{p.product.product_name}}</kbd> {{ p.nb }} {{p.product.product_unit}}(s) = {{ p.price }} €</li>
-                {% endfor %}
+                
+                {%if o.products %}  
+                  {% for p in o.products %}
+                    <li  class="list-unstyled"><kbd>{{p.product.product_name}}</kbd> {{ p.nb }} {{p.product.product_unit}}(s) = {{ p.price }} €</li>
+                  {% endfor %}
+                {%else%}
+                  <li class="list-unstyled text-danger">Aucune commande</li>
+                {% endif %}
                 </div>
               </div>
             {% endfor %}
