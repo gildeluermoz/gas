@@ -67,7 +67,6 @@ def info(id_delivery):
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True, TOrders.id_group == og))
-        print(q)
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1-(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
