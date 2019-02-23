@@ -1,7 +1,7 @@
 {
   "name": "gas",
   "version": "0.1.0",
-  "description": "Gestion centralisée des utilisateurs",
+  "description": "Gestion de commandes groupées de consommateurs",
   "main": "index.js",
   "directories": {
     "doc": "docs"

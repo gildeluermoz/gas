@@ -14,7 +14,7 @@
               {{ group_order_sum.total }}€
               {% if 'D' in user_right %}
                 <button 
-                  onClick="deleteRaw('/gas/order/delete/{{ delivery.id_delivery }}/{{ group.id_group }}')" 
+                  onClick="deleteRaw('../../order/delete/{{ delivery.id_delivery }}/{{ group.id_group }}')" 
                   type="submit" 
                   class="btn btn-outline-danger btn-sm border border-white text-white float-right">
                   Supprimer
@@ -22,7 +22,7 @@
               {%endif%}
               {% if 'U' in user_right %}
               <button 
-                onclick='window.location.href="/gas/order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' 
+                onclick='window.location.href="../../order/update/{{ delivery.id_delivery }}/{{ group.id_group }}"' 
                 id="submit"
                 class="btn btn-outline-success btn-sm border border-white text-white float-right">
                 Modifier

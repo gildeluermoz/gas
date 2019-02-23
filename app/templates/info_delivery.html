@@ -9,20 +9,20 @@
 
         {% if delivery.is_open %}
           <button 
-            onclick='window.location.href="/gas/order/info/{{ delivery.id_delivery }}"' 
+            onclick='window.location.href="../../order/info/{{ delivery.id_delivery }}"' 
             id="submit" 
             class="btn btn-outline-info btn-sm border border-white text-white float-right"
             style="margin: 0 3px">
             Voir les commandes de cette livraison
           </button>
           <button 
-            onclick='window.location.href="/gas/order/choice/{{ delivery.id_delivery }}"' 
+            onclick='window.location.href="../../order/choice/{{ delivery.id_delivery }}"' 
             id="submit" class="btn btn-outline-success btn-sm border border-white text-white float-right"
             style="margin: 0 3px">
             Ajouter une commande à cette livraison
           </button>
           <button 
-            onclick='window.location.href="/gas/delivery/print/{{ delivery.id_delivery }}"' 
+            onclick='window.location.href="../print/{{ delivery.id_delivery }}"' 
             id="submit" class="btn btn-outline-info btn-sm border border-white text-white float-right">
             Imprimer
           </button>
@@ -43,7 +43,7 @@
             DESCRIPTION DE LA LIVRAISON
             {% if 'U' in user_right %}
               <button 
-                onclick='window.location.href="/gas/delivery/update/{{ delivery.id_delivery }}"' 
+                onclick='window.location.href="../update/{{ delivery.id_delivery }}"' 
                 id="submit" 
                 class="btn btn-outline-success btn-sm border border-white text-white float-right"
                 style="margin: 0 3px">
