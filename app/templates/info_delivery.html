@@ -58,6 +58,8 @@
             {% endif %}
             Livraison le {{ delivery.delivery_date }}
             <br />
+            Remise/frais (Positif = remise ; Négatif = frais) : {{ delivery.delivery_discount }}%
+            <br />
             {{ delivery.delivery_comment }}
             <br />
             Pour commander : <a href="{{ url }}">{{ url }}</a>

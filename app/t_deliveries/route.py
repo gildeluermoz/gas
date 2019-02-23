@@ -138,7 +138,7 @@ def printdeliveryinfo(id_delivery):
     # get delivery products with id_delivery filter
     q = db.session.query(TProducts)
     q = q.filter(TProducts.id_delivery == id_delivery)
-    data = q.all() 
+    data = q.all()
     if data:
         products = [p.as_dict() for p in data]
     else:
@@ -176,7 +176,7 @@ def addorupdate(id_delivery):
     """
 
     form = deliveriesforms.Delivery()
-    if id_delivery == None:
+    if id_delivery is None:
         if request.method == 'POST':
             if form.validate_on_submit() and form.validate():
                 form_delivery = pops(form.data)
@@ -241,6 +241,7 @@ def process(form, delivery):
     if delivery['order_limit_date']:
         form.order_limit_date.process_data(datetime.strptime(delivery['order_limit_date'],'%Y-%m-%d'))
     form.delivery_comment.process_data(delivery['delivery_comment'])
+    form.delivery_discount.process_data(delivery['delivery_discount'])
     form.active.process_data(delivery['active'])
     form.is_open.process_data(delivery['is_open'])
     return form

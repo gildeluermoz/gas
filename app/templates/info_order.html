@@ -68,7 +68,7 @@
             {% endfor %}
             <br/>
           <div class="card bg-success text-white">
-            <div class="card-body">Bilan de la commande (remise globale -{{results[0].delivery_discount*100}} %)</div>
+            <div class="card-body">Bilan de la commande (remise/frais : {{results[0].delivery_discount}} %)</div>
           </div>
           <ul class="list-group">
           {% for p in results %}

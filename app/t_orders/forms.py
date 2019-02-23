@@ -21,11 +21,11 @@ class Order(FlaskForm):
         validators=[DataRequired(message = "Merci de choisir un " + config.WORD_GROUP)]
     )
     group_discount = DecimalField(
-        "Remise " +config.WORD_GROUP + " en pourcentage (de 0 à 100)",
+        "Remise " +config.WORD_GROUP + " en pourcentage (de -100 à 0)",
         default=0.0,
         validators=[
-            InputRequired(message = 'La remise est obligatoire. Aucune = "0", Gratuité = "100"'),
-            NumberRange(min=0, max=100, message="La valeur de la remise doit être comprise entre 0 et 100")
+            InputRequired(message = 'La remise est obligatoire. Aucune = 0, Gratuité = -100.00'),
+            NumberRange(min=-100, max=0, message="La valeur de la remise est négative et doit être comprise entre -100 et 0")
         ]
     )
     hidden_group_discount = HiddenField(default=0.0)

@@ -10,8 +10,7 @@
         <hr /><br />
           <div class="card bg-secondary text-white">
             <div class="card-body">
-              Relais {{ group.group_name }} ({{ group.group_leader }}) - 
-              {{ group_order_sum.total }}€
+              Relais {{ group.group_name }} ({{ group.group_leader }}) {{ group_order_sum.total }}€
               {% if 'D' in user_right %}
                 <button 
                   onClick="deleteRaw('../../../order/delete/{{ delivery.id_delivery }}/{{ group.id_group }}')" 
