@@ -221,7 +221,7 @@ def orderchoice(id_delivery=None, id_group=None):
     L'envoi du formulaire passe les paramètres id_delivery et id_group au formulaire principal de la commande
     Retourne un template accompagné du formulaire pré-rempli ou non
     """
-
+    
     user_profil = user_from_token(request.cookies['token']).id_profil
     user_right = list()
     if user_profil >= 2:

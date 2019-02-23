@@ -17,6 +17,7 @@
             </div>
             <div class="form-horizontal">
                 <input type="hidden" name="" id="user_app" value="{{id_app}}">
+                <input type="hidden" name="" id="next_url" value="{{next}}">
                 <div class="form-group">
                 <label for="user_id">Identifiant:</label>
                 <input type="text" class="form-control" id="user_id">
@@ -41,6 +42,7 @@ $(window).keypress(function(event) {
 })
 
 login = function() {
+    let next = $('#next_url').val();
     $("#login-error").hide();
     $.post({
         url : '{{url_application}}' + '/auth/login',
@@ -52,7 +54,12 @@ login = function() {
         contentType:"application/json; charset=utf-8",
         dataType:"json",
         success: function(response){
-            window.location.href = '{{url_application}}';
+            if(next != ''){
+                window.location.href = '{{url_application}}' + next;
+            }
+            else{
+                window.location.href = '{{url_application}}';
+             }
         },
         error: function(error){
             $("#login-error" ).show();

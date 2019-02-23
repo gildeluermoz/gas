@@ -109,6 +109,7 @@ def check_auth(
     def _check_auth(fn):
         @wraps(fn)
         def __check_auth(*args, **kwargs):
+            session['url'] = request.path
             try:
                 # TODO: better name and configurability for the token
                 user = user_from_token(request.cookies['token'])
@@ -167,7 +168,6 @@ def check_auth(
 
 @route.route('/login', methods=['POST'])
 def login():
-
     try:
         user_data = request.json
         try:

@@ -12,5 +12,4 @@ db = SQLAlchemy()
 # URL_REDIRECT = None
 URL_REDIRECT = "{}/{}".format(config.URL_APPLICATION, "login/")
 
-
-APP_ROOT = os.path.dirname(os.path.abspath(__file__)) 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
