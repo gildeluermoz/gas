@@ -127,6 +127,7 @@ def duplicate(id_product):
     product = TProducts.get_one(id_product)
 
     if request.method == 'GET':
+        product['id_delivery']=0
         form = process(form, product)
 
     if request.method == 'POST':
