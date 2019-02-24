@@ -10,13 +10,21 @@
               onclick='window.location.href="../../order/choice/{{ delivery.id_delivery }}"' 
               id="submit" 
               class="btn btn-outline-success btn-sm border border-white text-white float-right"
-              style="margin: 0 3px;">
+              style="margin: 0 1px;">
               Nouvelle commande
+            </button>
+            <button 
+              onclick='window.location.href="../../order/csvexport/{{ delivery.id_delivery }}"' 
+              id="submit"
+              class="btn btn-outline-info btn-sm border border-white text-white float-right"
+              style="margin: 0 1px;">
+              Exporter
             </button>
             <button 
               onclick='window.location.href="../../order/print/{{ delivery.id_delivery }}"' 
               id="submit" 
-              class="btn btn-outline-info btn-sm border border-white text-white float-right">
+              class="btn btn-outline-info btn-sm border border-white text-white float-right"
+              style="margin: 0 1px;">
               Imprimer
             </button>
 

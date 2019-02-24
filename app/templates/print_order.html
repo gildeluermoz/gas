@@ -12,11 +12,7 @@
         {{ o.group['group_name'].upper() }} <span style="float:right;"> {{o.group_price}} €</span>
       </div>
         {% for p in o.products %}
-          <!-- <div class="card bg-light"> -->
-            <!-- <div class="col-sm-4 text-center"> -->
               <div class="print_product">{{p.product.product_name.upper()}} {{ p.nb }}</div>
-            <!-- </div> -->
-          <!-- </div> -->
         {% endfor %}
     </div>
     {% endfor %}

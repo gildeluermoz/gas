@@ -1,8 +1,9 @@
 from flask import (
     redirect, url_for, render_template,
-    Blueprint, request, flash, send_file
+    Blueprint, request, flash, send_file, make_response
 )
 from flask_wtf import FlaskForm
+import flask_excel as excel
 from wtforms.validators import DataRequired
 
 from sqlalchemy import exc, and_
@@ -120,7 +121,7 @@ def info(id_delivery):
         title="Commandes pour la livraison du " + delivery['delivery_date']
     )
 
-def printorderinfo(id_delivery):
+def printorderinfo(id_delivery, action='print'):
     """
     Route permettant d'imprimer le résumé d'une commande
     """
@@ -189,19 +190,48 @@ def printorderinfo(id_delivery):
     sums['buying'] = buying
     sums['benefice'] = benef
 
-    return render_template(
-        'print_order.html', 
-        orders=orders, 
-        delivery=delivery,
-        results=results, 
-        sums=sums, 
-        title="Livraison du " + delivery['delivery_date']
-    )
+    if action == 'print':
+        return render_template(
+            'print_order.html', 
+            orders=orders, 
+            delivery=delivery,
+            results=results, 
+            sums=sums, 
+            title="Livraison du " + delivery['delivery_date']
+        )
+    if action == 'export':
+        data = list()
+        productline = ['RELAIS/PRODUITS']
+        priceline = ['Prix']
+        unitline = ['Unité']
+        weightline = ['Poids']
+        count = 0
+        for o in orders:
+            line = list()
+            line.append(o['group']['group_name'].upper())
+            if len(o['products']) > 0:
+                for p in o['products']:
+                    if count == 0:
+                        productline.append(p['product']['product_name'].upper())
+                        priceline.append(p['product']['selling_price'])
+                        unitline.append(p['product']['product_unit'])
+                        weightline.append(p['product']['case_weight'])
+                    line.append(p['nb'] or 0)
+                if count == 0:
+                    productline.append('TOTAL')
+                    priceline.append('')
+                    unitline.append('')
+                    weightline.append('')
+                    data.extend([productline, priceline, unitline, weightline])
+                    count = 1
+                line.append("%.2f" % o['group_price'] or 0)
+                data.append(line)
+        return data
 
 @route.route('order/print/<id_delivery>', methods=['GET'])
 @fnauth.check_auth(4, False, URL_REDIRECT)
 def printorder(id_delivery):
-    html = HTML(string=printorderinfo(id_delivery))
+    html = HTML(string=printorderinfo(id_delivery, 'print'))
     pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/info_order.pdf')
     return send_file(
         APP_ROOT+'/static/pdf/info_order.pdf',  # file path or file-like object
@@ -209,6 +239,15 @@ def printorder(id_delivery):
         as_attachment=True,
         attachment_filename="commande.pdf"
     )
+
+@route.route('order/csvexport/<id_delivery>', methods=['GET'])
+@fnauth.check_auth(4, False, URL_REDIRECT)
+def csvexport(id_delivery):
+    data = printorderinfo(id_delivery, 'export')
+    print(data)
+    output = excel.make_response_from_array(data, 'csv', file_name="export_data")
+    return output
+
 
 @route.route('order/choice', defaults={'id_delivery': None, 'id_group': None}, methods=['GET', 'POST'])
 @route.route('order/choice/<id_delivery>', defaults={'id_group': None}, methods=['GET', 'POST'])

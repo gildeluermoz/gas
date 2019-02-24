@@ -7,6 +7,7 @@ import json
 import os
 from flask import Flask, redirect, url_for, request, session, render_template
 from flask_bootstrap import Bootstrap
+import flask_excel as excel
 from app.env import db
 from config import config
 
@@ -114,4 +115,5 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True
+    excel.init_excel(app)
     app.run(debug=config.DEBUG, port=config.PORT)
