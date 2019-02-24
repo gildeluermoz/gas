@@ -17,7 +17,8 @@ from app.env import db, URL_REDIRECT, APP_ROOT
 from app.t_orders.forms import Order as orderform
 from app.t_orders.forms import OrderChoice as orderchoiceform
 from app.models import (TProducts, TGroups, TOrders, 
-    TDeliveries, VOrdersResult, VGroupOrdersDetail, VGroupOrdersSum)
+    TDeliveries, VOrdersResult, VGroupOrdersDetail, VGroupOrdersSum
+)
 
 from config import config
 
@@ -157,14 +158,13 @@ def printorderinfo(id_delivery):
             for p in order['products']:
                 mysum = mysum + p['price'] 
                 order['group_price'] = mysum
-        else:
+        orders.append(order)
+        if len(orders) == 0:
             flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
             return render_template(
                 'error.html', 
                 title="Houps ! Un petit soucis"
             )
-        orders.append(order)
-
     # get orders sums
     q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
     results = list()
