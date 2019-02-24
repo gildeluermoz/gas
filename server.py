@@ -52,6 +52,8 @@ app.secret_key = config.SECRET_KEY
 db.init_app(app)
 app.config['DB'] = db
 
+excel.init_excel(app)
+
 with app.app_context():
     app.jinja_env.globals['url_application'] = app.config["URL_APPLICATION"]
 
@@ -115,5 +117,4 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    excel.init_excel(app)
     app.run(debug=config.DEBUG, port=config.PORT)
