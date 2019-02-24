@@ -197,7 +197,9 @@ class TDeliveries(GenericRepository):
             q = q.filter(and_(TDeliveries.active == True, TDeliveries.is_open == True))
         else:
             q = q.filter(TDeliveries.active == True)
-        return [(o.id_delivery, o.delivery_name) for o in q.all()]
+        activedeliveries = [(o.id_delivery, o.delivery_name) for o in q.all()]
+        activedeliveries.insert(0,(0, 'Cliquer ici pour choisir'))
+        return activedeliveries
 
 
 @serializable
