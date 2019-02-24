@@ -62,11 +62,13 @@ def products():
         sortdirection='desc',
         sortcol=1,
         see="False",
+        duplicate="True",
         key="id_product",
         pathI=config.URL_APPLICATION + "/product/info/",
         pathU=config.URL_APPLICATION + "/product/update/",
         pathD=config.URL_APPLICATION + "/product/delete/",
         pathA=config.URL_APPLICATION + "/product/add/new",
+        pathC=config.URL_APPLICATION + "/product/duplicate/",
         name="un produit",
         name_list="Produits"
     )
@@ -78,8 +80,8 @@ def products():
 def addorupdate(id_product):
 
     """
-    Route affichant un formulaire vierge ou non (selon l'url) pour ajouter ou mettre à jour un utilisateurs
-    L'envoie du formulaire permet l'ajout ou la mise à jour de l'utilisateur dans la base
+    Route affichant un formulaire vierge ou non (selon l'url) pour ajouter ou mettre à jour un produit
+    L'envoie du formulaire permet l'ajout ou la mise à jour du produit dans la base
     Retourne un template accompagné du formulaire pré-rempli ou non selon le paramètre id_product
     Une fois le formulaire validé on retourne une redirection vers la liste de produits
     """
@@ -101,6 +103,37 @@ def addorupdate(id_product):
                 TProducts.update(form_product)
             else:
                 TProducts.post(form_product)
+            return redirect(url_for('product.products'))
+        else:
+            errors = form.errors
+            flash(errors)
+
+    return render_template(
+        'product.html', form=form, title="Formulaire des produits pour une livraison"
+    )
+
+@route.route('product/duplicate/<id_product>', methods=['GET', 'POST'])
+@fnauth.check_auth(4, False, URL_REDIRECT)
+def duplicate(id_product):
+
+    """
+    Route affichant un formulaire avec duplication d'un produit
+    L'envoie du formulaire permet l'ajout du produit dans la base
+    Retourne un template accompagné du formulaire pré-rempli ou non selon le paramètre id_product
+    Une fois le formulaire validé on retourne une redirection vers la liste de produits
+    """
+    form = t_productsforms.Product()
+    form.id_delivery.choices = TDeliveries.selectActiveDeliveries(False)
+    product = TProducts.get_one(id_product)
+
+    if request.method == 'GET':
+        form = process(form, product)
+
+    if request.method == 'POST':
+        if form.validate_on_submit() and form.validate():
+            form_product = pops(form.data)
+            form_product.pop('id_product')
+            TProducts.post(form_product)
             return redirect(url_for('product.products'))
         else:
             errors = form.errors

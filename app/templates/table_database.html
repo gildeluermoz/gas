@@ -29,6 +29,10 @@
                 {% if 'U' in user_right %}
                   <th style="vertical-align: middle; text-align: center" scope="col"><i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i></th>
                 {%endif%}
+                {% if duplicate == 'True'%}
+                <th style="vertical-align: middle; text-align: center" scope="col"><i title="Dupliquer" class="fa fa-files-o font-medium"
+                    aria-hidden="true"></i></th>
+                {%endif%}
                 {% if 'D' in user_right %}
                   <th style="vertical-align: middle; text-align: center" scope="col"><i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i></th>
                 {%endif%}
@@ -52,16 +56,16 @@
                   <td style="vertical-align: middle; text-align: center">
                     <a href="{{pathI}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm ">
-                        <i class="fa fa-eye font-medium" aria-hidden="true"></i>
+                        <i title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></i>
                       </button>
                     </a>
                   </td>
                   {%endif%}
-                  {% if otherCol == 'True'%}
+                  {% if otherCol == 'True' %}
                     <td style="vertical-align: middle; text-align: center">
                       <a href="{{pathP}}{{elt[key]}}" title="Liste des {{Members.lower()}}">
                         <button type="submit" class="btn btn-secondary btn-sm ">
-                          <i class="fa fa-user font-medium" aria-hidden="true"></i>
+                          <i title="Voir le détail" class="fa fa-user font-medium" aria-hidden="true"></i>
                         </button>
                     </a>
                     </td>
@@ -70,7 +74,16 @@
                   <td style="vertical-align: middle; text-align: center">
                     <a href="{{pathU}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm">
-                        <i class="fa fa-pencil font-medium" aria-hidden="true"></i>
+                        <i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i>
+                      </button>
+                    </a>
+                  </td>
+                  {%endif%}
+                  {% if 'U' in user_right and duplicate == 'True' %}
+                  <td style="vertical-align: middle; text-align: center">
+                    <a href="{{pathC}}{{elt[key]}}">
+                      <button type="submit" class="btn btn-secondary btn-sm">
+                        <i title="Dupliquer" class="fa fa-files-o font-medium" aria-hidden="true"></i>
                       </button>
                     </a>
                   </td>
@@ -78,7 +91,7 @@
                   {% if 'D' in user_right %}
                   <td style="vertical-align: middle; text-align: center">
                     <button onclick="deleteRaw('{{pathD}}{{elt[key]}}')" type="submit" class="btn btn-danger btn-sm">
-                      <i class="fa fa-trash font-medium" aria-hidden="true"></i>
+                      <i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i>
                     </button>
                   </td>
                   {%endif%}
