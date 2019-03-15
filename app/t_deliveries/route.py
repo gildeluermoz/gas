@@ -87,7 +87,7 @@ def deliveries():
 
 
 @route.route('delivery/info/<id_delivery>', methods=['GET'])
-# @fnauth.check_auth(2, False, URL_REDIRECT)
+@fnauth.check_auth(2, False, URL_REDIRECT)
 def info(id_delivery):
     """
     Route affichant le résumé d'une livraison
@@ -241,6 +241,7 @@ def process(form, delivery):
     if delivery['order_limit_date']:
         form.order_limit_date.process_data(datetime.strptime(delivery['order_limit_date'],'%Y-%m-%d'))
     form.delivery_comment.process_data(delivery['delivery_comment'])
+    form.delivery_organization.process_data(delivery['delivery_organization'])
     form.delivery_discount.process_data(delivery['delivery_discount'])
     form.active.process_data(delivery['active'])
     form.is_open.process_data(delivery['is_open'])

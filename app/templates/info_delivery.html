@@ -88,6 +88,18 @@
             {% endfor %}
           </div>
         </div>
+
+        <br />
+        {% if delivery.delivery_organization %}
+          <div class="card">
+            <div class="card-header bg-secondary text-white">
+              ORGANISATION DE LA LIVRAISON
+            </div>
+            <div class="card-body">
+              {{ delivery.delivery_organization.replace("\n", "<br />") | safe }}
+            </div>
+          </div>
+        {% endif %}
       </div>
   </body>
 </html>

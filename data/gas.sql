@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS t_deliveries (
     order_limit_date date,
     delivery_discount decimal DEFAULT 0,
     delivery_comment text,
+    delivery_organization text,
     active boolean DEFAULT true,
     is_open boolean DEFAULT false,
     date_insert timestamp without time zone,

@@ -182,6 +182,7 @@ class TDeliveries(GenericRepository):
     order_limit_date = db.Column(db.Date)
     delivery_discount = db.Column(db.Numeric)
     delivery_comment = db.Column(db.Unicode)
+    delivery_organization = db.Column(db.Unicode)
     active = db.Column(db.Boolean)
     is_open = db.Column(db.Boolean)
 

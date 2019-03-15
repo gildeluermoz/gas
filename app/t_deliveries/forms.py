@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateField, DecimalField, BooleanField, SubmitField, HiddenField
+from wtforms import StringField, DateField, DecimalField, BooleanField, SubmitField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, NumberRange
 
 
@@ -15,6 +15,7 @@ class Delivery(FlaskForm):
     delivery_date = DateField('Date de livraison')
     order_limit_date = DateField('Date limite de commande')
     delivery_comment = StringField('Commentaire')
+    delivery_organization = TextAreaField('Organisation de la livraison')
     delivery_discount = DecimalField(
         "Remise/frais global (remise = valeur négative, frais = valeur positive ; de -100% à +100%",
         default=0.0,
