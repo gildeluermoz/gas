@@ -3,7 +3,7 @@
   <body>
       {% include "head-appli.html" %}
 
-      <div class="container main-zone ng-scope">
+      <div class="container content main-zone ng-scope">
         <div class="card p-4 mb-3 bg-secondary border border-0 text-white">
           <h2 class="margin-neg">{{ title }}</h2>
         </div>
@@ -29,16 +29,13 @@
               {%endif%}
             </div>
           </div>
-
-          <ul>
-            {% for go in group_order %}
-              <div class="card">
-                <div class="card-body">
-                  <li class="list-unstyled"><kbd>{{ go.product_name }}</kbd> {{ go.product_case_number }} {{ go.product_unit }}s = {{ go.selling_price }}€</li>
-                </div>
-              </div> 
-            {% endfor %}
-          </ul>
+          {% for go in group_order %}
+            <div class="card back">
+              <div class="card-body">
+                <li class="list-unstyled"><kbd>{{ go.product_name }}</kbd> {{ go.product_case_number }} {{ go.product_unit }}s = {{ go.selling_price }}€</li>
+              </div>
+            </div> 
+          {% endfor %}
       </div>
   </body>
 </html>

@@ -5,12 +5,12 @@
 
 {% block content %}
 
-  <form method="POST" class="container" novalidate>
+  <form method="POST" class="container content" novalidate>
     <h3 class="margin-neg">{{ title }}</h3>
 
     {{ form.hidden_tag() }}
 
-    <div class="row forms card">
+    <div class="row forms card back">
       {% with messages = get_flashed_messages() %}
           {% if messages %}
             <div class="alert alert-danger" role="alert">

@@ -3,7 +3,7 @@
   <body>
       {% include "head-appli.html" %}
 
-      <div class="container main-zone ng-scope">
+      <div class="container content main-zone ng-scope">
         <div class="card p-4 mb-3 bg-secondary border border-0 text-white">
           <h2>{{title}}
             <button 
@@ -24,23 +24,22 @@
               onclick='window.location.href="../../order/print/{{ delivery.id_delivery }}"' 
               id="submit" 
               class="btn btn-outline-info btn-sm border border-white text-white float-right"
-              style="margin: 0 1px;">
+              style="margin: 0 1px 0 100px;">
               Imprimer
             </button>
 
           </h2>
         </div>
-      </div>
       
-      <hr /><br />
-      <div class="container main-zone ng-scope ">
+      <br />
+
         <div class="card bg-success text-white">
           <div class="card-body">
             Commandes des relais
           </div>
         </div>
             {% for o in orders %}
-              <div class="card" >
+              <div class="card back" >
                 <div class="card-header bg-secondary text-white" data-toggle="collapse" data-target="#group{{ o.group.id_group }}">
                   {{ o.group['group_name'] }} - {{o.group_price}} €
                   {% if 'D' in user_right %}

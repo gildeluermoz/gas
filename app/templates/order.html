@@ -3,7 +3,7 @@
 {% include "header.html" %}
 
 {% block content %}
-    <form method="POST" class="container" novalidate>
+    <form method="POST" class="container content" novalidate>
         {{ form.hidden_tag() }} {{ form.csrf_token }}
         <h2 class="margin-neg">{{ title }}</h2>
         {% if is_update %}
@@ -11,7 +11,7 @@
                 Une commande existe pour ce relais. Vous pouvez la modifier. N'oubliez pas d'enregistrer.
             </div>
         {% endif %}
-        <div class="row forms card">
+        <div class="row forms card back">
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 <div class="alert alert-danger" role="alert">

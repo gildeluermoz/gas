@@ -5,10 +5,10 @@
 
 {% block content %}
 
-  <form method="POST" class="container" novalidate>
+  <form method="POST" class="container content" novalidate>
     <h3 class="margin-neg">{{ title }}</h3>
 
-    <div class="row forms card">
+    <div class="row forms card back">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}

@@ -3,11 +3,11 @@
 {% include "head-appli.html" %} 
 
 {% block content %}
-  <form method="post" class="container" novalidate>
+  <form method="post" class="container content" novalidate>
     {{ form.hidden_tag() }} {{ form.csrf_token }}
-    <h3 class="margin-neg">{{ title }}</h3>
+    <h3>{{ title }}</h3>
 
-    <div class="row card forms">
+    <div class="row card forms back">
       {% with messages = get_flashed_messages() %} 
         {% if messages %}
           <div class="alert alert-danger" role="alert">

@@ -3,7 +3,7 @@
   <body>
       {% include "head-appli.html" %}
 
-      <div class="container main-zone ng-scope">
+      <div class="container content main-zone ng-scope">
         <div class="card p-4 mb-3 bg-secondary border border-white text-white text-white">
         <h2>{{title}}
 
@@ -38,7 +38,7 @@
         
         <hr /><br />
 
-        <div class="card">
+        <div class="card back">
           <div class="card-header bg-secondary text-white">
             DESCRIPTION DE LA LIVRAISON
             {% if 'U' in user_right %}
@@ -68,7 +68,7 @@
 
         <br />
 
-        <div class="card" >
+        <div class="card back" >
           <div class="card-header bg-secondary text-white">
             PRODUITS EN COMMANDE
           </div>
@@ -91,7 +91,7 @@
 
         <br />
         {% if delivery.delivery_organization %}
-          <div class="card">
+          <div class="card back">
             <div class="card-header bg-secondary text-white">
               ORGANISATION DE LA LIVRAISON
             </div>

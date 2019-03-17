@@ -2,7 +2,7 @@
   {% include "header.html" %}
   <body>
       {% include "head-appli.html" %}
-      <div class="container">
+      <div class="container content" >
         <div class="card p-4 mb-3 bg-secondary border border-0 text-white">
           <h2>{{ name_list }}
           {% if 'C' in user_right %}
@@ -12,29 +12,28 @@
           {%endif%}
           </h2>
         </div>
-        <div id="table">
-          <table class="hover table table-bordered table-striped table-hover table-sm table-responsive-sm" id="tri" sortcol="{{ sortcol }}" sortdirection="{{ sortdirection }}">
+        <div id="table" class="back" style="padding: 20px;">
+          <table  class="hover table table-bordered table-striped table-hover table-sm table-responsive-sm" id="tri" sortcol="{{ sortcol }}" sortdirection="{{ sortdirection }}">
             <thead>
-              <!-- <tr class="footable-filtering"></tr> -->
               <tr>
                 {% for name in fLine %}
                   <th scope="col">{{ name }}</th>
                 {% endfor %}
                 {% if otherCol == 'True'%}
-                  <th style="vertical-align: middle; text-align: center" scope="col"><i title="{{ Members }}" class="fa fa-user font-medium" aria-hidden="true"></i></th>
+                  <th style="vertical-align: middle; text-align: center" scope="col"><span title="{{ Members }}" class="fa fa-user font-medium" aria-hidden="true"></span></th>
                 {%endif%}
                 {% if see == 'True'%}
-                <th style="vertical-align: middle; text-align: center" scope="col"><i title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></i></th>
+                <th style="vertical-align: middle; text-align: center" scope="col"><span title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></span></th>
                 {%endif%}
                 {% if 'U' in user_right %}
-                  <th style="vertical-align: middle; text-align: center" scope="col"><i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i></th>
+                  <th style="vertical-align: middle; text-align: center" scope="col"><span title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></span></th>
                 {%endif%}
                 {% if duplicate == 'True'%}
-                <th style="vertical-align: middle; text-align: center" scope="col"><i title="Dupliquer" class="fa fa-files-o font-medium"
-                    aria-hidden="true"></i></th>
+                <th style="vertical-align: middle; text-align: center" scope="col"><span title="Dupliquer" class="fa fa-files-o font-medium"
+                    aria-hidden="true"></span></th>
                 {%endif%}
                 {% if 'D' in user_right %}
-                  <th style="vertical-align: middle; text-align: center" scope="col"><i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i></th>
+                  <th style="vertical-align: middle; text-align: center" scope="col"><span title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></span></th>
                 {%endif%}
               </tr>
             </thead>
@@ -56,7 +55,7 @@
                   <td style="vertical-align: middle; text-align: center">
                     <a href="{{pathI}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm ">
-                        <i title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></i>
+                        <span title="Voir" class="fa fa-eye font-medium" aria-hidden="true"></span>
                       </button>
                     </a>
                   </td>
@@ -65,7 +64,7 @@
                     <td style="vertical-align: middle; text-align: center">
                       <a href="{{pathP}}{{elt[key]}}">
                         <button type="submit" class="btn btn-secondary btn-sm ">
-                          <i title="Voir le contenu}}" class="fa fa-user font-medium" aria-hidden="true"></i>
+                          <span title="Voir le contenu}}" class="fa fa-user font-medium" aria-hidden="true"></span>
                         </button>
                     </a>
                     </td>
@@ -74,7 +73,7 @@
                   <td style="vertical-align: middle; text-align: center">
                     <a href="{{pathU}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm">
-                        <i title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></i>
+                        <span title="Modifier" class="fa fa-pencil font-medium" aria-hidden="true"></span>
                       </button>
                     </a>
                   </td>
@@ -83,7 +82,7 @@
                   <td style="vertical-align: middle; text-align: center">
                     <a href="{{pathC}}{{elt[key]}}">
                       <button type="submit" class="btn btn-secondary btn-sm">
-                        <i title="Dupliquer" class="fa fa-files-o font-medium" aria-hidden="true"></i>
+                        <span title="Dupliquer" class="fa fa-files-o font-medium" aria-hidden="true"></span>
                       </button>
                     </a>
                   </td>
@@ -91,7 +90,7 @@
                   {% if 'D' in user_right %}
                   <td style="vertical-align: middle; text-align: center">
                     <button onclick="deleteRaw('{{pathD}}{{elt[key]}}')" type="submit" class="btn btn-danger btn-sm">
-                      <i title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></i>
+                      <span title="Supprimer" class="fa fa-trash font-medium" aria-hidden="true"></span>
                     </button>
                   </td>
                   {%endif%}

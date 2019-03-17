@@ -192,8 +192,8 @@ $( document ).ready(function() {
     }
 
     $('#tri').DataTable({
-        "scrollY": "400px",
-        "scrollX": false,
+        "scrollY": false,
+        "scrollX": true,
         "scrollCollapse": true,
         "paging": true,
         "pageLength":50,
@@ -215,5 +215,10 @@ $( document ).ready(function() {
             "iDisplayLength": 25
         }
     });
-});
 
+    setTimeout(function () {
+        $('#tri').DataTable().columns.adjust().draw();
+        $('#tri').DataTable().addClass('dtbody')
+    }, 200);
+
+});
