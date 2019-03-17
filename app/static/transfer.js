@@ -218,7 +218,6 @@ $( document ).ready(function() {
 
     setTimeout(function () {
         $('#tri').DataTable().columns.adjust().draw();
-        $('#tri').DataTable().addClass('dtbody')
     }, 200);
 
 });
