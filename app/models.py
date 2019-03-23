@@ -218,7 +218,7 @@ class TProducts(GenericRepository):
     product_unit = db.Column(db.Unicode)
     buying_price = db.Column(db.Numeric)
     selling_price = db.Column(db.Numeric)
-    case_weight = db.Column(db.Integer)
+    case_weight = db.Column(db.Numeric)
     product_comment = db.Column(db.Unicode)
     active = db.Column(db.Boolean)
     delivery_rel = relationship("TDeliveries")

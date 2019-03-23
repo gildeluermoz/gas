@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS t_deliveries (
     delivery_date date,
     order_limit_date date,
     delivery_discount decimal DEFAULT 0,
+    shipping decimal DEFAULT 0,
     delivery_comment text,
     delivery_organization text,
     active boolean DEFAULT true,
@@ -111,7 +112,7 @@ CREATE TABLE IF NOT EXISTS t_products (
     product_unit character varying(50) NOT NULL,
     buying_price decimal NOT NULL,
     selling_price decimal NOT NULL,
-    case_weight integer NOT NULL,
+    case_weight decimal NOT NULL,
     product_comment text,
     active boolean DEFAULT true
 );

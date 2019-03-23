@@ -18,7 +18,7 @@ class Product(FlaskForm):
     id_delivery = SelectField("Choisir la livraison pour ce produit", coerce=str, choices=[], default=[])
     buying_price = DecimalField("Prix d'achat")
     selling_price = DecimalField("Prix de vente")
-    case_weight = IntegerField("Poids de l'unité")
+    case_weight = DecimalField("Poids de l'unité")
     id_product = HiddenField("id")
     submit = SubmitField("Enregistrer")
 
