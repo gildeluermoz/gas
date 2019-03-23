@@ -243,6 +243,7 @@ def process(form, delivery):
     form.delivery_comment.process_data(delivery['delivery_comment'])
     form.delivery_organization.process_data(delivery['delivery_organization'])
     form.delivery_discount.process_data(delivery['delivery_discount'])
+    form.shipping.process_data(delivery['shipping'])
     form.active.process_data(delivery['active'])
     form.is_open.process_data(delivery['is_open'])
     return form

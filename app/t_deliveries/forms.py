@@ -24,5 +24,6 @@ class Delivery(FlaskForm):
             NumberRange(min=-100, max=100, message="La valeur doit être comprise entre -100 et +100")
         ]
     )
+    shipping = DecimalField("Frais de port (valeur positive en euros)", default=0.0)
     id_delivery = HiddenField('id')
     submit = SubmitField('Enregistrer')

@@ -58,6 +58,8 @@
             {% endif %}
             Livraison le {{ delivery.delivery_date }}
             <br />
+            Frais de port : {{ delivery.shipping }}€
+            <br />
             Remise/frais (Positif = remise ; Négatif = frais) : {{ delivery.delivery_discount }}%
             <br />
             {{ delivery.delivery_comment }}
