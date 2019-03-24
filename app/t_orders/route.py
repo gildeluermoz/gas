@@ -411,7 +411,7 @@ def addorupdate(id_delivery, id_group):
                     group_order_sum=group_order_sum, 
                     group=group, 
                     delivery=delivery, 
-                    title="Résumé de la commande pour la livraison du " + delivery['delivery_date']
+                    title="Résumé de votre commande (livraison du " + delivery['delivery_date'] +")"
                 )
             else:
                 errors = form.errors
