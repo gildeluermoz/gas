@@ -73,21 +73,27 @@ def load_fixtures(con_uri):
             engine.execute("COMMIT")
 
 
-def user_from_token(token, secret_key=None):
+def user_from_token(token=None, secret_key=None):
     """Given a, authentification token, return the matching AppUser instance"""
-
+    print('beforetry')
     secret_key = secret_key or current_app.config['SECRET_KEY']
 
     try:
         s = Serializer(current_app.config['SECRET_KEY'])
-        data = s.loads(token)
-
-        id_user = data['id_user']
-        id_app = data['id_application']
-        return (models.AppUser
+        if token is not None:
+            data = s.loads(token)
+            id_user = data['id_user']
+            id_app = data['id_application']
+            return (models.AppUser
+                        .query
+                        .filter(models.AppUser.id_user == id_user)
+                        .filter(models.AppUser.id_application == id_app)
+                        .one())
+        else:
+            return (models.AppUser
                       .query
-                      .filter(models.AppUser.id_user == id_user)
-                      .filter(models.AppUser.id_application == id_app)
+                      .filter(models.AppUser.id_user == "0")
+                      .filter(models.AppUser.id_application == "0")
                       .one())
 
     except NoResultFound:

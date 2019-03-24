@@ -112,8 +112,10 @@ def check_auth(
             session['url'] = request.path
             try:
                 # TODO: better name and configurability for the token
-                user = user_from_token(request.cookies['token'])
-
+                if level > 0:
+                    user = user_from_token(request.cookies['token'])
+                else:
+                    user = user_from_token()
                 if user.id_profil < level:
                     log.info('Privilege too low')
                     return Response('Forbidden', 403)
@@ -134,11 +136,14 @@ def check_auth(
                 return res
 
             except KeyError as e:
-                if 'token' not in e.args:
-                    raise
-                if redirect_on_expiration:
-                    return redirect(redirect_on_expiration, code=302)
-                return Response('No token', 403)
+                if level > 0:
+                    if 'token' not in e.args:
+                        raise
+                    if redirect_on_expiration:
+                        return redirect(redirect_on_expiration, code=302)
+                    return Response('No token', 403)
+                else:
+                    pass
 
             except UnreadableAccessRightsError:
                 log.info('Invalid Token : BadSignature')

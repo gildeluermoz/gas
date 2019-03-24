@@ -87,13 +87,16 @@ def deliveries():
 
 
 @route.route('delivery/info/<id_delivery>', methods=['GET'])
-@fnauth.check_auth(2, False, URL_REDIRECT)
+@fnauth.check_auth(0, False, URL_REDIRECT)
 def info(id_delivery):
     """
     Route affichant le résumé d'une livraison
     Des liens permettent de créer ou de voir la commande des relais
     """
-    user_profil = user_from_token(request.cookies['token']).id_profil
+    if 'token' in request.cookies:
+        user_profil = user_from_token(request.cookies['token']).id_profil
+    else:
+        user_profil = 0
     user_right = list()
     if user_profil >= 4:
         user_right = ['C', 'R', 'U', 'D']

@@ -6,34 +6,37 @@
       <div class="container content main-zone ng-scope">
         <div class="card p-4 mb-3 bg-secondary border border-white text-white text-white">
         <h2>{{title}}
-
+        
         {% if delivery.is_open %}
-          <button 
-            onclick='window.location.href="../../order/info/{{ delivery.id_delivery }}"' 
-            id="submit" 
-            class="btn btn-outline-info btn-sm border border-white text-white float-right"
-            style="margin: 0 3px">
-            Voir les commandes de cette livraison
-          </button>
-          <button 
-            onclick='window.location.href="../../order/choice/{{ delivery.id_delivery }}"' 
-            id="submit" class="btn btn-outline-success btn-sm border border-white text-white float-right"
-            style="margin: 0 3px">
-            Ajouter une commande à cette livraison
-          </button>
-          <button 
-            onclick='window.location.href="../print/{{ delivery.id_delivery }}"' 
-            id="submit" class="btn btn-outline-info btn-sm border border-white text-white float-right">
-            Imprimer
-          </button>
-          </h2>
-          </div>
-          <br />
-        {% else %}
-          </h2>
-          </div>
+          {% if 'U' in user_right %}
+            <button 
+              onclick='window.location.href="../../order/info/{{ delivery.id_delivery }}"' 
+              id="submit" 
+              class="btn btn-outline-info btn-sm border border-white text-white float-right"
+              style="margin: 0 3px">
+              Voir les commandes de cette livraison
+            </button>
+            <button 
+              onclick='window.location.href="../../order/choice/{{ delivery.id_delivery }}"' 
+              id="submit" class="btn btn-outline-success btn-sm border border-white text-white float-right"
+              style="margin: 0 3px">
+              Ajouter une commande à cette livraison
+            </button>
+            <button 
+              onclick='window.location.href="../print/{{ delivery.id_delivery }}"' 
+              id="submit" class="btn btn-outline-info btn-sm border border-white text-white float-right">
+              Imprimer
+            </button>
+          {%endif%}
+            </h2>
+            </div>
+          {% else %}
+            <br />
+            </h2>
+            </div>
             <div class="alert alert-danger">Les commandes pour cette livraison sont closes.</div>
         {%endif%}
+        
         
         
         <hr /><br />
@@ -63,8 +66,10 @@
             Remise/frais (Positif = remise ; Négatif = frais) : {{ delivery.delivery_discount }}%
             <br />
             {{ delivery.delivery_comment }}
-            <br />
-            Pour commander : <a href="{{ url }}">{{ url }}</a>
+            {% if 'U' in user_right %}
+              <br />
+              Pour commander : <a href="{{ url }}">{{ url }}</a>
+            {% endif %}
           </div>
         </div>
 
@@ -78,10 +83,8 @@
             {% for p in products %}
               <li  class="list-unstyled">
                 <kbd>{{p.product_name}}</kbd> 
-                {% if session['current_user']['id_profil'] >= 4 %}
                   {{ p.selling_price }}€ 
-                {% endif %}
-                <small>(Achat : {{ p.buying_price }}€)</small>
+                <!--<small>(Achat : {{ p.buying_price }}€)</small>-->
                 Poids : {{ p.case_weight }}Kg
                 {% if p.product_comment %}
                   - Commentaire : {{ p.product_comment }}
