@@ -11,6 +11,7 @@ SELECT pg_catalog.setval('t_groups_id_group_seq', (SELECT max(id_group)+1 FROM t
 
 INSERT INTO t_users (id_user, id_group, identifiant, last_name, first_name, user_comment, email, pass_plus) VALUES 
 ('2734d3f237e741dbae27ba9c2ec04f3a', 0, 'admin', 'Administrateur', 'test', 'administrateur par défaut', NULL, '$2y$13$TMuRXgvIg6/aAez0lXLLFu0lyPk4m8N55NDhvLoUHh/Ar3rFzjFT.')
+,('0', 0, NULL, 'non identifié', NULL, 'Utilisateur générique utilisé pour l''accès aux pages non protégées', NULL, NULL)
 ;
 
 INSERT INTO t_profils (id_profil, profil_code, profil_name, profil_comment) VALUES
@@ -25,4 +26,5 @@ SELECT pg_catalog.setval('t_profils_id_profil_seq', (SELECT max(id_profil)+1 FRO
 
 INSERT INTO cor_user_profil (id_profil, id_user) VALUES
 (6, '2734d3f237e741dbae27ba9c2ec04f3a')
+,(0, '0')
 ;
