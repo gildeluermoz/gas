@@ -111,6 +111,7 @@ def info(id_delivery):
     # get delivery products with id_delivery filter
     q = db.session.query(TProducts)
     q = q.filter(TProducts.id_delivery == id_delivery)
+    q = q.order_by(TProducts.product_name)
     data = q.all() 
     if data:
         products = [p.as_dict() for p in data]
