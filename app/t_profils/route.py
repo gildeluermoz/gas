@@ -73,7 +73,7 @@ def profils():
 @fnauth.check_auth(6, False, URL_REDIRECT)
 def users(id_profil):
     """
-    Route affichant la liste des users du profil et ceux dispobles.
+    Route affichant la liste des users du profil et ceux disponibles.
     Avec pour paramètre un id de profil
     Retourne un template avec pour paramètres:
         - une entête des tableaux --> fLine
