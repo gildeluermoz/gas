@@ -75,7 +75,6 @@ def load_fixtures(con_uri):
 
 def user_from_token(token=None, secret_key=None):
     """Given a, authentification token, return the matching AppUser instance"""
-    print('beforetry')
     secret_key = secret_key or current_app.config['SECRET_KEY']
 
     try:
