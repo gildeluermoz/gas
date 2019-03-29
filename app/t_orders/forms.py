@@ -9,8 +9,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, InputRequired, NumberRange
 from config import config
-# from app.env import db, URL_REDIRECT
-# from app.models import TProducts
+
 
 class Order(FlaskForm):
     id_group = SelectField(
@@ -18,13 +17,13 @@ class Order(FlaskForm):
         coerce=int, 
         choices=[], 
         default=[0],
-        validators=[DataRequired(message = "Merci de choisir un " + config.WORD_GROUP)]
+        validators=[DataRequired(message="Merci de choisir un " + config.WORD_GROUP)]
     )
     group_discount = DecimalField(
         "Remise " +config.WORD_GROUP + " en pourcentage (de -100 à 0)",
         default=0.0,
         validators=[
-            InputRequired(message = 'La remise est obligatoire. Aucune = 0, Gratuité = -100.00'),
+            InputRequired(message='La remise est obligatoire. Aucune = 0, Gratuité = -100.00'),
             NumberRange(min=-100, max=0, message="La valeur de la remise est négative et doit être comprise entre -100 et 0")
         ]
     )
@@ -33,22 +32,22 @@ class Order(FlaskForm):
 
     @classmethod
     def append_nbcase(cls, name, label):
-        setattr(cls, name, IntegerField(label, validators=[InputRequired(message = 'La quantité est obligatoire. Aucune = "0"')]))
+        setattr(cls, name, IntegerField(label, validators=[InputRequired(message='La quantité est obligatoire. Aucune = "0"')]))
         return cls
 
 class OrderChoice(FlaskForm):
     id_delivery = SelectField(
-        'Je choisi une livraison', 
-        coerce=str, 
+        'Je choisi une livraison',
+        coerce=str,
         choices=[],
-        default=[], 
-        validators=[DataRequired(message = "Merci de choisir une livraison.")]
+        default=[],
+        validators=[DataRequired(message="Merci de choisir une livraison.")]
     )
     id_group = SelectField(
-        "Je choisi mon " + config.WORD_GROUP, 
-        coerce=int, 
-        choices=[], 
+        "Je choisi mon " + config.WORD_GROUP,
+        coerce=int,
+        choices=[],
         default=[],
-        validators=[DataRequired(message = "Merci de choisir un " + config.WORD_GROUP)]
+        validators=[DataRequired(message="Merci de choisir un " + config.WORD_GROUP)]
     )
     submit = SubmitField("C'est parti")
