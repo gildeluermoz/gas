@@ -4,6 +4,14 @@
     body{
       background-image:none !important;
     }
+    table{
+      width:100%; 
+      border-collapse: collapse;
+    }
+    tr, th, td{
+      border: 1px solid black;
+      height: 35px; 
+    }
   </style>
   <body>
     <div class="print_head">
@@ -54,5 +62,25 @@
           </ul>
         </div>
       </div>
+      <br />
+      <div class="print_card">
+        <div class="print_title">
+          Encaissements
+        </div>
+        <table>
+          <tr style="border: 1px solid black;">
+            <th style="width:60%; text-align: center;">Relais</th> 
+            <th style="width:20%; text-align: center;">A payer</th>
+            <th style="width:20%; text-align: center;">Encaissé</th>
+          </tr>
+        {% for o in orders %}
+          <tr style="border: 1px solid black;">
+            <td style="width:60%;">{{ o.group['group_name'].upper() }}</td> 
+            <td style="width:20%; text-align: right">{{o.group_price}} €</td>
+            <td style="width:20%;"></td>
+          </tr>
+        {% endfor %}
+        </table>
+    </div>
   </body>
 </html>
