@@ -124,8 +124,12 @@ class TUsers(GenericRepository):
 
         if self.first_name == None:
             full_name = self.last_name
+        elif self.last_name == None:
+            full_name = self.first_name
+        elif self.last_name is not None and self.first_name is not None:
+            full_name = self.last_name + ' ' + self.first_name
         else :
-            full_name = self.last_name + ' '+ self.first_name
+            full_name = ''
         return full_name
 
     def as_dict_full_name(self):
