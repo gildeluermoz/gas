@@ -332,7 +332,7 @@ def addorupdate(id_delivery, id_group):
         # get active products order in t_products table with id_delivery filter
         q = db.session.query(TProducts)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
-        q = q.order_by(TProducts.id_product)
+        q = q.order_by(TProducts.product_name)
         products = [p.as_dict() for p in q.all()]
         if len(products) == 0:
             flash("Aucun produit n'a été enregistré pour cette livraison.")
@@ -407,7 +407,7 @@ def addorupdate(id_delivery, id_group):
                             )
                         
                 q = db.session.query(VGroupOrdersDetail)
-                q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group))
+                q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group)).order_by(VGroupOrdersDetail.group_name, VGroupOrdersDetail.product_name)
                 group_order = [go.as_dict() for go in q.all()]
                 group_order_sum = VGroupOrdersSum.get_one((id_delivery, id_group))
                 return render_template(
