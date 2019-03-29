@@ -49,9 +49,11 @@ def info(id_delivery):
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
 
     # get products order in t_products table with id_delivery filter
-    q = db.session.query(TOrders.id_group).distinct()
-    q.join(TProducts, TProducts.id_product == TOrders.id_product)
+    q = db.session.query(TOrders.id_group, TGroups.group_name).distinct()
+    q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
+    q = q.join(TGroups, TGroups.id_group == TOrders.id_group)
     q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
+    q = q.order_by(TGroups.group_name)
     data = q.all() 
     if data:
          ordergroups = [p[0] for p in data]
@@ -69,6 +71,7 @@ def info(id_delivery):
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True, TOrders.id_group == og))
+        q = q.order_by(TProducts.product_name)
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1+(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
@@ -88,7 +91,7 @@ def info(id_delivery):
             title="Houps ! Un petit soucis"
         )
     # get orders sums
-    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
+    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery).order_by(VOrdersResult.product_name)
     results = list()
     nbc = 0
     w = 0 
@@ -107,7 +110,7 @@ def info(id_delivery):
     sums = dict()
     sums['case_number'] = nbc
     sums['weight'] = w
-    sums['selling'] = round(selling,2)
+    sums['selling'] = round(selling, 2)
     sums['buying'] = buying
     sums['benefice'] = benef
 
@@ -131,9 +134,11 @@ def printorderinfo(id_delivery, action='print'):
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
 
     # get products order in t_products table with id_delivery filter
-    q = db.session.query(TOrders.id_group).distinct()
-    q.join(TProducts, TProducts.id_product == TOrders.id_product)
+    q = db.session.query(TOrders.id_group, TGroups.group_name).distinct()
+    q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
+    q = q.join(TGroups, TGroups.id_group == TOrders.id_group)
     q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
+    q = q.order_by(TGroups.group_name)
     data = q.all() 
     if data:
          ordergroups = [p[0] for p in data]
@@ -152,6 +157,7 @@ def printorderinfo(id_delivery, action='print'):
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
         q = q.join(TDeliveries, TDeliveries.id_delivery == TProducts.id_delivery)
         q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True, TOrders.id_group == og))
+        q = q.order_by(TProducts.product_name)
         order['products'] = [{'product':o.product_rel.as_dict(), 'nb':o.product_case_number, 'price':round(o.product_case_number*o.product_rel.selling_price*(1+(o.group_discount/100)),2)} for o in q.all()]
         order['group'] = TGroups.get_one(og)
         mysum = 0
@@ -163,11 +169,11 @@ def printorderinfo(id_delivery, action='print'):
         if len(orders) == 0:
             flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
             return render_template(
-                'error.html', 
+                'error.html',
                 title="Houps ! Un petit soucis"
             )
     # get orders sums
-    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery)
+    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery).order_by(VOrdersResult.product_name)
     results = list()
     nbc = 0
     w = 0 
@@ -186,7 +192,7 @@ def printorderinfo(id_delivery, action='print'):
     sums = dict()
     sums['case_number'] = nbc
     sums['weight'] = w
-    sums['selling'] = round(selling,2)
+    sums['selling'] = round(selling, 2)
     sums['buying'] = buying
     sums['benefice'] = benef
 
@@ -255,7 +261,7 @@ def csvexport(id_delivery):
 def orderchoice(id_delivery=None, id_group=None):
     """
     Route affichant un formulaire préalable à la commande
-    Il permet de choisir sa commande et son relais 
+    Il permet de choisir sa commande et son relais
     L'envoi du formulaire passe les paramètres id_delivery et id_group au formulaire principal de la commande
     Retourne un template accompagné du formulaire pré-rempli ou non
     """
