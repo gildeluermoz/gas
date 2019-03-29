@@ -197,7 +197,7 @@ def printorderinfo(id_delivery, action='print'):
             delivery=delivery,
             results=results, 
             sums=sums, 
-            title="Livraison du " + delivery['delivery_date']
+            title=delivery['delivery_name']
         )
     if action == 'export':
         data = list()

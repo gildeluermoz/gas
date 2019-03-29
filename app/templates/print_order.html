@@ -1,5 +1,10 @@
 <html>
   {% include "header.html" %}
+  <style>
+    body{
+      background-image:none !important;
+    }
+  </style>
   <body>
     <div class="print_head">
       {{title}}
@@ -9,7 +14,7 @@
     {% for o in orders %}
     <div class="print_card">
       <div class="print_title">
-        {{ o.group['group_name'].upper() }} <span style="float:right;"> {{o.group_price}} €</span>
+        {{ o.group['group_name'].upper() }} <div style="float:right;"> {{o.group_price}} €</div>
       </div>
         {% for p in o.products %}
               <div class="print_product">{{p.product.product_name.upper()}} {{ p.nb }}</div>
