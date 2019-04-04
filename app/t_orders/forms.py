@@ -1,7 +1,7 @@
 '''
     Définition du formulaire : création/modification d'une commande
 '''
-
+import inspect
 from flask_wtf import FlaskForm
 from wtforms import (
     SubmitField, HiddenField, SelectField, 
@@ -32,6 +32,14 @@ class Order(FlaskForm):
     @classmethod
     def append_nbcase(cls, name, label):
         setattr(cls, name, IntegerField(label, validators=[InputRequired(message='La quantité est obligatoire. Aucune = "0"')]))
+        return cls
+
+    @classmethod
+    def clean_attr(cls):
+        attributes = inspect.getmembers(cls, lambda a:not(inspect.isroutine(a)))
+        for a in attributes:
+            if a[0].startswith('nb'):
+                delattr(cls, a[0])
         return cls
 
 class OrderChoice(FlaskForm):

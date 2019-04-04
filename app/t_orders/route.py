@@ -341,7 +341,10 @@ def addorupdate(id_delivery, id_group):
                 title="Houps ! Un petit soucis"
             )
         
-        # construct form with delivery products
+        # destroy products fields in form for a construction with differents field
+        # in case of switch between differents deliveries
+        orderform(request.form).clean_attr()
+        # construct new form with delivery products
         nbcase = list()
         for p in products:
             orderform.append_nbcase(
@@ -372,9 +375,9 @@ def addorupdate(id_delivery, id_group):
                     pass 
             del form.id_group
             group =  TGroups.get_one(id_group)
-            title = "Commande du " + config.WORD_GROUP + " '" + group['group_name']+"' pour la livraison du " + delivery['delivery_date']
+            title = "Commande du " + config.WORD_GROUP + " '" + group['group_name']+"' pour la livraison " + delivery['delivery_name']
         else:
-            title = "Nouvelle commande pour la livraison du " + delivery['delivery_date']    
+            title = "Nouvelle commande pour la livraison " + delivery['delivery_name']    
         
         if request.method == 'POST' and user_profil < 4:
             form.hidden_group_discount.process_data(form.data['hidden_group_discount'])
@@ -405,7 +408,6 @@ def addorupdate(id_delivery, id_group):
                                 'error.html', 
                                 title="Houps ! Une erreur s'est produite"
                             )
-                        
                 q = db.session.query(VGroupOrdersDetail)
                 q = q.filter(and_(VGroupOrdersDetail.id_delivery == id_delivery, VGroupOrdersDetail.id_group == id_group)).order_by(VGroupOrdersDetail.group_name, VGroupOrdersDetail.product_name)
                 group_order = [go.as_dict() for go in q.all()]

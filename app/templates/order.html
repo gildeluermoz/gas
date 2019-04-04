@@ -14,9 +14,12 @@
         <div class="row forms card back">
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                <div class="alert alert-danger" role="alert">
-                    Veuillez remplir les champs obligatoires
-                </div>
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        UNe erreur est survenue :<br />
+                        {{ message }}
+                    </div>
+                {% endfor %}
                 {% endif %}
             {% endwith %}
             
