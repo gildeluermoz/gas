@@ -16,7 +16,6 @@ class Order(FlaskForm):
         "Je choisi mon " + config.WORD_GROUP, 
         coerce=int, 
         choices=[], 
-        default=[0],
         validators=[DataRequired(message="Merci de choisir un " + config.WORD_GROUP)]
     )
     group_discount = DecimalField(
