@@ -48,15 +48,13 @@ def info(id_delivery):
     delivery = TDeliveries.get_one(id_delivery)
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
 
-    # get products order in t_products table with id_delivery filter
-    q = db.session.query(TOrders.id_group, TGroups.group_name).distinct()
-    q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
-    q = q.join(TGroups, TGroups.id_group == TOrders.id_group)
-    q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
+    # get all active groups ordered by name
+    q = db.session.query(TGroups.id_group)
+    q = q.filter(TGroups.active)
     q = q.order_by(TGroups.group_name)
-    data = q.all() 
+    data = q.all()
     if data:
-         ordergroups = [p[0] for p in data]
+        orderedgroups = [p[0] for p in data]
     else:
         flash("Aucun produit n'a été enregistré pour cette livraison.")
         return render_template(
@@ -65,7 +63,7 @@ def info(id_delivery):
         )
     # get orders details
     orders = list()
-    for og in ordergroups:
+    for og in orderedgroups:
         order = dict()
         q = db.session.query(TOrders)
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
@@ -82,7 +80,6 @@ def info(id_delivery):
         else:
             order['group_price'] = 0
             order['products'] = {}
-
         orders.append(order)
     if len(orders) == 0:
         flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
@@ -115,12 +112,12 @@ def info(id_delivery):
     sums['benefice'] = benef
 
     return render_template(
-        'info_order.html', 
+        'info_order.html',
         user_right=user_right,
-        orders=orders, 
+        orders=orders,
         delivery=delivery,
-        results=results, 
-        sums=sums, 
+        results=results,
+        sums=sums,
         title="Commandes pour la livraison du " + delivery['delivery_date']
     )
 
@@ -133,15 +130,13 @@ def printorderinfo(id_delivery, action='print'):
     delivery = TDeliveries.get_one(id_delivery)
     delivery['delivery_date'] = datetime.strptime(delivery['delivery_date'],'%Y-%m-%d').strftime('%d/%m/%Y')
 
-    # get products order in t_products table with id_delivery filter
-    q = db.session.query(TOrders.id_group, TGroups.group_name).distinct()
-    q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
-    q = q.join(TGroups, TGroups.id_group == TOrders.id_group)
-    q = q.filter(and_(TProducts.id_delivery == id_delivery, TProducts.active == True))
+    # get all active groups ordered by name
+    q = db.session.query(TGroups.id_group)
+    q = q.filter(TGroups.active)
     q = q.order_by(TGroups.group_name)
-    data = q.all() 
+    data = q.all()
     if data:
-         ordergroups = [p[0] for p in data]
+        orderedgroups = [p[0] for p in data]
     else:
         flash("Aucun produit n'a été enregistré pour cette livraison.")
         return render_template(
@@ -151,7 +146,7 @@ def printorderinfo(id_delivery, action='print'):
 
     # get orders details
     orders = list()
-    for og in ordergroups:
+    for og in orderedgroups:
         order = dict()
         q = db.session.query(TOrders)
         q = q.join(TProducts, TProducts.id_product == TOrders.id_product)
