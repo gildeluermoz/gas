@@ -50,7 +50,7 @@ def info(id_delivery):
 
     # get all active groups ordered by name
     q = db.session.query(TGroups.id_group)
-    q = q.filter(TGroups.active)
+    q = q.filter(and_(TGroups.active, TGroups.id_group > 0))
     q = q.order_by(TGroups.group_name)
     data = q.all()
     if data:
@@ -132,7 +132,7 @@ def printorderinfo(id_delivery, action='print'):
 
     # get all active groups ordered by name
     q = db.session.query(TGroups.id_group)
-    q = q.filter(TGroups.active)
+    q = q.filter(and_(TGroups.active, TGroups.id_group > 0))
     q = q.order_by(TGroups.group_name)
     data = q.all()
     if data:
