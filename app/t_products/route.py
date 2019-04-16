@@ -3,14 +3,14 @@ from flask import (
     Blueprint, request, flash
 )
 
-from sqlalchemy import exc
+from sqlalchemy import exc, func
 
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
 
-from app.env import URL_REDIRECT
+from app.env import db, URL_REDIRECT
 from app.t_products import forms as t_productsforms
-from app.models import TProducts, TGroups, TDeliveries
+from app.models import TProducts, TGroups, TDeliveries, TOrders
 
 from config import config
 
@@ -152,17 +152,26 @@ def delproduct(id_product):
     Route qui supprime un utilisateur dont l'id est donné en paramètres dans l'url
     Retourne une redirection vers la liste d'utilisateurs
     """
-    try:
-        TProducts.delete(id_product)
-        return redirect(url_for('product.products'))
-    except (exc.SQLAlchemyError, exc.DBAPIError) as e:
-        flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
-        flash(e)
+    usedProducts = db.session.query(TOrders).filter(TOrders.id_product == id_product).all()
+    if len(usedProducts) == 0:
+        try:
+            TProducts.delete(id_product)
+            return redirect(url_for('product.products'))
+        except (exc.SQLAlchemyError, exc.DBAPIError) as e:
+            flash("Peut-être que tu essaies de faire quelque chose qui n'est pas cohérent.")
+            flash(e)
+            return render_template(
+                'error.html', 
+                title="Houps ! Une erreur s'est produite"
+            )
+    else:
+        flash("Tu essaies de supprimer un produit qui est utilisé dans la commande de " + str(len(usedProducts)) + " relais.")
+        flash("Tu veux peut-être désactiver ce produit pour qu'il ne soit plus comptabilisé dans la commande. Pour cela ouvre le formulaire du produit pour le modifier et décoche 'Actif'.")
+        flash("Si tu souhaites réellement supprimer le produit, il faut au préalable supprimer toutes les commandes qui portent sur ce produit.")
         return render_template(
             'error.html', 
-            title="Houps ! Une erreur s'est produite"
+            title="Houps !"
         )
-    
 
 
 def pops(form):
