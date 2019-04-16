@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, flash
 )
 
-from sqlalchemy import exc, func
+from sqlalchemy import exc
 
 from app.pypnusershub import route as fnauth
 from app.pypnusershub.db.tools import user_from_token
