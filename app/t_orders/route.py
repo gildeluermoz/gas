@@ -111,6 +111,13 @@ def info(id_delivery):
     sums['buying'] = buying
     sums['benefice'] = benef
 
+    if len(results) == 0:
+        flash("Aucun " + config.WORD_GROUP + " n'a passé commande pour le moment sur cette livraison.")
+        return render_template(
+            'error.html', 
+            title="Houps ! Un petit soucis"
+        )
+        
     return render_template(
         'info_order.html',
         user_right=user_right,
