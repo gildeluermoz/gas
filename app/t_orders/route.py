@@ -370,9 +370,12 @@ def addorupdate(id_delivery, id_group):
         # construct new form with delivery products
         nbcase = list()
         for p in products:
+            formlabel = p['product_name'] + ' (' + p['product_unit'] + ' de ' + str(p['case_weight']) + ' kg)' 
+            if p['product_comment']:
+                formlabel += ' - ' + p['product_comment']
             orderform.append_nbcase(
                 'nb'+str(p['id_product']), 
-                p['product_name']
+                formlabel
             )
             nbcase.append('nb'+str(p['id_product']))
         form = orderform(request.form)
