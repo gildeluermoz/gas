@@ -31,7 +31,7 @@
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "footable": "^2.0.6",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "toastr": "^2.1.4",
     "moment": "^2.24.0",
     "moment-datetime": "^0.0.2",
