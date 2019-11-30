@@ -100,6 +100,8 @@ def info(id_delivery):
     user_right = list()
     if user_profil >= 4:
         user_right = ['C', 'R', 'U', 'D']
+    elif user_profil >= 3:
+        user_right = ['C', 'R']
     else:
         user_right = ['R']
      # get delivery informations with id_delivery filter
@@ -157,7 +159,7 @@ def printdeliveryinfo(id_delivery):
     )
 
 @route.route('delivery/print/<id_delivery>', methods=['GET'])
-@fnauth.check_auth(4, False, URL_REDIRECT)
+@fnauth.check_auth(3, False, URL_REDIRECT)
 def printdelivery(id_delivery):
     html = HTML(string=printdeliveryinfo(id_delivery))
     pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/delivery.pdf')

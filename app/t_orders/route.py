@@ -246,7 +246,7 @@ def printorderinfo(id_delivery, id_group=None, action='print'):
         return data
 
 @route.route('order/print/<id_delivery>', methods=['GET'])
-@fnauth.check_auth(4, False, URL_REDIRECT)
+@fnauth.check_auth(3, False, URL_REDIRECT)
 def printorder(id_delivery, id_group=None):
     html = HTML(string=printorderinfo(id_delivery, id_group, 'print'))
     pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/info_order.pdf')
