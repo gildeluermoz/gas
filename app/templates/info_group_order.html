@@ -29,7 +29,8 @@
               <button 
                 onClick="deleteRaw('../../../order/delete/{{ delivery.id_delivery }}/{{ group.id_group }}')" 
                 type="submit" 
-                class="btn btn-outline-danger btn-sm border border-white text-white float-right">
+                class="btn btn-outline-danger btn-sm border border-white text-white float-right"
+                style="margin: 0 0 0 3px;">
                 Supprimer
               </button>
             {%endif%}
@@ -39,6 +40,13 @@
               id="submit"
               class="btn btn-outline-success btn-sm border border-white text-white float-right">
               Modifier
+            </button>
+            <button 
+              onclick="window.location.href='../../../order/print/{{ delivery.id_delivery }}/{{ group.id_group }}'" 
+              id="submit"
+              class="btn btn-outline-info btn-sm border border-white text-white float-right"
+              style="margin: 0 3px 0 100px;">
+              Imprimer
             </button>
             {%endif%}
           </div>

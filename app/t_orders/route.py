@@ -128,9 +128,10 @@ def info(id_delivery):
         title="Commandes pour la livraison du " + delivery['delivery_date']
     )
 
-def printorderinfo(id_delivery, action='print'):
+def printorderinfo(id_delivery, id_group=None, action='print'):
     """
-    Route permettant d'imprimer le résumé d'une commande
+    Route permettant d'imprimer le résumé d'une livraison
+    ou la commande d'un groupe
     """
 
      # get delivery informations with id_delivery filter
@@ -140,6 +141,8 @@ def printorderinfo(id_delivery, action='print'):
     # get all active groups ordered by name
     q = db.session.query(TGroups.id_group)
     q = q.filter(and_(TGroups.active, TGroups.id_group > 0))
+    if id_group is not None:
+        q = q.filter(TGroups.id_group == id_group)
     q = q.order_by(TGroups.group_name)
     data = q.all()
     if data:
@@ -174,29 +177,34 @@ def printorderinfo(id_delivery, action='print'):
                 'error.html',
                 title="Houps ! Un petit soucis"
             )
-    # get orders sums
-    q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery).order_by(VOrdersResult.product_name)
-    results = list()
-    nbc = 0
-    w = 0 
-    selling = 0 
-    buying = 0
-    benef = 0
-    for r in q.all():
-        result = dict()
-        result = r.as_dict()
-        results.append(result)
-        nbc = nbc + r.case_number
-        w = w + r.weight
-        selling = selling + r.selling_price
-        buying = buying + r.buying_price
-        benef = benef + r.benefice
-    sums = dict()
-    sums['case_number'] = nbc
-    sums['weight'] = w
-    sums['selling'] = round(selling, 2)
-    sums['buying'] = buying
-    sums['benefice'] = benef
+
+    if id_group is None:
+        # get orders sums
+        q = db.session.query(VOrdersResult).filter(VOrdersResult.id_delivery == id_delivery).order_by(VOrdersResult.product_name)
+        results = list()
+        nbc = 0
+        w = 0 
+        selling = 0 
+        buying = 0
+        benef = 0
+        for r in q.all():
+            result = dict()
+            result = r.as_dict()
+            results.append(result)
+            nbc = nbc + r.case_number
+            w = w + r.weight
+            selling = selling + r.selling_price
+            buying = buying + r.buying_price
+            benef = benef + r.benefice
+        sums = dict()
+        sums['case_number'] = nbc
+        sums['weight'] = w
+        sums['selling'] = round(selling, 2)
+        sums['buying'] = buying
+        sums['benefice'] = benef
+    else:
+        results = list()
+        sums = dict()
 
     if action == 'print':
         return render_template(
@@ -207,6 +215,7 @@ def printorderinfo(id_delivery, action='print'):
             sums=sums, 
             title=delivery['delivery_name']
         )
+        
     if action == 'export':
         data = list()
         productline = ['RELAIS/PRODUITS']
@@ -238,14 +247,26 @@ def printorderinfo(id_delivery, action='print'):
 
 @route.route('order/print/<id_delivery>', methods=['GET'])
 @fnauth.check_auth(4, False, URL_REDIRECT)
-def printorder(id_delivery):
-    html = HTML(string=printorderinfo(id_delivery, 'print'))
+def printorder(id_delivery, id_group=None):
+    html = HTML(string=printorderinfo(id_delivery, id_group, 'print'))
     pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/info_order.pdf')
     return send_file(
         APP_ROOT+'/static/pdf/info_order.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
         attachment_filename="commande.pdf"
+    )
+
+@route.route('order/print/<id_delivery>/<id_group>', methods=['GET'])
+@fnauth.check_auth(3, False, URL_REDIRECT)
+def printgrouporder(id_delivery, id_group):
+    html = HTML(string=printorderinfo(id_delivery, id_group, 'print'))
+    pdf_file = html.write_pdf(APP_ROOT+'/static/pdf/info_group_order.pdf')
+    return send_file(
+        APP_ROOT+'/static/pdf/info_group_order.pdf',  # file path or file-like object
+        'application/pdf',
+        as_attachment=True,
+        attachment_filename="commande_relais.pdf"
     )
 
 @route.route('order/csvexport/<id_delivery>', methods=['GET'])
