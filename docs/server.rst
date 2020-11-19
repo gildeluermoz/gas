@@ -45,7 +45,7 @@ Installation de l'environnement logiciel
  
   ::  
   
-    nano /etc/apt/sources.list
+    sudo nano /etc/apt/sources.list
         #ajouter les backports et retirer les src 
     apt-get update
     apt-get upgrade
@@ -57,10 +57,9 @@ Installation de l'environnement logiciel
         #Fermer la console et la réouvrir pour que les modifications soient prises en compte.
     
     sudo apt-get install -y postgresql
-    sudo apt-get install -y python3 python3-dev python3-pip python3-setuptools python-virtualenv python3-wheel build-essential libssl-dev python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
-    pip3 install --upgrade pip virtualenv
-    apt-get install -y curl
-    su myuser
+    sudo apt-get install -y python3 python3-dev python3-pip python3-setuptools python3-wheel build-essential libssl-dev python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+    sudo pip3 install --upgrade pip virtualenv
+    sudo apt-get install -y curl
     cd
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
     sudo apt-get install -y nodejs
@@ -74,7 +73,7 @@ Installation de l'environnement logiciel
     sudo -n -u postgres -s psql -c "CREATE ROLE my_pg_superuser WITH SUPERUSER LOGIN PASSWORD 'userpass_change_it';"
 
     # pour accéder à postresql avec pg_admin
-    sed -e "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" -i /etc/postgresql/9.6/main/postgresql.conf
+    sudo sed -e "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" -i /etc/postgresql/9.6/main/postgresql.conf
     sudo nano /etc/postgresql/9.6/main/pg_hba.conf
         # ajouter un ligne avec
         # host  all all 0.0.0.0/0  md5
@@ -91,6 +90,6 @@ Installation de l'environnement logiciel
     \q
     exit
 
-L'utilisateur ``gasuser`` est super utilisateur de PostgreSQL il sera utilisé par l'application pour se connecter à sa propre base de données mais aussi à toutes les autres bases qu'UsersHub doit gérer.
+L'utilisateur ``gasuser`` est super utilisateur de PostgreSQL il sera utilisé par l'application pour se connecter à sa propre base de données.
 
 L'application fonctionne avec par default le mot de passe ``monpassachanger`` mais il est conseillé de le modifier !  
