@@ -35,7 +35,7 @@
     "font-awesome": "^4.7.0",
     "footable": "^2.0.6",
     "jquery": "^3.4.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "moment-datetime": "0.0.2",
     "popper.js": "^1.14.3",
     "toastr": "^2.1.4"
