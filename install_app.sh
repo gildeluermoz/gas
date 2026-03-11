@@ -27,6 +27,9 @@ pip install --upgrade pip || exit 1
 pip install -r requirements.txt
 deactivate
 
+# Création du répertoire pour les PDF générés
+mkdir -p app/static/pdf
+
 # Installation de l'environement javascript
 # rendre la commande nvm disponible
 export NVM_DIR="$HOME/.nvm"

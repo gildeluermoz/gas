@@ -272,7 +272,7 @@ def printgrouporder(id_delivery, id_group):
 @route.route('order/csvexport/<id_delivery>', methods=['GET'])
 @fnauth.check_auth(4, False, URL_REDIRECT)
 def csvexport(id_delivery):
-    data = printorderinfo(id_delivery, 'export')
+    data = printorderinfo(id_delivery, action='export')
     output = excel.make_response_from_array(data, 'csv', file_name="export_data")
     return output
 
