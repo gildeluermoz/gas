@@ -20,16 +20,17 @@ body{
     text-align: center;
     margin-bottom: .5rem;
     padding: 0 30px;
-    font-size: 3em;
-    font-family: inherit;
+    font-size: 2.5em;
+    font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
     font-weight: 300;
-    color: #fff;
-    background: #2e3031;
+    color: #171818;
+    background: #fff;
     border-radius: .2rem;
     border-style: solid;
     border-width: 1px;
     margin-bottom: 50px;
 }
+
 .print_card{
     border-radius: .2rem;
     border-style: solid;
@@ -43,11 +44,11 @@ body{
     line-height: 80px;
     margin-bottom: .5rem;
     padding: 0 30px;
-    font-size: 2em;
+    font-size: 1.5em;
     font-family: inherit;
     font-weight: 800;
-    color: #fff;
-    background: #6c757d;
+    color: #2e3031;
+    background: #fff;
     border-radius: .2rem;
     border-style: solid;
     border-width: 1px;
@@ -55,9 +56,9 @@ body{
 
 .print_product{
     display: inline-block;
-    width: 48%;
-    font-size:2em;
-    font-weight: 800;
+    width: 98%;
+    font-size:1.25em;
+    font-weight: 500;
     padding: .2rem .4rem;
     color: #000;
     border-radius: .2rem;

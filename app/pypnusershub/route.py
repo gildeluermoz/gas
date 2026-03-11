@@ -21,7 +21,7 @@ from flask import (Blueprint, request, Response,
 from sqlalchemy.orm import exc
 import sqlalchemy as sa
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
 
 from app.pypnusershub.db import models, db
 from app.pypnusershub.db.tools import (
@@ -59,7 +59,7 @@ log = logging.getLogger(__name__)
 #    'LOGIN_ROUTE' param, but we still default to '/login' and POST.
 class ConfigurableBlueprint(Blueprint):
 
-    def register(self, app, options, first_registration=False):
+    def register(self, app, options, **kwargs):
 
         # set cookie autorenew
         expiration = app.config.get('COOKIE_EXPIRATION', 3600)
@@ -75,7 +75,7 @@ class ConfigurableBlueprint(Blueprint):
                     is_setting_token = set_cookie.startswith('token=')
                     is_token_set = request.cookies.get('token')
                     if is_token_set and not is_setting_token:
-                        cookie_exp = datetime.datetime.utcnow()
+                        cookie_exp = datetime.datetime.now(datetime.UTC)
                         cookie_exp += datetime.timedelta(seconds=expiration)
                         response.set_cookie('token',
                                             request.cookies['token'],
@@ -94,7 +94,7 @@ class ConfigurableBlueprint(Blueprint):
             models.db.init_app(app)
 
         parent = super(ConfigurableBlueprint, self)
-        parent.register(app, options, first_registration)
+        parent.register(app, options, **kwargs)
 
 
 route = ConfigurableBlueprint('auth', __name__)
@@ -240,9 +240,9 @@ def login():
 
         # Génération d'un token
         expiration = current_app.config['COOKIE_EXPIRATION']
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        s = Serializer(current_app.config['SECRET_KEY'])
         token = s.dumps(user.as_dict())
-        cookie_exp = datetime.datetime.utcnow()
+        cookie_exp = datetime.datetime.now(datetime.UTC)
         cookie_exp += datetime.timedelta(seconds=expiration)
         resp = Response(json.dumps({'user': user_dict,
                                     'expires': str(cookie_exp)}))

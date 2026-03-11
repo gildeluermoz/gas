@@ -71,7 +71,7 @@ class User(db.Model):
 
     def to_json(self):
         out = {
-            'id': self.id_role,
+            'id': self.id_user,
             'login': self.identifiant,
             'email': self.email,
             'applications': []
@@ -86,20 +86,20 @@ class User(db.Model):
         return out
 
     def __repr__(self):
-        return "<User '{!r}' id='{}'>".format(self.identifiant, self.id_role)
+        return "<User '{!r}' id='{}'>".format(self.identifiant, self.id_user)
 
     def __str__(self):
         return self.identifiant or ''
 
     def as_dict(self, recursif=False, columns=()):
-        nom_role = self.nom_role or ''
-        prenom_role = self.prenom_role or ''
+        last_name = self.last_name or ''
+        first_name = self.first_name or ''
         return {
-            'id_role': self.id_role,
+            'id_user': self.id_user,
             'identifiant': self.identifiant,
-            'nom_role': self.nom_role,
-            'prenom_role': self.prenom_role,
-            'nom_complet': nom_role+' '+prenom_role
+            'last_name': self.last_name,
+            'first_name': self.first_name,
+            'nom_complet': last_name+' '+first_name
         }
 
 

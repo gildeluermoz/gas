@@ -167,7 +167,7 @@ def printdelivery(id_delivery):
         APP_ROOT+'/static/pdf/delivery.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
-        attachment_filename="livraison.pdf"
+        download_name="livraison.pdf"
     )
 
 @route.route('delivery/add/new', defaults={'id_delivery': None}, methods=['GET', 'POST'])

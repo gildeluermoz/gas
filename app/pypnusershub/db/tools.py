@@ -11,8 +11,7 @@ from flask import current_app
 from sqlalchemy.orm.exc import NoResultFound
 import sqlalchemy as sa
 
-from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
-                          SignatureExpired, BadSignature)
+from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired, BadSignature
 
 from app.pypnusershub.db import models, db
 from app.pypnusershub.utils import text_resource_stream
@@ -44,17 +43,17 @@ def init_schema(con_uri):
         sql = sql_file.read()
 
     engine = sa.create_engine(con_uri)
-    with engine.connect():
-        engine.execute(sql)
-        engine.execute("COMMIT")
+    with engine.connect() as conn:
+        conn.execute(sa.text(sql))
+        conn.commit()
 
 
 def delete_schema(con_uri):
 
     engine = sa.create_engine(con_uri)
-    with engine.connect():
-        engine.execute("DROP SCHEMA IF EXISTS utilisateurs CASCADE")
-        engine.execute("COMMIT")
+    with engine.connect() as conn:
+        conn.execute(sa.text("DROP SCHEMA IF EXISTS utilisateurs CASCADE"))
+        conn.commit()
 
 
 def reset_schema(con_uri):
@@ -66,11 +65,11 @@ def load_fixtures(con_uri):
     with text_resource_stream('fixtures.sql', 'pypnusershub.db') as sql_file:
 
         engine = sa.create_engine(con_uri)
-        with engine.connect():
+        with engine.connect() as conn:
             for line in sql_file:
                 if line.strip():
-                    engine.execute(line)
-            engine.execute("COMMIT")
+                    conn.execute(sa.text(line))
+            conn.commit()
 
 
 def user_from_token(token=None, secret_key=None):
@@ -80,7 +79,8 @@ def user_from_token(token=None, secret_key=None):
     try:
         s = Serializer(current_app.config['SECRET_KEY'])
         if token is not None:
-            data = s.loads(token)
+            expiration = current_app.config.get('COOKIE_EXPIRATION', 3600)
+            data = s.loads(token, max_age=expiration)
             id_user = data['id_user']
             id_app = data['id_application']
             return (models.AppUser

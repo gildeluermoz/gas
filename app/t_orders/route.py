@@ -254,7 +254,7 @@ def printorder(id_delivery, id_group=None):
         APP_ROOT+'/static/pdf/info_order.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
-        attachment_filename="commande.pdf"
+        download_name="commande.pdf"
     )
 
 @route.route('order/print/<id_delivery>/<id_group>', methods=['GET'])
@@ -266,7 +266,7 @@ def printgrouporder(id_delivery, id_group):
         APP_ROOT+'/static/pdf/info_group_order.pdf',  # file path or file-like object
         'application/pdf',
         as_attachment=True,
-        attachment_filename="commande_relais.pdf"
+        download_name="commande_relais.pdf"
     )
 
 @route.route('order/csvexport/<id_delivery>', methods=['GET'])
