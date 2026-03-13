@@ -8,15 +8,15 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         {% if session.get('current_user', False) %}
         
-            <ul class="nav navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav mr-auto">
                 {% if session['current_user']['id_profil'] == 6 %}
-                    <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link active" href="{{ url_for('profil.profils') }}">Profils</a>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('profil.profils') }}">Profils</a>
                     </li>
                 {% endif %}
-                {% if session['current_user']['id_profil'] >= 2 %} 
-                    <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link" href="{{ url_for('user.users') }}">
+                {% if session['current_user']['id_profil'] >= 2 %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user.users') }}">
                             {% if session['current_user']['id_profil'] == 2 %}
                                 Mon compte
                             {% elif session['current_user']['id_profil'] == 3 %}
@@ -28,23 +28,23 @@
                     </li>
                 {% endif %}
                 {% if session['current_user']['id_profil'] >= 4 %}
-                    <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link" href="{{ url_for('group.groups') }}">Relais</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('group.groups') }}">Relais</a>
                     </li>
                 {% endif %}
                 {% if session['current_user']['id_profil'] >= 3 %}
-                    <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link" href="{{ url_for('delivery.deliveries') }}">Livraisons</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('delivery.deliveries') }}">Livraisons</a>
                     </li>
                 {% endif %}
                 {% if session['current_user']['id_profil'] >= 4 %}
-                    <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link" href="{{ url_for('product.products') }}">Produits</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('product.products') }}">Produits</a>
                     </li>
                 {% endif %}
                 {% if session['current_user']['id_profil'] >= 3 %}
-                    <li class="nav-item list-unstyled">
-                        <a style="color: #fff" class="nav-link" href="{{ url_for('order.orderchoice') }}">Commandes</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('order.orderchoice') }}">Commandes</a>
                     </li>
                 {% endif %}
             </ul>
